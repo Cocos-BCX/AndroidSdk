@@ -5,11 +5,12 @@
 SDK适用于Android4.0 (API Level 14)及以上版本，SDK目前测试版编译版本选择27.
 注意：Android P(版本27以上) 对网络请求http限制，SDK中有使用http请求；
 
-##1.1 类库引用说明
+## 1.1 类库引用说明
 
 1. 将bcx_sdk.aar复制到项目目录下，在Project Structure里选择New Moudule(注意不是添加Module dependency), 选择Import JAR/arr Package，点击Next,选择arr文件所在的路径, 点击Finish,选择Module dependency里将bcx_sdkMoudle添加到项目里即可：
 这种方式不会将第三方依赖编译进aar文件，需要添加以下依赖：
-```
+
+```Java
     // implenment websocket
     implementation 'com.neovisionaries:nv-websocket-client:1.30'
     // implenment bitcoinj
@@ -26,7 +27,8 @@ SDK适用于Android4.0 (API Level 14)及以上版本，SDK目前测试版编译�
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
 ```
 
-######注意：
+###### 注意：
+
 ```
 1.避免创建同名数据库：cocos_bcx_android_sdk.db;
 
@@ -39,7 +41,7 @@ SDK适用于Android4.0 (API Level 14)及以上版本，SDK目前测试版编译�
     }
 ```
 
-##1.2 SDK 初始化  （调用其他接口前必须初始化项目 ，否则会报空指针错误）
+## 1.2 SDK 初始化  （调用其他接口前必须初始化项目 ，否则会报空指针错误）
 
 下面给出初始化sdk示例：(建议在Application中做统一初始化)
 
