@@ -1,5 +1,5 @@
-#Part 1
-##1.0 适用范围
+# Part 1
+## 1.0 适用范围
 
 该文档适用于Android cocos 钱包开发.
 SDK适用于Android4.0 (API Level 14)及以上版本，SDK目前测试版编译版本选择27.
