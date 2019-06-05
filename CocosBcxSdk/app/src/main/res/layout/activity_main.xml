@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="注意： isLogin为false 是只注册账号不登入" />
+
+        <TextView
+            style="@style/TvEdTips1"
+            android:text="钱包管理模式" />
+
+
+        <!-- ********************* -->
+        <TextView
+            style="@style/TvTitle"
+            android:text="钱包模式创建账户" />
+
+        <include layout="@layout/include_line" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="如果钱包模式已经存在账户，该操作会创建子账户，创建该子账户需要操作账户为终身会员账户" />
+
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="用户名(规则/^[a-z][a-z0-9\.-]{4,63}$//)" />
+
+        <EditText
+            android:id="@+id/et_wallet_signup_username"
+            style="@style/EtSingleLine" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="密码" />
+
+        <EditText
+            android:id="@+id/et_wallet_signup_pwd"
+            style="@style/EtSingleLine" />
+
+        <TextView
+            android:id="@+id/tv_wallet_signup"
+            style="@style/TvBtn"
+            android:text="确认创建帐户" />
+
+
+        <!-- ********************* -->
+
+
+        <TextView
+            style="@style/TvEdTips1"
+            android:text="账户管理模式" />
+        <!-- ********************* -->
+        <TextView
+            style="@style/TvTitle"
+            android:text="账户模式创建账户" />
+
+        <include layout="@layout/include_line" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="如果账户模式已经登录，该操作会创建子账户，创建该子账户需要操作账户为终身会员账户" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="用户名(规则/^[a-z][a-z0-9\.-]{4,63}$/)" />
+
+        <EditText
+            android:id="@+id/et_account_signup_username"
+            style="@style/EtSingleLine" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="密码" />
+
+        <EditText
+            android:id="@+id/et_account_signup_pwd"
+            style="@style/EtSingleLine" />
+
+        <TextView
+            android:id="@+id/tv_signup"
+            style="@style/TvBtn"
+            android:text="注册" />
+
+        <!-- ********************* -->
+        <TextView
+            style="@style/TvTitle"
+            android:text="登录（钱包模式不支持密码登录）" />
+
+        <include layout="@layout/include_line" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="用户名" />
+
+        <EditText
+            android:id="@+id/et_login_username"
+            style="@style/EtSingleLine" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="密码" />
+
+        <EditText
+            android:id="@+id/et_login_pwd"
+            style="@style/EtSingleLine" />
+
+        <TextView
+            android:id="@+id/tv_login"
+            style="@style/TvBtn"
+            android:text="登录" />
+
+        <!-- ********************* -->
+
+
+        <!-- ********************* -->
+        <TextView
+            style="@style/TvTitle"
+            android:text="私钥登录" />
+
+        <include layout="@layout/include_line" />
+
+        <EditText
+            android:id="@+id/et_key_login_password"
+            style="@style/EtSingleLine"
+            android:hint="请设置临时密码" />
+
+        <EditText
+            android:id="@+id/et_key_login_private_key"
+            style="@style/EtSingleLine"
+            android:hint="请输入账号私钥" />
+
+        <TextView
+            android:id="@+id/tv_key_login"
+            style="@style/TvBtn"
+            android:text="确认登录" />
+        <!-- ********************* -->
+
+
+        <!-- ********************* -->
+        <TextView
+            style="@style/TvTitle"
+            android:text="退出登录" />
+
+        <include layout="@layout/include_line" />
+
+
+        <TextView
+            android:id="@+id/tv_logout"
+            style="@style/TvBtn"
+            android:text="退出登录" />
+
+        <!-- ********************* -->
+
+        <!-- ********************* -->
+        <!--   <TextView
+               style="@style/TvTitle"
+               android:text="修改密码" />
+
+           <include layout="@layout/include_line" />
+
+           <TextView
+               style="@style/TvEdTips"
+               android:text="如果账户模式已经登录，该操作会创建子账户，创建该子账户需要操作账户为终身会员账户" />
+
+
+           <EditText
+               android:id="@+id/et_change_password_old"
+               style="@style/EtSingleLine"
+               android:hint="原始密码/临时钱包密码" />
+
+           <EditText
+               android:id="@+id/et_change_password_new"
+               style="@style/EtSingleLine"
+               android:hint="新密码" />
+
+           <TextView
+               android:id="@+id/tv_change_password"
+               style="@style/TvBtn"
+               android:text="确认修改" />-->
+
+        <!-- ********************* -->
+
+        <!--************************* -->
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="获取账户信息" />
+
+        <EditText
+            android:id="@+id/edt_account_name"
+            style="@style/EtSingleLine"
+            android:hint="请输入账号" />
+
+        <TextView
+            android:id="@+id/tv_get_account_object"
+            style="@style/TvBtn"
+            android:text="get_account_object(name or id)" />
+
+        <TextView
+            android:id="@+id/tv_get_accounts"
+            style="@style/TvBtn"
+            android:text="get_accounts(id only)" />
+
+
+        <TextView
+            android:id="@+id/tv_lookup_account_names"
+            style="@style/TvBtn"
+            android:text="lookup_account_names(name only)" />
+
+
+        <TextView
+            android:id="@+id/tv_get_full_accounts"
+            style="@style/TvBtn"
+            android:gravity="center"
+            android:text="get_full_accounts(name or id)( same with get_account_object)" />
+
+        <!-- ********************* -->
+        <TextView
+            style="@style/TvEdTips1"
+            android:text="账户操作" />
+        <!-- ********************* -->
+        <TextView
+            style="@style/TvTitle"
+            android:text="获取私钥" />
+
+        <EditText
+            android:id="@+id/et_get_private_key_account_name"
+            style="@style/EtSingleLine"
+            android:hint="账户名称" />
+
+        <EditText
+            android:id="@+id/et_get_private_key_pwd"
+            style="@style/EtSingleLine"
+            android:hint="账户密码" />
+
+        <TextView
+            android:id="@+id/tv_get_private_key"
+            style="@style/TvBtn"
+            android:text="获取私钥" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="查询和订阅账户记录" />
+
+        <include layout="@layout/include_line" />
+
+        <EditText
+            android:id="@+id/et_get_src_info_account"
+            style="@style/EtSingleLine"
+            android:layout_marginTop="10dp"
+            android:hint="查询账户" />
+
+        <EditText
+            android:id="@+id/et_get_src_info_limit"
+            style="@style/EtSingleLine"
+            android:hint="limit" />
+
+        <TextView
+            android:id="@+id/tv_get_src_info"
+            style="@style/TvBtn"
+            android:text="立即查询" />
+
+
+        <!-- ********************* -->
+        <TextView
+            style="@style/TvEdTips1"
+            android:text="代币资产操作" />
+
+        <!-- ********************* -->
+        <TextView
+            style="@style/TvTitle"
+            android:text="转账" />
+
+        <include layout="@layout/include_line" />
+
+        <EditText
+            android:id="@+id/et_transfer_asset_from_account"
+            style="@style/EtSingleLine"
+            android:layout_marginTop="14dp"
+            android:hint="发送发" />
+
+        <EditText
+            android:id="@+id/et_transfer_asset_to_account"
+            style="@style/EtSingleLine"
+            android:hint="接收方" />
+
+        <EditText
+            android:id="@+id/et_transfer_asset_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/et_transfer_asset_amount"
+            style="@style/EtSingleLine"
+            android:hint="数量" />
+
+
+        <EditText
+            android:id="@+id/et_transfer_asset_asset_type"
+            style="@style/EtSingleLine"
+            android:hint="转账资产类型" />
+
+        <EditText
+            android:id="@+id/et_transfer_fee_asset_type"
+            style="@style/EtSingleLine"
+            android:hint="支付手续费资产类型" />
+
+        <EditText
+            android:id="@+id/et_transfer_asset_memo"
+            style="@style/EtSingleLine"
+            android:hint="备注消息" />
+
+        <TextView
+            android:id="@+id/tv_transfer_assetGetFee"
+            style="@style/TvBtn"
+            android:text="获取本次转账所需手续费" />
+
+        <TextView
+            android:id="@+id/tv_transfer_asset"
+            style="@style/TvBtn"
+            android:text="转账" />
+
+
+        <include layout="@layout/include_line" />
+
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="memo :格式
+            {from:COCOS6G55VgR94GZmELS4UHEf2eVggmhPRnWLTWgGiEmzuBKdvEwoAB,to:COCOS61qJmvPif4seDKUjEkoL9qUP9cSvwBvgme5djcK8thuUS6o4Mg,nonce:12970368479715836292,message:b9b37e032e205a78ce7238bfdeebc791}" />
+
+        <EditText
+            android:id="@+id/et_asset_memo_account_name"
+            style="@style/EtSingleLine"
+            android:hint="帐户名" />
+
+        <EditText
+            android:id="@+id/et_asset_memo_account_pwd"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+
+        <EditText
+            android:id="@+id/et_asset_memo_account_memmo"
+            style="@style/EtSingleLine"
+            android:hint="备注信息（json）" />
+
+
+        <TextView
+            android:id="@+id/tv_get_memo"
+            style="@style/TvBtn"
+            android:text="解密备注信息" />
+
+
+        <include layout="@layout/include_line" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:layout_marginTop="14dp"
+            android:text="sdk 内部实现了多账户登录功能，在本地持久化了用户登录/导入/注册的多个账户信息，并提供接口供开发者调用" />
+
+        <TextView
+            android:id="@+id/tv_get_dao_accounts"
+            style="@style/TvBtn"
+            android:text="查询所有DAO账户信息" />
+
+        <TextView
+            android:id="@+id/tv_get_account_names"
+            style="@style/TvBtn"
+            android:text="查询所有DAO账户名称" />
+
+
+        <EditText
+            android:id="@+id/et_delete_account_name"
+            style="@style/EtSingleLine"
+            android:hint="要删除的DAO账户名" />
+
+        <TextView
+            android:id="@+id/tv_delete_account_by_name"
+            style="@style/TvBtn"
+            android:text="根据帐户名删除DAO账户" />
+
+
+        <EditText
+            android:id="@+id/et_block_number"
+            style="@style/EtSingleLine"
+            android:hint="头区块Number" />
+
+
+        <TextView
+            android:id="@+id/tv_get_block_header"
+            style="@style/TvBtn"
+            android:text="获取头区块信息；" />
+
+        <include layout="@layout/include_line" />
+
+        <EditText
+            android:id="@+id/et_asset_symbol"
+            style="@style/EtSingleLine"
+            android:hint="资产symbol" />
+
+
+        <TextView
+            android:id="@+id/lookup_asset_symbols"
+            style="@style/TvBtn"
+            android:text="获取资产信息" />
+
+        <include layout="@layout/include_line" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:layout_marginTop="14dp"
+            android:text="资产id可输入多个用英文逗号隔开，如果资产Id为空则返回账户所有的资产余额" />
+
+        <EditText
+            android:id="@+id/et_account_id"
+            style="@style/EtSingleLine"
+            android:hint="账户ID" />
+
+
+        <EditText
+            android:id="@+id/et_asset_id"
+            style="@style/EtSingleLine"
+            android:hint="资产Symbol 或 ID" />
+
+        <TextView
+            android:id="@+id/get_account_balances"
+            style="@style/TvBtn"
+            android:text="查询账户指定资产余额" />
+
+        <TextView
+            android:id="@+id/get_all_account_balances"
+            style="@style/TvBtn"
+            android:text="查询账户所有资产余额" />
+
+        <include layout="@layout/include_line" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="本地加密生成的keyStore ， 登录/导入/注册时isLogin为true 的账户" />
+
+        <EditText
+            android:id="@+id/et_export_account"
+            style="@style/EtSingleLine"
+            android:hint="账户名称" />
+
+
+        <EditText
+            android:id="@+id/et_export_pwd"
+            style="@style/EtSingleLine"
+            android:hint="账户密码" />
+
+
+        <TextView
+            android:id="@+id/get_keystore"
+            style="@style/TvBtn"
+            android:text="备份 keystore" />
+
+
+        <include layout="@layout/include_line" />
+
+
+        <EditText
+            android:id="@+id/et_import_keystore"
+            style="@style/EtSingleLine"
+            android:layout_marginTop="14dp"
+            android:hint="keystore" />
+
+
+        <EditText
+            android:id="@+id/et_import_pwd"
+            style="@style/EtSingleLine"
+            android:hint="账户密码" />
+
+        <EditText
+            android:id="@+id/et_import_wallet_type"
+            style="@style/EtSingleLine"
+            android:hint="账户模式（可不写）" />
+
+        <TextView
+            android:id="@+id/tv_import_keyStore"
+            style="@style/TvBtn"
+            android:text="导入Keystore" />
+
+
+        <include layout="@layout/include_line" />
+
+
+        <EditText
+            android:id="@+id/et_calculate_invoking_contract_strAccount"
+            style="@style/EtSingleLine"
+            android:layout_marginTop="14dp"
+            android:hint="帐户名" />
+
+        <EditText
+            android:id="@+id/et_calculate_invoking_contract_feeAssetSymbol"
+            style="@style/EtSingleLine"
+            android:hint="调用合约的手续费币种symbol" />
+
+        <EditText
+            android:id="@+id/et_calculate_invoking_contract_contractId"
+            style="@style/EtSingleLine"
+            android:hint="合约id" />
+
+        <EditText
+            android:id="@+id/et_calculate_invoking_contract_functionName"
+            style="@style/EtSingleLine"
+            android:hint="要调用的方法" />
+
+        <EditText
+            android:id="@+id/et_calculate_invoking_contract_params"
+            style="@style/EtSingleLine"
+            android:hint="调用参数（用英文逗号隔开）" />
+
+        <EditText
+            android:id="@+id/et_calculate_invoking_contract_pwd"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <TextView
+            android:id="@+id/tv_calculate_invoking_contract_fee"
+            style="@style/TvBtn"
+            android:text="获取合约调用费用（不需要密码）" />
+
+        <TextView
+            android:id="@+id/tv_invoking_contract"
+            style="@style/TvBtn"
+            android:text="调用合约方法（需要验证密码）" />
+
+
+        <include layout="@layout/include_line" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="NH资产" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="查询NH资产详情" />
+
+        <EditText
+            android:id="@+id/ed_nh_asset_id_hash"
+            style="@style/EtSingleLine"
+            android:hint="hash或id" />
+
+        <TextView
+            android:id="@+id/tv_look_up_nh_asset"
+            style="@style/TvBtn"
+            android:text="立即查询" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="查询账户下所拥有的NH资产" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_account"
+            style="@style/EtSingleLine"
+            android:hint="查询账户" />
+
+        <EditText
+            android:id="@+id/et_world_view"
+            style="@style/EtSingleLine"
+            android:hint="查询的世界观" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_page"
+            style="@style/EtSingleLine"
+            android:hint="page" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_page_size"
+            style="@style/EtSingleLine"
+            android:hint="pageSize" />
+
+        <TextView
+            android:id="@+id/tv_look_up_account_nh_asset"
+            style="@style/TvBtn"
+            android:text="立即查询" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="查询世界观详细信息" />
+
+        <EditText
+            android:id="@+id/et_word_view"
+            style="@style/EtSingleLine"
+            android:hint="世界观" />
+
+        <TextView
+            android:id="@+id/tv_look_up_word_view"
+            style="@style/TvBtn"
+            android:text="立即查询" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="查询开发者关联的世界观" />
+
+        <EditText
+            android:id="@+id/et_account_name"
+            style="@style/EtSingleLine"
+            android:hint="账户名" />
+
+        <TextView
+            android:id="@+id/tv_get_nh_creator"
+            style="@style/TvBtn"
+            android:text="立即查询" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="查询开发者所创建的NH资产" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_account"
+            style="@style/EtSingleLine"
+            android:hint="查询的账户" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_page"
+            style="@style/EtSingleLine"
+            android:hint="page" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_page_size"
+            style="@style/EtSingleLine"
+            android:hint="pageSize" />
+
+        <TextView
+            android:id="@+id/tv_list_nh_asset_by_creator"
+            style="@style/TvBtn"
+            android:text="立即查询" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="查询账户下的NH资产售卖单" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_account_order"
+            style="@style/EtSingleLine"
+            android:hint="查询的账户" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_page_order"
+            style="@style/EtSingleLine"
+            android:hint="page" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_page_size_order"
+            style="@style/EtSingleLine"
+            android:hint="pageSize" />
+
+        <TextView
+            android:id="@+id/tv_list_account_nh_asset_order"
+            style="@style/TvBtn"
+            android:text="立即查询" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="查询全网NH资产售卖单" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_symbol_or_id"
+            style="@style/EtSingleLine"
+            android:hint="资产ID或资产符号" />
+
+        <EditText
+            android:id="@+id/et_word_view_id_or_name"
+            style="@style/EtSingleLine"
+            android:hint="世界观ID或世界观名" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_order_baseDescribe"
+            style="@style/EtSingleLine"
+            android:hint="baseDescribe" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_page_order"
+            style="@style/EtSingleLine"
+            android:hint="page" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_page_size_order"
+            style="@style/EtSingleLine"
+            android:hint="pageSize" />
+
+
+        <TextView
+            android:id="@+id/tv_list_nh_asset_order"
+            style="@style/TvBtn"
+            android:text="立即查询" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="NH资产转移" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_transfer_from_account"
+            style="@style/EtSingleLine"
+            android:hint="资产发送方" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_transfer_to_account"
+            style="@style/EtSingleLine"
+            android:hint="资产接收方" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_fee_symbol"
+            style="@style/EtSingleLine"
+            android:hint="nh资产转移费用symbol" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_id"
+            style="@style/EtSingleLine"
+            android:hint="nh 资产id" />
+
+        <EditText
+            android:id="@+id/et_password"
+            style="@style/EtSingleLine"
+            android:hint="验证密码" />
+
+
+        <TextView
+            android:id="@+id/tv_nh_asset_transfer_fee"
+            style="@style/TvBtn"
+            android:text="获取本次交易费用" />
+
+        <TextView
+            android:id="@+id/tv_send_nh_asset"
+            style="@style/TvBtn"
+            android:text="确认发送（需要验证密码）" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="购买NH资产" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_buyer"
+            style="@style/EtSingleLine"
+            android:hint="购买者" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_order_id"
+            style="@style/EtSingleLine"
+            android:hint="nh订单Id" />
+
+        <EditText
+            android:id="@+id/et_buy_nh_password"
+            style="@style/EtSingleLine"
+            android:hint="验证密码" />
+
+        <TextView
+            android:id="@+id/tv_nh_asset_buy_fee"
+            style="@style/TvBtn"
+            android:text="获取本次交易费用" />
+
+        <TextView
+            android:id="@+id/tv_nh_asset_buy"
+            style="@style/TvBtn"
+            android:text="购买" />
+
+
+        <TextView
+            android:id="@+id/tv_get_contract_object"
+            style="@style/TvBtn"
+            android:text="获取合约信息" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="升级终身会员" />
+
+
+        <EditText
+            android:id="@+id/et_upgrade_lifetime_account"
+            style="@style/EtSingleLine"
+            android:hint="账户名" />
+
+        <EditText
+            android:id="@+id/et_upgrade_lifetime_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/et_upgrade_lifetime_asset"
+            style="@style/EtSingleLine"
+            android:hint="手续费资产" />
+
+        <TextView
+            android:id="@+id/tv_upgrade_lifetime_fee"
+            style="@style/TvBtn"
+            android:text="获取升级终身会员手续费" />
+
+        <TextView
+            android:id="@+id/tv_upgrade_lifetime_member"
+            style="@style/TvBtn"
+            android:text="升级为终身会员" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="创建子账号" />
+
+
+        <EditText
+            android:id="@+id/et_create_child_account_name"
+            style="@style/EtSingleLine"
+            android:hint="帐户名" />
+
+        <EditText
+            android:id="@+id/et_create_child_account_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/et_create_child_registrar"
+            style="@style/EtSingleLine"
+            android:hint="注册官" />
+
+        <EditText
+            android:id="@+id/et_create_child_registrar_password"
+            style="@style/EtSingleLine"
+            android:hint="注册官账户密码" />
+
+        <EditText
+            android:id="@+id/et_create_child_fee_asset"
+            style="@style/EtSingleLine"
+            android:hint="手续费币种" />
+
+        <TextView
+            android:id="@+id/tv_create_child_account_fee"
+            style="@style/TvBtn"
+            android:text="获取注册子账号手续费" />
+
+        <TextView
+            android:id="@+id/tv_create_child_account"
+            style="@style/TvBtn"
+            android:text="注册子账号" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="节点设置" />
+
+        <TextView
+            android:id="@+id/tv_switch_node_url"
+            style="@style/TvBtn"
+            android:text="切换节点" />
+
+    </LinearLayout>
+</ScrollView>
+
