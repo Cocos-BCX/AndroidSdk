@@ -45,7 +45,7 @@ SDK适用于Android4.0 (API Level 14)及以上版本，SDK目前测试版编译�
 
 下面给出初始化sdk示例：(建议在Application中做统一初始化)
 
- ```   
+```Java
         List<String> mListNode = Arrays.asList("ws://47.93.62.96:8050", "ws://39.96.33.61:8080", "ws://39.96.29.40:8050", "ws://39.106.126.54:8050");
         String[] faucetUrl = {"http://47.93.62.96:3000/api/v1/accounts"};
         String chainId = "53b98adf376459cc29e5672075ed0c0b1672ea7dce42b0b1fe5e021c02bda640";
@@ -61,7 +61,7 @@ SDK适用于Android4.0 (API Level 14)及以上版本，SDK目前测试版编译�
 ```
 
        
-   ##1.3 SDK API 使用说明
+   ## 1.3 SDK API 使用说明
 
 回调数据为统一string 类型；
 API 调用对象为单列对象；
@@ -69,7 +69,7 @@ API 调用对象为单列对象；
 下面给出API调用示例：
 
 
- ```
+```Java
   /**
      * account model  create account
      *
@@ -87,7 +87,7 @@ CocosBcxApiWrapper.getBcxInstance().create_password_account("*****", "*****", tr
             });
  ```
 
-##1.4 状态码
+## 1.4 状态码
 
 | code | message | 说明 |
 | --- | --- | --- | 
@@ -161,13 +161,13 @@ CocosBcxApiWrapper.getBcxInstance().create_password_account("*****", "*****", tr
 | 168 | This subscription does not exist | 当前没有订阅此项 | 
 | 169 | Method does not exist | API方法不存在 |
 
-  #Part 2
+# Part 2
 
-API  使用示例
+## 1.1 API 使用示例
 
- 钱包模式-创建账户
+#### 1.1.0 钱包模式-创建账户
 
-```
+```Java
   /**
      * wallet model  create account
      *
@@ -197,9 +197,9 @@ API  使用示例
 返回数据 3：{"code":102,"message":It doesn't connect to the server.}
 ```
 
-转账
+#### 1.1.1 转账
 
-```
+```Java
  /**
      * transfer
      * @param password 密码 (临时密码/账户密码)
@@ -226,9 +226,9 @@ API  使用示例
 返回数据2: {"code":105,"message":wrong password}
 ```
 
-导出私钥 (私通过钥导入登录的账户只能导出登陆时导入的私钥)
+#### 1.1.2 导出私钥 (私通过钥导入登录的账户只能导出登陆时导入的私钥)
 
-```
+```Java
 CocosBcxApiWrapper.getBcxInstance().export_private_key("gnkhandsome1", "123456", new IBcxCallBack() {
                             @Override
                             public void onReceiveValue(final String value) {
@@ -240,13 +240,13 @@ CocosBcxApiWrapper.getBcxInstance().export_private_key("gnkhandsome1", "123456",
 
 返回数据 (公钥（Key）,私钥(Value))：
 
-```
+```json
 {"code":1,"data":{"COCOS6G55VgR94GZmELS4UHEf2eVggmhPRnWLTWgGiEmzuBKdvEwoAB":"5Hy7aVcZFyHa7UKURN22m9gB7xp4KS7Bo1dibWSVZZYAg6Br1bu","COCOS8Dw7QjWVFggYCvp9c8XbsXssqizN1MqkwPfSAVTQppQLhUcTC2":"5JgPmrWHevyH4ZzLkgZL3yAaddXE6phrKJYCfKyAJmhhjbmZyF7"},"message":""}
 ```
 
-4.获取账户余额（参数1:用户ID, 参数2：获取余额的资产ID，为空则获取账户的所有资产余额信息）
+#### 1.1.3 获取账户余额（参数1:用户ID, 参数2：获取余额的资产ID，为空则获取账户的所有资产余额信息）
 
-  ```
+  ```Java
  List<Object> assetSymbolOrId = new ArrayList<>();
         // todo 默认币种类型
  assetSymbolOrId.add("1.3.0");
