@@ -41,10 +41,16 @@
 -keep class com.cocos.bcx_sdk.bcx_wallet.chain.** { *; }
 -keep class com.cocos.bcx_sdk.bcx_wallet.common.** { *; }
 -keep class com.cocos.bcx_sdk.bcx_wallet.fc.** { *; }
--keep com.cocos.bcx_sdk.bcx_rpc.** { *; }
--keep com.cocos.bcx_sdk.bcx_entity.** { *; }
--keep com.cocos.bcx_sdk.bcx_callback.** { *; }
+-keep class com.cocos.bcx_sdk.bcx_entity.** { *; }
+-keep class com.cocos.bcx_sdk.bcx_callback.** { *; }
 
+
+
+-keep public class com.cocos.bcx_sdk.bcx_rpc.R$*{
+    public static final int *;
+    public static final String *;
+    public static final boolean *;
+}
 
 #for okhttp3
 -dontwarn okhttp3.**
@@ -113,12 +119,10 @@
     void set*(%, %, %, %);
     void set*(%[]);
     void set*(**[]);
-    void set*(!**Listener);
 
     % get*();
     %[] get*();
     **[] get*();
-    !**Listener get*();
 }
 
 
@@ -272,3 +276,29 @@
 -keepattributes *JavascriptInterface*
 -keep class android.webkit.WebSettings { *; }
 -dontwarn android.webkit.WebSettings
+
+# Gson
+-keep class com.google.gson.stream.** { *; }
+-keepattributes EnclosingMethod
+-keep class org.xz_sale.entity.**{*;}
+-keep class com.google.gson.** {*;}
+-keep class com.google.**{*;}
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.stream.** { *; }
+-keep class com.google.gson.examples.android.model.** { *; }
+
+#okhttp
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.squareup.okhttp.* { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+-dontwarn com.squareup.**
+-dontwarn okio.**
+-keep public class org.codehaus.* { *; }
+-keep public class java.nio.* { *; }

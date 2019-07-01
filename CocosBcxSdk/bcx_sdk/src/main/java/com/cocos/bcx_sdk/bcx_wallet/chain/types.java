@@ -1,5 +1,6 @@
 package com.cocos.bcx_sdk.bcx_wallet.chain;
 
+import com.cocos.bcx_sdk.bcx_error.KeyInvalideException;
 import com.cocos.bcx_sdk.bcx_wallet.fc.io.base_encoder;
 import com.cocos.bcx_sdk.bcx_wallet.fc.io.raw_type;
 import com.google.common.primitives.UnsignedInteger;
@@ -217,38 +218,31 @@ public class types {
             return Base58.encode(data);
         }
 
-        public private_key_type(String strBase58) {
+        public private_key_type(String strBase58) throws KeyInvalideException {
             byte wif_bytes[] = Base58.decode(strBase58);
-            if (wif_bytes != null) {
-                if (wif_bytes.length < 5) {
-//                    throw new RuntimeException("Private key is not valid");
-                }
-
-                System.arraycopy(wif_bytes, 1, key_data, 0, key_data.length);
-
-                SHA256Digest digest = new SHA256Digest();
-                digest.update(wif_bytes, 0, wif_bytes.length - 4);
-                byte[] hashCheck = new byte[32];
-                digest.doFinal(hashCheck, 0);
-
-                byte[] hashCheck2 = new byte[32];
-                digest.update(hashCheck, 0, hashCheck.length);
-                digest.doFinal(hashCheck2, 0);
-
-                byte check[] = new byte[4];
-                System.arraycopy(wif_bytes, wif_bytes.length - check.length, check, 0, check.length);
-
-                byte[] check1 = new byte[4];
-                byte[] check2 = new byte[4];
-                System.arraycopy(hashCheck, 0, check1, 0, check1.length);
-                System.arraycopy(hashCheck2, 0, check2, 0, check2.length);
-
-                if (Arrays.equals(check1, check) == false &&
-                        Arrays.equals(check2, check) == false) {
-                    throw new RuntimeException("Private key is not valid");
-                }
+            if (wif_bytes.length < key_data.length) {
+                throw new KeyInvalideException("Private key is not valid");
             }
+            System.arraycopy(wif_bytes, 1, key_data, 0, key_data.length);
+            SHA256Digest digest = new SHA256Digest();
+            digest.update(wif_bytes, 0, wif_bytes.length - 4);
+            byte[] hashCheck = new byte[32];
+            digest.doFinal(hashCheck, 0);
 
+            byte[] hashCheck2 = new byte[32];
+            digest.update(hashCheck, 0, hashCheck.length);
+            digest.doFinal(hashCheck2, 0);
+
+            byte check[] = new byte[4];
+            System.arraycopy(wif_bytes, wif_bytes.length - check.length, check, 0, check.length);
+
+            byte[] check1 = new byte[4];
+            byte[] check2 = new byte[4];
+            System.arraycopy(hashCheck, 0, check1, 0, check1.length);
+            System.arraycopy(hashCheck2, 0, check2, 0, check2.length);
+            if (!Arrays.equals(check1, check) && !Arrays.equals(check2, check)) {
+                throw new KeyInvalideException("Private key is not valid");
+            }
         }
 
         public private_key_type(private_key privateKey) {

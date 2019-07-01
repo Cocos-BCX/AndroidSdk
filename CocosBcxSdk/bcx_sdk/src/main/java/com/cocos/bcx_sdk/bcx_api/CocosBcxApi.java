@@ -15,6 +15,7 @@ import com.cocos.bcx_sdk.bcx_error.AssetNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.AuthorityException;
 import com.cocos.bcx_sdk.bcx_error.ContractNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.CreateAccountException;
+import com.cocos.bcx_sdk.bcx_error.KeyInvalideException;
 import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
 import com.cocos.bcx_sdk.bcx_error.NhAssetNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.NhAssetOrderNotFoundException;
@@ -30,6 +31,7 @@ import com.cocos.bcx_sdk.bcx_wallet.chain.account_related_word_view_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_fee_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.block_header;
+import com.cocos.bcx_sdk.bcx_wallet.chain.block_info;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.create_account_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.dynamic_global_property_object;
@@ -44,6 +46,7 @@ import com.cocos.bcx_sdk.bcx_wallet.chain.operations;
 import com.cocos.bcx_sdk.bcx_wallet.chain.private_key;
 import com.cocos.bcx_sdk.bcx_wallet.chain.public_key;
 import com.cocos.bcx_sdk.bcx_wallet.chain.signed_operate;
+import com.cocos.bcx_sdk.bcx_wallet.chain.transaction_in_block_info;
 import com.cocos.bcx_sdk.bcx_wallet.chain.types;
 import com.cocos.bcx_sdk.bcx_wallet.chain.world_view_object;
 import com.cocos.bcx_sdk.bcx_wallet.fc.crypto.aes;
@@ -79,6 +82,7 @@ import okhttp3.Response;
 
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.CHAIN_ID_NOT_MATCH;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_ACCOUNT_OBJECT_EXIST;
+import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_INVALID_PRIVATE_KEY;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_NETWORK_FAIL;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_OBJECT_NOT_FOUND;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_PARAMETER;
@@ -247,11 +251,18 @@ public class CocosBcxApi {
             if (response.isSuccessful()) {
                 // parse create account data model
                 create_account_object createAccountObject = global_config_object.getInstance().getGsonBuilder().create().fromJson(strResponse, create_account_object.class);
-                rspText = new ResponseData(OPERATE_SUCCESS, createAccountObject.getMsg(), createAccountObject.getData()).toString();
-                callBack.onReceiveValue(rspText);
+
                 if (isAutoLogin) {
+                    long startTime = System.currentTimeMillis();
+                    long endTime;
                     do {
                         accountObject = lookup_account_names(createAccountObject.getData().getAccount().getName());
+                        endTime = System.currentTimeMillis();
+                        if (endTime - startTime > 6000) {
+                            rspText = new ResponseData(OPERATE_FAILED, "operate failed", null).toString();
+                            callBack.onReceiveValue(rspText);
+                            return;
+                        }
                     } while (accountObject == null);
 
                     // get account object
@@ -263,6 +274,8 @@ public class CocosBcxApi {
                     mHashMapPub2Private.put(publicActiveKeyType, new types.private_key_type(privateActiveKey));
                     mHashMapPub2Private.put(publicOwnerKeyType, new types.private_key_type(privateOwnerKey));
                     save_account(paramEntity.getAccountName(), accountObject.id.toString(), paramEntity.getPassword(), paramEntity.getAccountType().name(), accountDao);
+                    rspText = new ResponseData(OPERATE_SUCCESS, createAccountObject.getMsg(), createAccountObject.getData()).toString();
+                    callBack.onReceiveValue(rspText);
                 }
             } else {
                 if (response.body().contentLength() != 0) {
@@ -270,7 +283,7 @@ public class CocosBcxApi {
                     callBack.onReceiveValue(rspText);
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             rspText = new ResponseData(OPERATE_FAILED, e.getMessage(), null).toString();
             callBack.onReceiveValue(rspText);
         }
@@ -355,6 +368,9 @@ public class CocosBcxApi {
         } catch (UnLegalInputException e) {
             rspText = new ResponseData(ERROR_PARAMETER, e.getMessage(), null).toString();
             callBack.onReceiveValue(rspText);
+        } catch (KeyInvalideException e) {
+            rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
+            callBack.onReceiveValue(rspText);
         }
 
     }
@@ -398,6 +414,9 @@ public class CocosBcxApi {
         } catch (PasswordVerifyException e) {
             rspText = new ResponseData(ERROR_WRONG_PASSWORD, "Wrong password", null).toString();
             callBack.onReceiveValue(rspText);
+        } catch (KeyInvalideException e) {
+            rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
+            callBack.onReceiveValue(rspText);
         }
     }
 
@@ -408,7 +427,7 @@ public class CocosBcxApi {
      * @param wifKey   private key
      * @param password to encrypt your private key,
      */
-    public List<String> import_wif_key(String wifKey, String password, String accountType, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException {
+    public List<String> import_wif_key(String wifKey, String password, String accountType, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException {
         // get public key
         types.private_key_type privateKeyType = new types.private_key_type(wifKey);
         public_key publicKey = privateKeyType.getPrivateKey().get_public_key();
@@ -469,7 +488,7 @@ public class CocosBcxApi {
      * @return
      * @throws NetworkStatusException
      */
-    public String transfer(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strFeeSymbolOrId, String strMemo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, AuthorityException, AssetNotFoundException, UnLegalInputException {
+    public String transfer(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strFeeSymbolOrId, String strMemo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, AuthorityException, AssetNotFoundException, KeyInvalideException {
         // get asset object
         asset_object assetObject = lookup_asset_symbols(strAssetSymbolOrId);
         asset_object feeAssetObject = lookup_asset_symbols(strFeeSymbolOrId);
@@ -642,7 +661,7 @@ public class CocosBcxApi {
      * @param strFeeSymbolOrId   transfer fee symbol or id
      * @param strMemo            memo
      */
-    public List<asset_fee_object> calculate_transfer_fee(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strFeeSymbolOrId, String strMemo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, AssetNotFoundException, AuthorityException {
+    public List<asset_fee_object> calculate_transfer_fee(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strFeeSymbolOrId, String strMemo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, AssetNotFoundException, AuthorityException, KeyInvalideException {
 
         // verify tempory password and account model password
         asset_object assetObject = lookup_asset_symbols(strAssetSymbolOrId);
@@ -726,7 +745,7 @@ public class CocosBcxApi {
      * @throws PasswordVerifyException
      * @throws ContractNotFoundException
      */
-    public String invoking_contract(String strAccount, String password, String feeAssetSymbolOrId, String contractNameOrId, String functionName, String params, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AuthorityException, ContractNotFoundException, AssetNotFoundException, PasswordVerifyException {
+    public String invoking_contract(String strAccount, String password, String feeAssetSymbolOrId, String contractNameOrId, String functionName, String params, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AuthorityException, ContractNotFoundException, AssetNotFoundException, PasswordVerifyException, KeyInvalideException {
 
         //search contract
         contract_object contractObject = mWebSocketApi.get_contract(contractNameOrId);
@@ -768,7 +787,7 @@ public class CocosBcxApi {
             invokingContractOperation.value_list.add(base_encoder);
         }
         List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_CALCULATE_INVOKING_CONTRACT_FEE_OPERATION);
+        operateList.add(operations.ID_CALCULATE_INVOKING_CONTRACT_OPERATION);
         operateList.add(invokingContractOperation);
         List<Object> feeList = new ArrayList<>();
         feeList.add(operateList);
@@ -782,7 +801,7 @@ public class CocosBcxApi {
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = invokingContractOperation;
-        operationType.nOperationType = operations.ID_CALCULATE_INVOKING_CONTRACT_FEE_OPERATION;
+        operationType.nOperationType = operations.ID_CALCULATE_INVOKING_CONTRACT_OPERATION;
 
         signed_operate transactionWithCallback = new signed_operate();
         transactionWithCallback.operations = new ArrayList<>();
@@ -801,6 +820,15 @@ public class CocosBcxApi {
      */
     public contract_object get_contract(String contractNameOrId) throws NetworkStatusException {
         return mWebSocketApi.get_contract(contractNameOrId);
+    }
+
+    /**
+     * get nh asset order object
+     *
+     * @throws NetworkStatusException
+     */
+    public nh_asset_order_object get_nhasset_order_object(String nh_order_id) throws NetworkStatusException {
+        return mWebSocketApi.get_nhasset_order_object(nh_order_id);
     }
 
     /**
@@ -848,7 +876,7 @@ public class CocosBcxApi {
             invokingContractOperation.value_list.add(base_encoder);
         }
         List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_CALCULATE_INVOKING_CONTRACT_FEE_OPERATION);
+        operateList.add(operations.ID_CALCULATE_INVOKING_CONTRACT_OPERATION);
         operateList.add(invokingContractOperation);
         List<Object> feeList = new ArrayList<>();
         feeList.add(operateList);
@@ -878,11 +906,11 @@ public class CocosBcxApi {
      * @throws AuthorityException
      * @throws PasswordVerifyException
      */
-    public String transfer_nh_asset(String password, String account_from, String account_to, String fee_asset_symbol, String nh_asset_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AuthorityException, PasswordVerifyException {
+    public String transfer_nh_asset(String password, String account_from, String account_to, String fee_asset_symbol, String nh_asset_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException {
 
         account_object accountObjectFrom = get_account_object(account_from);
         if (accountObjectFrom == null) {
-            throw new AccountNotFoundException("Transfer account does not exist ");
+            throw new AccountNotFoundException("Transfer account does not exist");
         }
         account_object accountObjectTo = get_account_object(account_to);
         if (accountObjectTo == null) {
@@ -892,13 +920,7 @@ public class CocosBcxApi {
         if (unlock(accountObjectFrom.name, password, accountDao) != OPERATE_SUCCESS && verify_password(accountObjectFrom.name, password).size() <= 0) {
             throw new PasswordVerifyException("Wrong password");
         }
-        List list = new ArrayList();
-        list.add(nh_asset_id);
-        List<nhasset_object> nhasset_objects = lookup_nh_asset(list);
-        if (null == nhasset_objects || nhasset_objects.size() <= 0) {
-            throw new NhAssetNotFoundException("Nhasset does not exist");
-        }
-        nhasset_object nhasset_object = nhasset_objects.get(0);
+        nhasset_object nhasset_object = lookup_nh_asset_object(nh_asset_id);
         asset_object fee_asset_object = lookup_asset_symbols(fee_asset_symbol);
         operations.transfer_nhasset_operation transfer_nhasset_operation = new operations.transfer_nhasset_operation();
         transfer_nhasset_operation.fee = fee_asset_object.amount_from_string("0");
@@ -954,13 +976,7 @@ public class CocosBcxApi {
             throw new AccountNotFoundException("Receiving account does not exist");
         }
 
-        List list = new ArrayList();
-        list.add(nh_asset_id);
-        List<nhasset_object> nhasset_objects = lookup_nh_asset(list);
-        if (null == nhasset_objects || nhasset_objects.size() <= 0) {
-            throw new NhAssetNotFoundException("Nhasset does not exist");
-        }
-        nhasset_object nhasset_object = nhasset_objects.get(0);
+        nhasset_object nhasset_object = lookup_nh_asset_object(nh_asset_id);
         asset_object fee_asset_object = lookup_asset_symbols(fee_asset_symbol);
         operations.transfer_nhasset_operation transfer_nhasset_operation = new operations.transfer_nhasset_operation();
         transfer_nhasset_operation.fee = fee_asset_object.amount_from_string("0");
@@ -996,23 +1012,17 @@ public class CocosBcxApi {
      * @throws NhAssetOrderNotFoundException
      * @throws UnLegalInputException
      */
-    public List<asset_fee_object> buy_nh_asset_fee(String fee_paying_account, String order_Id) throws NetworkStatusException, AccountNotFoundException, NhAssetOrderNotFoundException {
+    public List<asset_fee_object> buy_nh_asset_fee(String fee_paying_account, String order_Id) throws NetworkStatusException, AccountNotFoundException, NhAssetOrderNotFoundException, NhAssetNotFoundException {
 
         account_object feePayaccountObject = get_account_object(fee_paying_account);
         if (feePayaccountObject == null) {
             throw new AccountNotFoundException("Account does not exist");
         }
 
-        List<String> strings = new ArrayList<>();
-        strings.add(order_Id);
-        List<Object> nh_asset_order_string = get_objects(strings);
-
-        if (null == nh_asset_order_string || nh_asset_order_string.size() <= 0 || null == nh_asset_order_string.get(0)) {
+        nh_asset_order_object nh_asset_order_object = get_nhasset_order_object(order_Id);
+        if (null == nh_asset_order_object) {
             throw new NhAssetOrderNotFoundException("Order does not exist");
         }
-        Object o = nh_asset_order_string.get(0);
-        String nh_asset_order_sting = global_config_object.getInstance().getGsonBuilder().create().toJson(o);
-        nh_asset_order_object nh_asset_order_object = global_config_object.getInstance().getGsonBuilder().create().fromJson(nh_asset_order_sting, nh_asset_order_object.class);
         asset_object price_asset_object = lookup_asset_symbols(nh_asset_order_object.price.asset_id.toString());
         operations.buy_nhasset_operation buy_nhasset_operation = new operations.buy_nhasset_operation();
         buy_nhasset_operation.fee = price_asset_object.amount_from_string("0");
@@ -1052,32 +1062,24 @@ public class CocosBcxApi {
      * @throws AccountNotFoundException
      * @throws NhAssetNotFoundException
      */
-    public String buy_nh_asset(String password, String fee_paying_account, String order_Id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetOrderNotFoundException, AuthorityException, PasswordVerifyException {
+    public String buy_nh_asset(String password, String fee_paying_account, String order_Id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetOrderNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException {
 
         account_object feePayAccountObject = get_account_object(fee_paying_account);
         if (feePayAccountObject == null) {
             throw new AccountNotFoundException("Account does not exist");
         }
-        List<String> strings = new ArrayList<>();
-        strings.add(order_Id);
-        List<Object> nh_asset_order_string = get_objects(strings);
 
-        if (null == nh_asset_order_string || nh_asset_order_string.size() <= 0) {
-            throw new NhAssetOrderNotFoundException("Order does not exist");
-        }
-        Object o = nh_asset_order_string.get(0);
-        String nh_asset_order_sting = global_config_object.getInstance().getGsonBuilder().create().toJson(o);
-        nh_asset_order_object nh_asset_order_object = global_config_object.getInstance().getGsonBuilder().create().fromJson(nh_asset_order_sting, nh_asset_order_object.class);
+        nh_asset_order_object nh_asset_order_object = get_nhasset_order_object(order_Id);
         if (null == nh_asset_order_object) {
             throw new NhAssetOrderNotFoundException("Order does not exist");
         }
+        asset_object price_asset_object = lookup_asset_symbols(nh_asset_order_object.price.asset_id.toString());
 
         // verify tempory password and account model password
         if (unlock(feePayAccountObject.name, password, accountDao) != OPERATE_SUCCESS && verify_password(feePayAccountObject.name, password).size() <= 0) {
             throw new PasswordVerifyException("Wrong password");
         }
 
-        asset_object price_asset_object = lookup_asset_symbols(nh_asset_order_object.price.asset_id.toString());
         operations.buy_nhasset_operation buy_nhasset_operation = new operations.buy_nhasset_operation();
         buy_nhasset_operation.fee = price_asset_object.amount_from_string("0");
         buy_nhasset_operation.order = nh_asset_order_object.id;
@@ -1166,7 +1168,7 @@ public class CocosBcxApi {
      * @throws NetworkStatusException
      * @throws AccountNotFoundException
      */
-    public String upgrade_to_lifetime_member(String upgrade_account_id_or_symbol, String upgrade_account_password, String fee_paying_asset_id_or_symbol, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AuthorityException, PasswordVerifyException {
+    public String upgrade_to_lifetime_member(String upgrade_account_id_or_symbol, String upgrade_account_password, String fee_paying_asset_id_or_symbol, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException {
 
         account_object upgrade_account_object = get_account_object(upgrade_account_id_or_symbol);
         if (upgrade_account_object == null) {
@@ -1292,7 +1294,7 @@ public class CocosBcxApi {
      * @throws AccountNotFoundException
      */
     public String create_child_account(CreateAccountParamEntity paramEntity, String registrar_account_id_or_symbol, String registrar_account_password, String pay_asset_symbol_or_id, AccountDao accountDao)
-            throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AccountExistException, UnLegalInputException, AuthorityException, PasswordVerifyException {
+            throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AccountExistException, UnLegalInputException, AuthorityException, PasswordVerifyException, KeyInvalideException {
 
         private_key privateActiveKey = private_key.from_seed(paramEntity.getActiveSeed());
         private_key privateOwnerKey = private_key.from_seed(paramEntity.getOwnerSeed());
@@ -1465,10 +1467,27 @@ public class CocosBcxApi {
      * @throws NhAssetNotFoundException
      */
     public List<Object> lookup_nh_asset(List<String> nh_asset_ids_or_hash) throws NetworkStatusException, NhAssetNotFoundException {
-        if (mWebSocketApi.lookup_nh_asset(nh_asset_ids_or_hash) == null || mWebSocketApi.lookup_nh_asset(nh_asset_ids_or_hash).get(0) == null) {
+        List<Object> nhasset_object = mWebSocketApi.lookup_nh_asset(nh_asset_ids_or_hash);
+        if (nhasset_object == null || nhasset_object.size() <= 0) {
             throw new NhAssetNotFoundException("Nhasset does not exist");
         }
-        return mWebSocketApi.lookup_nh_asset(nh_asset_ids_or_hash);
+        return nhasset_object;
+    }
+
+    /**
+     * lookup_nh_asset get NH asset detail by NH asset id or hash
+     *
+     * @param nh_asset_ids_or_hash
+     * @return
+     * @throws NetworkStatusException
+     * @throws NhAssetNotFoundException
+     */
+    public nhasset_object lookup_nh_asset_object(String nh_asset_ids_or_hash) throws NetworkStatusException, NhAssetNotFoundException {
+        List<nhasset_object> nhasset_object = mWebSocketApi.lookup_nh_asset_object(nh_asset_ids_or_hash);
+        if (nhasset_object == null || nhasset_object.size() <= 0) {
+            throw new NhAssetNotFoundException("Nhasset does not exist");
+        }
+        return nhasset_object.get(0);
     }
 
 
@@ -1679,6 +1698,34 @@ public class CocosBcxApi {
         return mWebSocketApi.get_block_header(nBlockNumber);
     }
 
+    /**
+     * get block header。
+     *
+     * @throws NetworkStatusException
+     */
+    public block_info get_block(String nBlockNumber) throws NetworkStatusException {
+        return mWebSocketApi.get_block(nBlockNumber);
+    }
+
+    /**
+     * get transaction in block info
+     *
+     * @throws NetworkStatusException
+     */
+    public transaction_in_block_info get_transaction_in_block_info(String tr_id) throws NetworkStatusException {
+        return mWebSocketApi.get_transaction_in_block_info(tr_id);
+    }
+
+
+    /**
+     * get transaction by tx_id
+     *
+     * @throws NetworkStatusException
+     */
+    public Object get_transaction_by_id(String tr_id) throws NetworkStatusException {
+        return mWebSocketApi.get_transaction_by_id(tr_id);
+    }
+
 
     /**
      * decrypt memo
@@ -1714,6 +1761,8 @@ public class CocosBcxApi {
         } catch (JsonSyntaxException e) {
             rspText = new ResponseData(ERROR_PARAMETER_DATA_TYPE, "Please check parameter type", null).toString();
             callBack.onReceiveValue(rspText);
+        } catch (KeyInvalideException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1780,7 +1829,7 @@ public class CocosBcxApi {
      * @param accountDao
      * @return
      */
-    private int unlock(String accountName, String strPassword, AccountDao accountDao) {
+    private int unlock(String accountName, String strPassword, AccountDao accountDao) throws KeyInvalideException {
 
         assert (strPassword.length() > 0);
         sha512_object passwordHash = sha512_object.create_from_string(strPassword);
@@ -1853,6 +1902,9 @@ public class CocosBcxApi {
         } catch (PasswordVerifyException e) {
             rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
             callBack.onReceiveValue(rspText);
+        } catch (KeyInvalideException e) {
+            rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
+            callBack.onReceiveValue(rspText);
         }
     }
 
@@ -1863,7 +1915,7 @@ public class CocosBcxApi {
      * @param strPassword
      * @return privateKeys
      */
-    private Map<String, String> decrypt_keystore_callback_private_key(String strPassword) {
+    private Map<String, String> decrypt_keystore_callback_private_key(String strPassword) throws KeyInvalideException {
 
         assert (strPassword.length() > 0);
         sha512_object passwordHash = sha512_object.create_from_string(strPassword);

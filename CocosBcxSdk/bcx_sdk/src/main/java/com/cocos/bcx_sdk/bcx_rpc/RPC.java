@@ -1,7 +1,6 @@
 package com.cocos.bcx_sdk.bcx_rpc;
 
 public class RPC {
-    public static final String VERSION = "2.0";
     public static final String CALL_LOGIN = "login";
     public static final String CALL_NETWORK_BROADCAST = "network_broadcast";
     public static final String CALL_HISTORY = "history";
@@ -42,4 +41,6 @@ public class RPC {
     public static final String CALL_LOOKUP_WORLD_VIEW = "lookup_world_view";
     public static final String CALL_GET_NH_CREATOR = "get_nh_creator";
     public static final String CALL_LIST_NH_ASSET_BY_CREATOR = "list_nh_asset_by_creator";
+    public static final String CALL_GET_TRANSACTION_IN_BLOCK_INFO = "get_transaction_in_block_info";
+    public static final String CALL_GET_TRANSACTION_BY_ID = "get_transaction_by_id";
 }

@@ -13,13 +13,17 @@ import com.cocos.bcx_sdk.bcx_wallet.chain.account_related_word_view_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_fee_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.block_header;
+import com.cocos.bcx_sdk.bcx_wallet.chain.block_info;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.dynamic_global_property_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.global_config_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.global_property_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.nh_asset_order_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.nhasset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.object_id;
 import com.cocos.bcx_sdk.bcx_wallet.chain.operation_history_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.transaction;
+import com.cocos.bcx_sdk.bcx_wallet.chain.transaction_in_block_info;
 import com.cocos.bcx_sdk.bcx_wallet.chain.world_view_object;
 import com.cocos.bcx_sdk.bcx_wallet.fc.crypto.sha256_object;
 import com.google.common.reflect.TypeToken;
@@ -64,6 +68,8 @@ import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_KEY_REFERENCES;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_NH_CREATOR;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_OBJECTS;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_REQUIRED_FEES;
+import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_TRANSACTION_BY_ID;
+import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_TRANSACTION_IN_BLOCK_INFO;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_HISTORY;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_LIST_ACCOUNT_NH_ASSET;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_LIST_ACCOUNT_NH_ASSET_ORDER;
@@ -622,7 +628,7 @@ public class ConnectServer extends WebSocketListener {
      * @return
      * @throws NetworkStatusException
      */
-    public String broadcast_transaction_with_callback(transaction tx) throws NetworkStatusException {
+    public Object broadcast_transaction_with_callback(transaction tx) throws NetworkStatusException {
         Call callObject = new Call();
         int id = mnCallId.getAndIncrement();
         callObject.id = id;
@@ -635,9 +641,9 @@ public class ConnectServer extends WebSocketListener {
         listTransaction.add(tx);
         callObject.params.add(listTransaction);
 
-        ReplyObjectProcess<Reply<String>> replyObjectProcess = new ReplyObjectProcess<>(new TypeToken<Reply<String>>() {
+        ReplyObjectProcess<Reply<Object>> replyObjectProcess = new ReplyObjectProcess<>(new TypeToken<Reply<Object>>() {
         }.getType());
-        Reply<String> replyObject = sendForReply(callObject, replyObjectProcess);
+        Reply<Object> replyObject = sendForReply(callObject, replyObjectProcess);
         return replyObject.result;
     }
 
@@ -727,7 +733,7 @@ public class ConnectServer extends WebSocketListener {
      *
      * @throws NetworkStatusException
      */
-    public block_header get_block(int nBlockNumber) throws NetworkStatusException {
+    public block_info get_block(String nBlockNumber) throws NetworkStatusException {
         Call callObject = new Call();
         callObject.id = mnCallId.getAndIncrement();
         callObject.method = "call";
@@ -738,9 +744,9 @@ public class ConnectServer extends WebSocketListener {
         listBlockNumber.add(nBlockNumber);
         callObject.params.add(listBlockNumber);
 
-        ReplyObjectProcess<Reply<block_header>> replyObjectProcess = new ReplyObjectProcess<>(new com.google.gson.reflect.TypeToken<Reply<block_header>>() {
+        ReplyObjectProcess<Reply<block_info>> replyObjectProcess = new ReplyObjectProcess<>(new com.google.gson.reflect.TypeToken<Reply<block_info>>() {
         }.getType());
-        Reply<block_header> replyObject = sendForReply(callObject, replyObjectProcess);
+        Reply<block_info> replyObject = sendForReply(callObject, replyObjectProcess);
         return replyObject.result;
     }
 
@@ -872,6 +878,32 @@ public class ConnectServer extends WebSocketListener {
     }
 
     /**
+     * lookup_nh_asset get NH asset detail by NH asset id
+     *
+     * @throws NetworkStatusException
+     */
+    public List<nhasset_object> lookup_nh_asset_object(String nh_asset_ids_or_hash) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mDatabaseId);
+        callObject.params.add(CALL_LOOKUP_NH_ASSET);
+
+        List<String> nh_asset_ids_or_hashs = new ArrayList<>();
+        nh_asset_ids_or_hashs.add(nh_asset_ids_or_hash);
+        List<Object> nhAssetIds = new ArrayList<>();
+        nhAssetIds.add(nh_asset_ids_or_hashs);
+        callObject.params.add(nhAssetIds);
+
+        ReplyObjectProcess<Reply<List<nhasset_object>>> replyObject = new ReplyObjectProcess<>(new com.google.gson.reflect.TypeToken<Reply<List<nhasset_object>>>() {
+        }.getType());
+        Reply<List<nhasset_object>> replyLookupAccountNames = sendForReply(callObject, replyObject);
+
+        return replyLookupAccountNames.result;
+    }
+
+    /**
      * lookup_nh_asset get account NH asset by account id or name
      *
      * @throws NetworkStatusException
@@ -956,6 +988,32 @@ public class ConnectServer extends WebSocketListener {
         return (List<Object>) replyLookupAccountNames.result.get(0);
     }
 
+    /**
+     * get nh asset order object
+     *
+     * @throws NetworkStatusException
+     */
+    public nh_asset_order_object get_nhasset_order_object(String nh_order_id) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mDatabaseId);
+        callObject.params.add(CALL_GET_OBJECTS);
+
+        List<String> nh_order_ids = new ArrayList<>();
+        nh_order_ids.add(nh_order_id);
+        List<Object> listParams = new ArrayList<>();
+        listParams.add(nh_order_ids);
+        callObject.params.add(listParams);
+
+        ReplyObjectProcess<Reply<List<nh_asset_order_object>>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<List<nh_asset_order_object>>>() {
+        }.getType());
+        Reply<List<nh_asset_order_object>> reply = sendForReply(callObject, replyObject);
+
+        return reply.result.get(0);
+    }
+
 
     /**
      * Seek World View Details
@@ -1028,6 +1086,53 @@ public class ConnectServer extends WebSocketListener {
         ReplyObjectProcess<Reply<List<Object>>> replyObject = new ReplyObjectProcess<>(new com.google.gson.reflect.TypeToken<Reply<List<Object>>>() {
         }.getType());
         Reply<List<Object>> replyLookupAccountNames = sendForReply(callObject, replyObject);
+        return replyLookupAccountNames.result;
+    }
+
+    /**
+     * get transaction in block info
+     *
+     * @throws NetworkStatusException
+     */
+    public transaction_in_block_info get_transaction_in_block_info(String tr_id) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mDatabaseId);
+        callObject.params.add(CALL_GET_TRANSACTION_IN_BLOCK_INFO);
+
+        List<Object> tr_ids = new ArrayList<>();
+        tr_ids.add(tr_id);
+        callObject.params.add(tr_ids);
+
+        ReplyObjectProcess<Reply<transaction_in_block_info>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<transaction_in_block_info>>() {
+        }.getType());
+        Reply<transaction_in_block_info> replyLookupAccountNames = sendForReply(callObject, replyObject);
+        return replyLookupAccountNames.result;
+    }
+
+
+    /**
+     * get transaction by tr_id
+     *
+     * @throws NetworkStatusException
+     */
+    public Object get_transaction_by_id(Object tr_id) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mDatabaseId);
+        callObject.params.add(CALL_GET_TRANSACTION_BY_ID);
+
+        List<Object> tr_ids = new ArrayList<>();
+        tr_ids.add(tr_id);
+        callObject.params.add(tr_ids);
+
+        ReplyObjectProcess<Reply<Object>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<Object>>() {
+        }.getType());
+        Reply<Object> replyLookupAccountNames = sendForReply(callObject, replyObject);
         return replyLookupAccountNames.result;
     }
 

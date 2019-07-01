@@ -333,6 +333,9 @@
 
         <include layout="@layout/include_line" />
 
+        <TextView
+            style="@style/TvTitle"
+            android:text="Memo解密" />
 
         <TextView
             style="@style/TvEdTips"
@@ -407,6 +410,7 @@
         <EditText
             android:id="@+id/et_asset_symbol"
             style="@style/EtSingleLine"
+            android:layout_marginTop="10dp"
             android:hint="资产symbol" />
 
 
@@ -416,6 +420,10 @@
             android:text="获取资产信息" />
 
         <include layout="@layout/include_line" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="资产余额查询" />
 
         <TextView
             style="@style/TvEdTips"
@@ -496,6 +504,15 @@
         <include layout="@layout/include_line" />
 
 
+        <TextView
+            style="@style/TvTitle"
+            android:text="合约相关" />
+
+        <TextView
+            android:id="@+id/tv_get_contract_object"
+            style="@style/TvBtn"
+            android:text="获取合约信息" />
+
         <EditText
             android:id="@+id/et_calculate_invoking_contract_strAccount"
             style="@style/EtSingleLine"
@@ -537,6 +554,10 @@
             style="@style/TvBtn"
             android:text="调用合约方法（需要验证密码）" />
 
+        <TextView
+            android:id="@+id/tv_get_contract"
+            style="@style/TvBtn"
+            android:text="查询合约方法" />
 
         <include layout="@layout/include_line" />
 
@@ -773,12 +794,6 @@
             style="@style/TvBtn"
             android:text="购买" />
 
-
-        <TextView
-            android:id="@+id/tv_get_contract_object"
-            style="@style/TvBtn"
-            android:text="获取合约信息" />
-
         <TextView
             style="@style/TvTitle"
             android:text="升级终身会员" />
@@ -855,9 +870,34 @@
             android:text="节点设置" />
 
         <TextView
+            style="@style/TvTitle"
+            android:text="节点切换" />
+
+
+        <TextView
             android:id="@+id/tv_switch_node_url"
             style="@style/TvBtn"
             android:text="切换节点" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="交易信息查询" />
+
+        <EditText
+            android:id="@+id/et_get_transaction_in_block_info"
+            style="@style/EtSingleLine"
+            android:hint="交易ID" />
+
+        <TextView
+            android:id="@+id/tv_get_transaction_in_block_info"
+            style="@style/TvBtn"
+            android:text="get_transaction_in_block_info" />
+
+
+        <TextView
+            android:id="@+id/get_transaction_by_id"
+            style="@style/TvBtn"
+            android:text="get_transaction_by_id" />
 
     </LinearLayout>
 </ScrollView>

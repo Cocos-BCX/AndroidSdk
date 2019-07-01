@@ -27,11 +27,11 @@ public class operations {
 
     public static final int ID_TRANSFER_OPERATION = 0;
 
-    public static final int ID_CALCULATE_INVOKING_CONTRACT_FEE_OPERATION = 44;
+    public static final int ID_CALCULATE_INVOKING_CONTRACT_OPERATION = 44;
 
-    public static final int ID_TRANSFER_NH_ASSET_OPERATION = 52;
+    public static final int ID_TRANSFER_NH_ASSET_OPERATION = 51;
 
-    public static final int ID_BUY_NH_ASSET_OPERATION = 55;
+    public static final int ID_BUY_NH_ASSET_OPERATION = 54;
 
     public static final int ID_UPGRADE_TO_LIFETIME_MEMBER_OPERATION = 8;
 
@@ -45,7 +45,7 @@ public class operations {
 
         public operation_id_map() {
             mHashId2Operation.put(ID_TRANSFER_OPERATION, transfer_operation.class);
-            mHashId2Operation.put(ID_CALCULATE_INVOKING_CONTRACT_FEE_OPERATION, invoking_contract_operation.class);
+            mHashId2Operation.put(ID_CALCULATE_INVOKING_CONTRACT_OPERATION, invoking_contract_operation.class);
             mHashId2Operation.put(ID_TRANSFER_NH_ASSET_OPERATION, transfer_nhasset_operation.class);
             mHashId2Operation.put(ID_BUY_NH_ASSET_OPERATION, buy_nhasset_operation.class);
             mHashId2Operation.put(ID_UPGRADE_TO_LIFETIME_MEMBER_OPERATION, upgrade_to_lifetime_member_operation.class);

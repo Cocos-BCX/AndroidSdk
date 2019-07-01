@@ -56,6 +56,11 @@ public class ErrorCode {
 
 
     /**
+     * Please import right private key
+     */
+    public static final int ERROR_INVALID_PRIVATE_KEY = 109;
+
+    /**
      * The private key has no account information
      */
     public static final int NO_ACCOUNT_INFORMATION = 110;

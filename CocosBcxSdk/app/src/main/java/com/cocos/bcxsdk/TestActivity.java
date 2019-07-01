@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.cocos.bcx_sdk.bcx_api.CocosBcxApiWrapper;
 import com.cocos.bcx_sdk.bcx_callback.IBcxCallBack;
+import com.cocos.bcx_sdk.bcx_error.ContractNotFoundException;
+import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
+import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,6 +152,10 @@ public class TestActivity extends AppCompatActivity {
     private TextView tv_create_child_account_fee;
     private TextView tv_create_child_account;
     private TextView tv_switch_node_url;
+    private EditText et_get_transaction_in_block_info;
+    private TextView tv_get_transaction_in_block_info;
+    private TextView get_transaction_by_id;
+    private TextView tv_get_contract;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -245,6 +252,9 @@ public class TestActivity extends AppCompatActivity {
         tv_calculate_invoking_contract_fee = findViewById(R.id.tv_calculate_invoking_contract_fee);
         et_calculate_invoking_contract_pwd = findViewById(R.id.et_calculate_invoking_contract_pwd);
         tv_invoking_contract = findViewById(R.id.tv_invoking_contract);
+        tv_get_contract = findViewById(R.id.tv_get_contract);
+
+
         tv_look_up_nh_asset = findViewById(R.id.tv_look_up_nh_asset);
         et_nh_asset_account = findViewById(R.id.et_nh_asset_account);
         et_world_view = findViewById(R.id.et_world_view);
@@ -309,6 +319,10 @@ public class TestActivity extends AppCompatActivity {
         tv_create_child_account = findViewById(R.id.tv_create_child_account);
 
         tv_switch_node_url = findViewById(R.id.tv_switch_node_url);
+
+        et_get_transaction_in_block_info = findViewById(R.id.et_get_transaction_in_block_info);
+        tv_get_transaction_in_block_info = findViewById(R.id.tv_get_transaction_in_block_info);
+        get_transaction_by_id = findViewById(R.id.get_transaction_by_id);
 
         initListener();
     }
@@ -723,10 +737,11 @@ public class TestActivity extends AppCompatActivity {
                 CocosBcxApiWrapper.getBcxInstance().invoking_contract("gnkhandsome1",
                         "1111qqqq",
                         "COCOS",
-                        "contract.dicegame",
-                        "bet",
-                        "50,1",
+                        "contract.ccshooter.lottery",
+                        "draw",
+                        "gnkhandsome1,100",
                         new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
                             @Override
                             public void onReceiveValue(String value) {
                                 Log.i("invoking_contract", value);
@@ -735,6 +750,22 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * 查询合约
+         */
+        tv_get_contract.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().get_contract("1.16.2",
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("get_contract", value);
+                            }
+                        });
+            }
+        });
 
         /**
          * 查询NH资产详情,
@@ -960,12 +991,14 @@ public class TestActivity extends AppCompatActivity {
         tv_get_contract_object.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().get_objects("contract.dicegame", new IBcxCallBack() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        Log.i("get_contract_detail", value);
-                    }
-                });
+                try {
+                    contract_object contract_object = CocosBcxApiWrapper.getBcxInstance().get_contract_object("contract.dicegame");
+                    Log.i("get_contract_object", contract_object.contract_ABI.toString());
+                } catch (ContractNotFoundException e) {
+                    Log.i("get_contract_object", e.getMessage());
+                } catch (NetworkStatusException e) {
+                    Log.i("get_contract_object", e.getMessage());
+                }
             }
         });
 
@@ -1065,6 +1098,33 @@ public class TestActivity extends AppCompatActivity {
                                 Log.i("initBcxSdk", value);
                             }
                         });
+            }
+        });
+
+
+        tv_get_transaction_in_block_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().get_transaction_in_block_info(et_get_transaction_in_block_info.getText().toString(), new IBcxCallBack() {
+                    @SuppressLint("LongLogTag")
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i("get_transaction_in_block_info", value);
+                    }
+                });
+            }
+        });
+
+        get_transaction_by_id.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().get_transaction_by_id(et_get_transaction_in_block_info.getText().toString(), new IBcxCallBack() {
+                    @SuppressLint("LongLogTag")
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i("get_transaction_by_id", value);
+                    }
+                });
             }
         });
     }
