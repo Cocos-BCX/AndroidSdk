@@ -1,6 +1,7 @@
 package com.cocos.bcx_sdk.bcx_api;
 
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import com.cocos.bcx_sdk.bcx_callback.IBcxCallBack;
@@ -60,10 +61,14 @@ import com.google.common.primitives.UnsignedInteger;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import org.bitcoinj.core.AddressFormatException;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -371,6 +376,9 @@ public class CocosBcxApi {
         } catch (KeyInvalideException e) {
             rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
             callBack.onReceiveValue(rspText);
+        } catch (AddressFormatException e) {
+            rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
+            callBack.onReceiveValue(rspText);
         }
 
     }
@@ -417,6 +425,9 @@ public class CocosBcxApi {
         } catch (KeyInvalideException e) {
             rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
             callBack.onReceiveValue(rspText);
+        } catch (AddressFormatException e) {
+            rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
+            callBack.onReceiveValue(rspText);
         }
     }
 
@@ -427,7 +438,7 @@ public class CocosBcxApi {
      * @param wifKey   private key
      * @param password to encrypt your private key,
      */
-    public List<String> import_wif_key(String wifKey, String password, String accountType, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException {
+    public List<String> import_wif_key(String wifKey, String password, String accountType, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
         // get public key
         types.private_key_type privateKeyType = new types.private_key_type(wifKey);
         public_key publicKey = privateKeyType.getPrivateKey().get_public_key();
@@ -488,7 +499,7 @@ public class CocosBcxApi {
      * @return
      * @throws NetworkStatusException
      */
-    public String transfer(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strFeeSymbolOrId, String strMemo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, AuthorityException, AssetNotFoundException, KeyInvalideException {
+    public String transfer(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strFeeSymbolOrId, String strMemo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, AuthorityException, AssetNotFoundException, KeyInvalideException, AddressFormatException {
         // get asset object
         asset_object assetObject = lookup_asset_symbols(strAssetSymbolOrId);
         asset_object feeAssetObject = lookup_asset_symbols(strFeeSymbolOrId);
@@ -650,7 +661,6 @@ public class CocosBcxApi {
         return strings;
     }
 
-
     /**
      * calculate transfer fee
      *
@@ -661,7 +671,7 @@ public class CocosBcxApi {
      * @param strFeeSymbolOrId   transfer fee symbol or id
      * @param strMemo            memo
      */
-    public List<asset_fee_object> calculate_transfer_fee(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strFeeSymbolOrId, String strMemo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, AssetNotFoundException, AuthorityException, KeyInvalideException {
+    public List<asset_fee_object> calculate_transfer_fee(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strFeeSymbolOrId, String strMemo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, AssetNotFoundException, AuthorityException, KeyInvalideException, AddressFormatException {
 
         // verify tempory password and account model password
         asset_object assetObject = lookup_asset_symbols(strAssetSymbolOrId);
@@ -745,7 +755,7 @@ public class CocosBcxApi {
      * @throws PasswordVerifyException
      * @throws ContractNotFoundException
      */
-    public String invoking_contract(String strAccount, String password, String feeAssetSymbolOrId, String contractNameOrId, String functionName, String params, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AuthorityException, ContractNotFoundException, AssetNotFoundException, PasswordVerifyException, KeyInvalideException {
+    public String invoking_contract(String strAccount, String password, String feeAssetSymbolOrId, String contractNameOrId, String functionName, String params, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AuthorityException, ContractNotFoundException, AssetNotFoundException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
 
         //search contract
         contract_object contractObject = mWebSocketApi.get_contract(contractNameOrId);
@@ -906,7 +916,7 @@ public class CocosBcxApi {
      * @throws AuthorityException
      * @throws PasswordVerifyException
      */
-    public String transfer_nh_asset(String password, String account_from, String account_to, String fee_asset_symbol, String nh_asset_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException {
+    public String transfer_nh_asset(String password, String account_from, String account_to, String fee_asset_symbol, String nh_asset_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
 
         account_object accountObjectFrom = get_account_object(account_from);
         if (accountObjectFrom == null) {
@@ -1001,6 +1011,216 @@ public class CocosBcxApi {
 
 
     /**
+     * get delete nhasset fee
+     *
+     * @return
+     * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     * @throws NhAssetNotFoundException
+     */
+    public List<asset_fee_object> delete_nh_asset_fee(String fee_paying_account, String nhasset_id, String fee_symbol) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AssetNotFoundException {
+
+        account_object feePayaccountObject = get_account_object(fee_paying_account);
+        if (feePayaccountObject == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+
+        nhasset_object nhasset_object = lookup_nh_asset_object(nhasset_id);
+        if (nhasset_object == null) {
+            throw new NhAssetNotFoundException("NhAsset does not exist");
+        }
+
+        asset_object fee_asset_object = lookup_asset_symbols(fee_symbol);
+        if (fee_asset_object == null) {
+            throw new AssetNotFoundException("Asset does not exist");
+        }
+
+        operations.delete_nhasset_operation delete_nhasset_operation = new operations.delete_nhasset_operation();
+        delete_nhasset_operation.fee = fee_asset_object.amount_from_string("0");
+        delete_nhasset_operation.fee_paying_account = feePayaccountObject.id;
+        delete_nhasset_operation.nh_asset = nhasset_object.id;
+        List<Object> operateList = new ArrayList<>();
+        operateList.add(operations.ID_DELETE_NH_ASSET_OPERATION);
+        operateList.add(delete_nhasset_operation);
+
+        List<Object> operateLists = new ArrayList<>();
+        operateLists.add(operateList);
+
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(operateLists);
+        objectList.add(fee_asset_object.id);
+
+        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
+        asset_fee_objects.get(0).amount = String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, fee_asset_object.precision)));
+        return asset_fee_objects;
+    }
+
+
+    /**
+     * delete nhasset
+     *
+     * @return
+     * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     * @throws NhAssetNotFoundException
+     */
+    public String delete_nh_asset(String fee_paying_account, String password, String nhasset_id, String fee_symbol, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AssetNotFoundException, KeyInvalideException, AddressFormatException, PasswordVerifyException, AuthorityException {
+
+        account_object feePayaccountObject = get_account_object(fee_paying_account);
+        if (feePayaccountObject == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+
+        nhasset_object nhasset_object = lookup_nh_asset_object(nhasset_id);
+        if (nhasset_object == null) {
+            throw new NhAssetNotFoundException("NhAsset does not exist");
+        }
+
+        asset_object fee_asset_object = lookup_asset_symbols(fee_symbol);
+        if (fee_asset_object == null) {
+            throw new AssetNotFoundException("Asset does not exist");
+        }
+
+        if (unlock(feePayaccountObject.name, password, accountDao) != OPERATE_SUCCESS && verify_password(feePayaccountObject.name, password).size() <= 0) {
+            throw new PasswordVerifyException("Wrong password");
+        }
+
+        operations.delete_nhasset_operation delete_nhasset_operation = new operations.delete_nhasset_operation();
+        delete_nhasset_operation.fee = fee_asset_object.amount_from_string("0");
+        delete_nhasset_operation.fee_paying_account = feePayaccountObject.id;
+        delete_nhasset_operation.nh_asset = nhasset_object.id;
+        List<Object> operateList = new ArrayList<>();
+        operateList.add(operations.ID_DELETE_NH_ASSET_OPERATION);
+        operateList.add(delete_nhasset_operation);
+
+        List<Object> operateLists = new ArrayList<>();
+        operateLists.add(operateList);
+
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(operateLists);
+        objectList.add(fee_asset_object.id);
+
+        List<asset_fee_object> requiredFees = mWebSocketApi.get_required_fees(objectList);
+        delete_nhasset_operation.fee = fee_asset_object.amount_from_string(String.valueOf(Double.valueOf(requiredFees.get(0).amount) / (Math.pow(10, fee_asset_object.precision))));
+
+        operations.operation_type operationType = new operations.operation_type();
+        operationType.operationContent = delete_nhasset_operation;
+        operationType.nOperationType = operations.ID_DELETE_NH_ASSET_OPERATION;
+
+        signed_operate transactionWithCallback = new signed_operate();
+        transactionWithCallback.operations = new ArrayList<>();
+        transactionWithCallback.operations.add(operationType);
+        transactionWithCallback.extensions = new HashSet<>();
+        return sign_transaction(transactionWithCallback, feePayaccountObject);
+    }
+
+
+    /**
+     * get cancel nhasset order fee
+     *
+     * @return
+     * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     */
+    public List<asset_fee_object> cancel_nh_asset_order_fee(String fee_paying_account, String order_id, String fee_symbol) throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, NhAssetOrderNotFoundException {
+
+        account_object feePayaccountObject = get_account_object(fee_paying_account);
+        if (feePayaccountObject == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+
+        nh_asset_order_object nh_asset_order_object = get_nhasset_order_object(order_id);
+        if (null == nh_asset_order_object) {
+            throw new NhAssetOrderNotFoundException("Order does not exist");
+        }
+
+        asset_object fee_asset_object = lookup_asset_symbols(fee_symbol);
+        if (fee_asset_object == null) {
+            throw new AssetNotFoundException("Asset does not exist");
+        }
+
+        operations.cancel_nhasset_order_operation cancel_nhasset_order_operation = new operations.cancel_nhasset_order_operation();
+        cancel_nhasset_order_operation.fee = fee_asset_object.amount_from_string("0");
+        cancel_nhasset_order_operation.order = nh_asset_order_object.id;
+        cancel_nhasset_order_operation.fee_paying_account = feePayaccountObject.id;
+        cancel_nhasset_order_operation.extensions = new HashSet<>();
+        List<Object> operateList = new ArrayList<>();
+        operateList.add(operations.ID_CANCEL_NH_ASSET_ORDER_OPERATION);
+        operateList.add(cancel_nhasset_order_operation);
+
+        List<Object> operateLists = new ArrayList<>();
+        operateLists.add(operateList);
+
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(operateLists);
+        objectList.add(fee_asset_object.id);
+
+        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
+        asset_fee_objects.get(0).amount = String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, fee_asset_object.precision)));
+        return asset_fee_objects;
+    }
+
+
+    /**
+     * cancel nhasset order
+     *
+     * @return
+     * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     */
+    public String cancel_nh_asset_order(String fee_paying_account, String password, String order_id, String fee_symbol, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, KeyInvalideException, AddressFormatException, PasswordVerifyException, AuthorityException, NhAssetOrderNotFoundException {
+
+        account_object feePayaccountObject = get_account_object(fee_paying_account);
+        if (feePayaccountObject == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+
+        nh_asset_order_object nh_asset_order_object = get_nhasset_order_object(order_id);
+        if (null == nh_asset_order_object) {
+            throw new NhAssetOrderNotFoundException("Order does not exist");
+        }
+
+        asset_object fee_asset_object = lookup_asset_symbols(fee_symbol);
+        if (fee_asset_object == null) {
+            throw new AssetNotFoundException("Asset does not exist");
+        }
+
+        if (unlock(feePayaccountObject.name, password, accountDao) != OPERATE_SUCCESS && verify_password(feePayaccountObject.name, password).size() <= 0) {
+            throw new PasswordVerifyException("Wrong password");
+        }
+
+        operations.cancel_nhasset_order_operation cancel_nhasset_order_operation = new operations.cancel_nhasset_order_operation();
+        cancel_nhasset_order_operation.fee = fee_asset_object.amount_from_string("0");
+        cancel_nhasset_order_operation.order = nh_asset_order_object.id;
+        cancel_nhasset_order_operation.fee_paying_account = feePayaccountObject.id;
+        cancel_nhasset_order_operation.extensions = new HashSet<>();
+
+        List<Object> operateList = new ArrayList<>();
+        operateList.add(operations.ID_CANCEL_NH_ASSET_ORDER_OPERATION);
+        operateList.add(cancel_nhasset_order_operation);
+
+        List<Object> operateLists = new ArrayList<>();
+        operateLists.add(operateList);
+
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(operateLists);
+        objectList.add(fee_asset_object.id);
+
+        List<asset_fee_object> requiredFees = mWebSocketApi.get_required_fees(objectList);
+        cancel_nhasset_order_operation.fee = fee_asset_object.amount_from_string(String.valueOf(Double.valueOf(requiredFees.get(0).amount) / (Math.pow(10, fee_asset_object.precision))));
+
+        operations.operation_type operationType = new operations.operation_type();
+        operationType.operationContent = cancel_nhasset_order_operation;
+        operationType.nOperationType = operations.ID_CANCEL_NH_ASSET_ORDER_OPERATION;
+
+        signed_operate transactionWithCallback = new signed_operate();
+        transactionWithCallback.operations = new ArrayList<>();
+        transactionWithCallback.operations.add(operationType);
+        transactionWithCallback.extensions = new HashSet<>();
+        return sign_transaction(transactionWithCallback, feePayaccountObject);
+    }
+
+    /**
      * calculate buy nhasset fee
      *
      * @param fee_paying_account
@@ -1062,7 +1282,7 @@ public class CocosBcxApi {
      * @throws AccountNotFoundException
      * @throws NhAssetNotFoundException
      */
-    public String buy_nh_asset(String password, String fee_paying_account, String order_Id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetOrderNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException {
+    public String buy_nh_asset(String password, String fee_paying_account, String order_Id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetOrderNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
 
         account_object feePayAccountObject = get_account_object(fee_paying_account);
         if (feePayAccountObject == null) {
@@ -1107,6 +1327,147 @@ public class CocosBcxApi {
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = buy_nhasset_operation;
         operationType.nOperationType = operations.ID_BUY_NH_ASSET_OPERATION;
+
+        signed_operate transactionWithCallback = new signed_operate();
+        transactionWithCallback.operations = new ArrayList<>();
+        transactionWithCallback.operations.add(operationType);
+        transactionWithCallback.extensions = new HashSet<>();
+
+        return sign_transaction(transactionWithCallback, feePayAccountObject);
+    }
+
+
+    /**
+     * create nh asset order fee
+     *
+     * @param pending_order_nh_asset
+     * @param pending_order_fee
+     * @param pending_order_memo
+     * @param pending_order_price
+     * @param pending_order_price_symbol
+     * @return
+     * @throws NetworkStatusException
+     * @throws NhAssetNotFoundException
+     */
+    public List<asset_fee_object> create_nh_asset_order_fee(String otcaccount, String seller, String pending_order_nh_asset, String pending_order_fee, String pending_order_fee_symbol, String pending_order_memo, String pending_order_price, String pending_order_price_symbol, long pending_order_valid_time_millis) throws NetworkStatusException, NhAssetNotFoundException, AssetNotFoundException, AccountNotFoundException, ParseException {
+
+        account_object feePayAccountObject = get_account_object(seller);
+        account_object otcAccount = get_account_object(otcaccount);
+        nhasset_object nhasset_object = lookup_nh_asset_object(pending_order_nh_asset);
+        asset_object pending_order_price_asset_object = lookup_asset_symbols(pending_order_price_symbol);
+        asset_object pending_order_fee_asset = lookup_asset_symbols(pending_order_fee_symbol);
+
+        if (feePayAccountObject == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+        if (nhasset_object == null) {
+            throw new NhAssetNotFoundException("NhAsset does not exist");
+        }
+        if (null == pending_order_price_asset_object) {
+            throw new AssetNotFoundException("Price asset does not exist");
+        }
+
+        operations.create_nhasset_order_operation create_nhasset_order_operation = new operations.create_nhasset_order_operation();
+        create_nhasset_order_operation.fee = pending_order_fee_asset.amount_from_string("0");
+        create_nhasset_order_operation.seller = feePayAccountObject.id;
+        create_nhasset_order_operation.otcaccount = otcAccount.id;
+        create_nhasset_order_operation.pending_orders_fee = pending_order_fee_asset.amount_from_string(pending_order_fee);
+        create_nhasset_order_operation.nh_asset = nhasset_object.id;
+        create_nhasset_order_operation.memo = pending_order_memo;
+        create_nhasset_order_operation.price = pending_order_price_asset_object.amount_from_string(pending_order_price);
+
+        long valid_time = System.currentTimeMillis() + pending_order_valid_time_millis * 1000;
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sDateFormat = new SimpleDateFormat(pattern);
+        String expiration = sDateFormat.format(valid_time);
+        Date dateObject = sDateFormat.parse(expiration);
+        create_nhasset_order_operation.expiration = dateObject;
+
+        List<Object> operateList = new ArrayList<>();
+        operateList.add(operations.ID_CREATE_NH_ASSET_ORDER_OPERATION);
+        operateList.add(create_nhasset_order_operation);
+
+        List<Object> operateLists = new ArrayList<>();
+        operateLists.add(operateList);
+
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(operateLists);
+        objectList.add(pending_order_fee_asset.id);
+
+        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
+        asset_fee_objects.get(0).amount = String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, pending_order_fee_asset.precision)));
+        return asset_fee_objects;
+    }
+
+    /**
+     * create nh asset order
+     *
+     * @param pending_order_nh_asset
+     * @param pending_order_fee
+     * @param pending_order_memo
+     * @param pending_order_price
+     * @param pending_order_price_symbol
+     * @return
+     * @throws NetworkStatusException
+     * @throws NhAssetNotFoundException
+     */
+    public String create_nh_asset_order(String otcaccount, String seller, String password, AccountDao accountDao, String pending_order_nh_asset, String pending_order_fee, String pending_order_fee_symbol, String pending_order_memo, String pending_order_price, String pending_order_price_symbol, long pending_order_valid_time_millis) throws NetworkStatusException, NhAssetNotFoundException, AssetNotFoundException, AccountNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException, ParseException {
+
+        account_object feePayAccountObject = get_account_object(seller);
+        account_object otcAccount = get_account_object(otcaccount);
+        nhasset_object nhasset_object = lookup_nh_asset_object(pending_order_nh_asset);
+        asset_object pending_order_price_asset_object = lookup_asset_symbols(pending_order_price_symbol);
+        asset_object pending_order_fee_asset = lookup_asset_symbols(pending_order_fee_symbol);
+
+        if (feePayAccountObject == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+
+        if (unlock(feePayAccountObject.name, password, accountDao) != OPERATE_SUCCESS && verify_password(feePayAccountObject.name, password).size() <= 0) {
+            throw new PasswordVerifyException("Wrong password");
+        }
+
+        if (nhasset_object == null) {
+            throw new NhAssetNotFoundException("NhAsset does not exist");
+        }
+        if (null == pending_order_price_asset_object) {
+            throw new AssetNotFoundException("Price asset does not exist");
+        }
+
+        operations.create_nhasset_order_operation create_nhasset_order_operation = new operations.create_nhasset_order_operation();
+        create_nhasset_order_operation.fee = pending_order_fee_asset.amount_from_string("0");
+        create_nhasset_order_operation.seller = feePayAccountObject.id;
+        create_nhasset_order_operation.otcaccount = otcAccount.id;
+        create_nhasset_order_operation.pending_orders_fee = pending_order_fee_asset.amount_from_string(pending_order_fee);
+        create_nhasset_order_operation.nh_asset = nhasset_object.id;
+        create_nhasset_order_operation.memo = pending_order_memo;
+        create_nhasset_order_operation.price = pending_order_price_asset_object.amount_from_string(pending_order_price);
+
+        long valid_time = System.currentTimeMillis() + pending_order_valid_time_millis * 1000;
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sDateFormat = new SimpleDateFormat(pattern);
+        String expiration = sDateFormat.format(valid_time);
+        LogUtils.i("SimpleDateFormat", expiration);
+        Date dateObject = sDateFormat.parse(expiration);
+        create_nhasset_order_operation.expiration = dateObject;
+
+        List<Object> operateList = new ArrayList<>();
+        operateList.add(operations.ID_CREATE_NH_ASSET_ORDER_OPERATION);
+        operateList.add(create_nhasset_order_operation);
+
+        List<Object> operateLists = new ArrayList<>();
+        operateLists.add(operateList);
+
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(operateLists);
+        objectList.add(pending_order_fee_asset.id);
+
+        List<asset_fee_object> requiredFees = mWebSocketApi.get_required_fees(objectList);
+        create_nhasset_order_operation.fee = pending_order_fee_asset.amount_from_string(String.valueOf(Double.valueOf(requiredFees.get(0).amount) / (Math.pow(10, pending_order_fee_asset.precision))));
+
+        operations.operation_type operationType = new operations.operation_type();
+        operationType.operationContent = create_nhasset_order_operation;
+        operationType.nOperationType = operations.ID_CREATE_NH_ASSET_ORDER_OPERATION;
 
         signed_operate transactionWithCallback = new signed_operate();
         transactionWithCallback.operations = new ArrayList<>();
@@ -1168,7 +1529,7 @@ public class CocosBcxApi {
      * @throws NetworkStatusException
      * @throws AccountNotFoundException
      */
-    public String upgrade_to_lifetime_member(String upgrade_account_id_or_symbol, String upgrade_account_password, String fee_paying_asset_id_or_symbol, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException {
+    public String upgrade_to_lifetime_member(String upgrade_account_id_or_symbol, String upgrade_account_password, String fee_paying_asset_id_or_symbol, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
 
         account_object upgrade_account_object = get_account_object(upgrade_account_id_or_symbol);
         if (upgrade_account_object == null) {
@@ -1294,7 +1655,7 @@ public class CocosBcxApi {
      * @throws AccountNotFoundException
      */
     public String create_child_account(CreateAccountParamEntity paramEntity, String registrar_account_id_or_symbol, String registrar_account_password, String pay_asset_symbol_or_id, AccountDao accountDao)
-            throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AccountExistException, UnLegalInputException, AuthorityException, PasswordVerifyException, KeyInvalideException {
+            throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AccountExistException, UnLegalInputException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
 
         private_key privateActiveKey = private_key.from_seed(paramEntity.getActiveSeed());
         private_key privateOwnerKey = private_key.from_seed(paramEntity.getOwnerSeed());
@@ -1763,6 +2124,8 @@ public class CocosBcxApi {
             callBack.onReceiveValue(rspText);
         } catch (KeyInvalideException e) {
             e.printStackTrace();
+        } catch (AddressFormatException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1829,7 +2192,7 @@ public class CocosBcxApi {
      * @param accountDao
      * @return
      */
-    private int unlock(String accountName, String strPassword, AccountDao accountDao) throws KeyInvalideException {
+    private int unlock(String accountName, String strPassword, AccountDao accountDao) throws KeyInvalideException, AddressFormatException {
 
         assert (strPassword.length() > 0);
         sha512_object passwordHash = sha512_object.create_from_string(strPassword);
@@ -1905,6 +2268,9 @@ public class CocosBcxApi {
         } catch (KeyInvalideException e) {
             rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
             callBack.onReceiveValue(rspText);
+        } catch (AddressFormatException e) {
+            rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
+            callBack.onReceiveValue(rspText);
         }
     }
 
@@ -1915,7 +2281,7 @@ public class CocosBcxApi {
      * @param strPassword
      * @return privateKeys
      */
-    private Map<String, String> decrypt_keystore_callback_private_key(String strPassword) throws KeyInvalideException {
+    private Map<String, String> decrypt_keystore_callback_private_key(String strPassword) throws KeyInvalideException, AddressFormatException {
 
         assert (strPassword.length() > 0);
         sha512_object passwordHash = sha512_object.create_from_string(strPassword);

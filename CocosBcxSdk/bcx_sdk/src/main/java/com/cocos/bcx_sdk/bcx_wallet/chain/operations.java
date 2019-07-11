@@ -13,8 +13,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -29,11 +28,17 @@ public class operations {
 
     public static final int ID_CALCULATE_INVOKING_CONTRACT_OPERATION = 44;
 
+    public static final int ID_DELETE_NH_ASSET_OPERATION = 50;
+
     public static final int ID_TRANSFER_NH_ASSET_OPERATION = 51;
+
+    public static final int ID_CREATE_NH_ASSET_ORDER_OPERATION = 52;
+
+    public static final int ID_CANCEL_NH_ASSET_ORDER_OPERATION = 53;
 
     public static final int ID_BUY_NH_ASSET_OPERATION = 54;
 
-    public static final int ID_UPGRADE_TO_LIFETIME_MEMBER_OPERATION = 8;
+    public static final int ID_UPGRADE_TO_LIFETIME_MEMBER_OPERATION = 7;
 
     public static final int ID_CREATE_CHILD_ACCOUNT_OPERATION = 5;
 
@@ -50,6 +55,9 @@ public class operations {
             mHashId2Operation.put(ID_BUY_NH_ASSET_OPERATION, buy_nhasset_operation.class);
             mHashId2Operation.put(ID_UPGRADE_TO_LIFETIME_MEMBER_OPERATION, upgrade_to_lifetime_member_operation.class);
             mHashId2Operation.put(ID_CREATE_CHILD_ACCOUNT_OPERATION, create_child_account_operation.class);
+            mHashId2Operation.put(ID_CREATE_NH_ASSET_ORDER_OPERATION, create_nhasset_order_operation.class);
+            mHashId2Operation.put(ID_DELETE_NH_ASSET_OPERATION, delete_nhasset_operation.class);
+            mHashId2Operation.put(ID_CANCEL_NH_ASSET_ORDER_OPERATION, cancel_nhasset_order_operation.class);
         }
 
         public Type getOperationObjectById(int nId) {
@@ -95,15 +103,7 @@ public class operations {
 
 
     public interface base_operation {
-        Collection<? extends authority> get_required_authorities();
-
-        List<object_id<account_object>> get_required_active_authorities();
-
-        Collection<? extends object_id<account_object>> get_required_owner_authorities();
-
         void write_to_encoder(base_encoder baseEncoder);
-
-        object_id<account_object> fee_payer();
     }
 
 
@@ -118,23 +118,6 @@ public class operations {
         public asset amount;
         public memo_data memo;
         public Set<types.void_t> extensions;
-
-        @Override
-        public Collection<? extends authority> get_required_authorities() {
-            return new ArrayList<>();
-        }
-
-        @Override
-        public List<object_id<account_object>> get_required_active_authorities() {
-            List<object_id<account_object>> activeList = new ArrayList<>();
-            activeList.add(fee_payer());
-            return activeList;
-        }
-
-        @Override
-        public Collection<? extends object_id<account_object>> get_required_owner_authorities() {
-            return new ArrayList<>();
-        }
 
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
@@ -162,11 +145,6 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
 
-        @Override
-        public object_id<account_object> fee_payer() {
-            return from;
-        }
-
     }
 
 
@@ -189,23 +167,6 @@ public class operations {
 
 
         @Override
-        public Collection<? extends authority> get_required_authorities() {
-            return new ArrayList<>();
-        }
-
-        @Override
-        public List<object_id<account_object>> get_required_active_authorities() {
-            List<object_id<account_object>> activeList = new ArrayList<>();
-            activeList.add(fee_payer());
-            return activeList;
-        }
-
-        @Override
-        public Collection<? extends object_id<account_object>> get_required_owner_authorities() {
-            return new ArrayList<>();
-        }
-
-        @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
             fee.write_to_encoder(baseEncoder);
@@ -223,11 +184,6 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
 
-        @Override
-        public object_id<account_object> fee_payer() {
-            return caller;
-        }
-
     }
 
 
@@ -241,24 +197,6 @@ public class operations {
         public object_id<account_object> to;
         public object_id<nhasset_object> nh_asset;
 
-
-        @Override
-        public Collection<? extends authority> get_required_authorities() {
-            return new ArrayList<>();
-        }
-
-        @Override
-        public List<object_id<account_object>> get_required_active_authorities() {
-            List<object_id<account_object>> activeList = new ArrayList<>();
-            activeList.add(fee_payer());
-            return activeList;
-        }
-
-        @Override
-        public Collection<? extends object_id<account_object>> get_required_owner_authorities() {
-            return new ArrayList<>();
-        }
-
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
@@ -266,11 +204,6 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(from.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(to.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
-        }
-
-        @Override
-        public object_id<account_object> fee_payer() {
-            return from;
         }
 
     }
@@ -292,23 +225,6 @@ public class operations {
         public Set<types.void_t> extensions;
 
         @Override
-        public Collection<? extends authority> get_required_authorities() {
-            return new ArrayList<>();
-        }
-
-        @Override
-        public List<object_id<account_object>> get_required_active_authorities() {
-            List<object_id<account_object>> activeList = new ArrayList<>();
-            activeList.add(fee_payer());
-            return activeList;
-        }
-
-        @Override
-        public Collection<? extends object_id<account_object>> get_required_owner_authorities() {
-            return new ArrayList<>();
-        }
-
-        @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
             fee.write_to_encoder(baseEncoder);
@@ -322,11 +238,6 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(price_asset_symbol.length()));
             baseEncoder.write(price_asset_symbol.getBytes());
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
-        }
-
-        @Override
-        public object_id<account_object> fee_payer() {
-            return seller;
         }
 
     }
@@ -343,23 +254,6 @@ public class operations {
         public Set<types.void_t> extensions;
 
         @Override
-        public Collection<? extends authority> get_required_authorities() {
-            return new ArrayList<>();
-        }
-
-        @Override
-        public List<object_id<account_object>> get_required_active_authorities() {
-            List<object_id<account_object>> activeList = new ArrayList<>();
-            activeList.add(fee_payer());
-            return activeList;
-        }
-
-        @Override
-        public Collection<? extends object_id<account_object>> get_required_owner_authorities() {
-            return new ArrayList<>();
-        }
-
-        @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
             fee.write_to_encoder(baseEncoder);
@@ -368,10 +262,6 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
 
-        @Override
-        public object_id<account_object> fee_payer() {
-            return account_to_upgrade;
-        }
     }
 
 
@@ -389,23 +279,6 @@ public class operations {
         public authority1 active;
         public types.account_options options;
         public Set<types.void_t> extensions;
-
-        @Override
-        public Collection<? extends authority> get_required_authorities() {
-            return new ArrayList<>();
-        }
-
-        @Override
-        public List<object_id<account_object>> get_required_active_authorities() {
-            List<object_id<account_object>> activeList = new ArrayList<>();
-            activeList.add(fee_payer());
-            return activeList;
-        }
-
-        @Override
-        public Collection<? extends object_id<account_object>> get_required_owner_authorities() {
-            return new ArrayList<>();
-        }
 
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
@@ -428,9 +301,76 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
 
+    }
+
+
+    /**
+     * create nhasset order operation
+     */
+    public static class create_nhasset_order_operation implements base_operation {
+
+        public asset fee;
+        public object_id<account_object> seller;
+        public object_id<account_object> otcaccount;
+        public asset pending_orders_fee;
+        public object_id<nhasset_object> nh_asset;
+        public String memo;
+        public asset price;
+        public Date expiration;
+
         @Override
-        public object_id<account_object> fee_payer() {
-            return registrar;
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            fee.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(otcaccount.get_instance()));
+            pending_orders_fee.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(memo.length()));
+            baseEncoder.write(memo.getBytes());
+            price.write_to_encoder(baseEncoder);
+            baseEncoder.write(rawObject.get_byte_array(expiration));
+        }
+
+    }
+
+    /**
+     * delete nhasset operation
+     */
+    public static class delete_nhasset_operation implements base_operation {
+
+        public asset fee;
+        public object_id<account_object> fee_paying_account;
+        public object_id<nhasset_object> nh_asset;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            fee.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
+        }
+
+    }
+
+
+    /**
+     * cancel nhasset order operation
+     */
+    public static class cancel_nhasset_order_operation implements base_operation {
+
+        public asset fee;
+        public object_id<nh_asset_order_object> order;
+        public object_id<account_object> fee_paying_account;
+        public Set<types.void_t> extensions;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            fee.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(order.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
     }
 

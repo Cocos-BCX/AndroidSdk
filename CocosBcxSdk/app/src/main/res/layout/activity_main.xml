@@ -764,6 +764,40 @@
             style="@style/TvBtn"
             android:text="确认发送（需要验证密码）" />
 
+        <TextView
+            style="@style/TvTitle"
+            android:text="删除NH资产" />
+
+
+        <EditText
+            android:id="@+id/et_delete_nh_asset_account"
+            style="@style/EtSingleLine"
+            android:hint="账户名" />
+
+        <EditText
+            android:id="@+id/et_delete_nh_asset_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/et_delete_nh_asset_id"
+            style="@style/EtSingleLine"
+            android:hint="nh 资产id" />
+
+        <EditText
+            android:id="@+id/et_delete_nh_asset_fee_symbol"
+            style="@style/EtSingleLine"
+            android:hint="费用symbol" />
+
+        <TextView
+            android:id="@+id/tv_nh_asset_delete_fee"
+            style="@style/TvBtn"
+            android:text="获取本次交易费用" />
+
+        <TextView
+            android:id="@+id/tv_delete_nh_asset"
+            style="@style/TvBtn"
+            android:text="确认删除（需要验证密码）" />
 
         <TextView
             style="@style/TvTitle"
@@ -793,6 +827,96 @@
             android:id="@+id/tv_nh_asset_buy"
             style="@style/TvBtn"
             android:text="购买" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="创建NH资产订单（出售）" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_seller"
+            style="@style/EtSingleLine"
+            android:hint="seller" />
+
+        <EditText
+            android:id="@+id/pending_order_seller_password"
+            style="@style/EtSingleLine"
+            android:hint="账户密码" />
+
+        <EditText
+            android:id="@+id/pending_order_nh_asset"
+            style="@style/EtSingleLine"
+            android:hint="nh资产Id" />
+
+        <EditText
+            android:id="@+id/pending_order_fee"
+            style="@style/EtSingleLine"
+            android:hint="挂单费用fee" />
+
+        <EditText
+            android:id="@+id/pending_order_memo"
+            style="@style/EtSingleLine"
+            android:hint="挂单备注信息memo" />
+
+        <EditText
+            android:id="@+id/pending_order_price"
+            style="@style/EtSingleLine"
+            android:hint="商品挂单价格price" />
+
+        <EditText
+            android:id="@+id/pending_order_price_symbol"
+            style="@style/EtSingleLine"
+            android:hint="商品挂单价格币种priceAssetSymbol" />
+
+        <EditText
+            android:id="@+id/pending_order_valid_time"
+            style="@style/EtSingleLine"
+            android:hint="过期时间(即挂卖时间,number类型,如3600，表示3600秒后过期)" />
+
+        <TextView
+            android:id="@+id/tv_create_nh_asset_order_fee"
+            style="@style/TvBtn"
+            android:text="获取本次交易费用" />
+
+        <TextView
+            android:id="@+id/tv_create_nh_asset_order"
+            style="@style/TvBtn"
+            android:text="确认卖出NH资产" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="取消账户NH资产售卖单" />
+
+        <EditText
+            android:id="@+id/et_cancel_nh_asset_account"
+            style="@style/EtSingleLine"
+            android:hint="账户名" />
+
+        <EditText
+            android:id="@+id/et_cancel_nh_asset_order_id"
+            style="@style/EtSingleLine"
+            android:hint="订单id" />
+
+        <EditText
+            android:id="@+id/et_cancel_nh_asset_fee_symbol"
+            style="@style/EtSingleLine"
+            android:hint="费用symbol" />
+
+        <EditText
+            android:id="@+id/et_cancel_nh_asset_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <TextView
+            android:id="@+id/tv_cancel_nh_asset_order_fee"
+            style="@style/TvBtn"
+            android:text="获取本次交易费用" />
+
+        <TextView
+            android:id="@+id/tv_cancel_nh_asset_order"
+            style="@style/TvBtn"
+            android:text="取消订单（需要验证密码）" />
+
 
         <TextView
             style="@style/TvTitle"

@@ -57,22 +57,6 @@ public class transaction {
     }
 
 
-    public required_authorities get_required_authorities() {
-        required_authorities requiredAuthorities = new required_authorities();
-        requiredAuthorities.active = new ArrayList<>();
-        requiredAuthorities.owner = new ArrayList<>();
-        requiredAuthorities.other = new ArrayList<>();
-
-        for (com.cocos.bcx_sdk.bcx_wallet.chain.operations.operation_type operationType : operations) {
-            com.cocos.bcx_sdk.bcx_wallet.chain.operations.base_operation baseOperation = (com.cocos.bcx_sdk.bcx_wallet.chain.operations.base_operation) operationType.operationContent;
-            requiredAuthorities.active.addAll(baseOperation.get_required_active_authorities());
-            requiredAuthorities.owner.addAll(baseOperation.get_required_owner_authorities());
-            requiredAuthorities.other.addAll(baseOperation.get_required_authorities());
-        }
-        return requiredAuthorities;
-    }
-
-
     public sha256_object sig_digest(sha256_object chain_id) {
         sha256_object.encoder enc = new sha256_object.encoder();
         enc.write(chain_id.hash, 0, chain_id.hash.length);

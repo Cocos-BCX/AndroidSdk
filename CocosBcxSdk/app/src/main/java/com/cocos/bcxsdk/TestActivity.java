@@ -156,6 +156,28 @@ public class TestActivity extends AppCompatActivity {
     private TextView tv_get_transaction_in_block_info;
     private TextView get_transaction_by_id;
     private TextView tv_get_contract;
+    private EditText et_nh_asset_seller;
+    private EditText pending_order_seller_password;
+    private EditText pending_order_nh_asset;
+    private EditText pending_order_fee;
+    private EditText pending_order_memo;
+    private EditText pending_order_price;
+    private EditText pending_order_price_symbol;
+    private EditText pending_order_valid_time;
+    private TextView tv_create_nh_asset_order_fee;
+    private TextView tv_create_nh_asset_order;
+    private EditText et_delete_nh_asset_account;
+    private EditText et_delete_nh_asset_password;
+    private EditText et_delete_nh_asset_id;
+    private EditText et_delete_nh_asset_fee_symbol;
+    private TextView tv_nh_asset_delete_fee;
+    private TextView tv_delete_nh_asset;
+    private EditText et_cancel_nh_asset_account;
+    private EditText et_cancel_nh_asset_password;
+    private EditText et_cancel_nh_asset_order_id;
+    private EditText et_cancel_nh_asset_fee_symbol;
+    private TextView tv_cancel_nh_asset_order_fee;
+    private TextView tv_cancel_nh_asset_order;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -286,7 +308,6 @@ public class TestActivity extends AppCompatActivity {
         et_nh_asset_page_size_order = findViewById(R.id.et_nh_asset_page_size_order);
         tv_list_nh_asset_order = findViewById(R.id.tv_list_nh_asset_order);
 
-
         et_nh_asset_transfer_from_account = findViewById(R.id.et_nh_asset_transfer_from_account);
         et_nh_asset_transfer_to_account = findViewById(R.id.et_nh_asset_transfer_to_account);
         et_nh_asset_fee_symbol = findViewById(R.id.et_nh_asset_fee_symbol);
@@ -295,13 +316,26 @@ public class TestActivity extends AppCompatActivity {
         tv_send_nh_asset = findViewById(R.id.tv_send_nh_asset);
         tv_nh_asset_transfer_fee = findViewById(R.id.tv_nh_asset_transfer_fee);
 
+        et_delete_nh_asset_account = findViewById(R.id.et_delete_nh_asset_account);
+        et_delete_nh_asset_password = findViewById(R.id.et_delete_nh_asset_password);
+        et_delete_nh_asset_id = findViewById(R.id.et_delete_nh_asset_id);
+        et_delete_nh_asset_fee_symbol = findViewById(R.id.et_delete_nh_asset_fee_symbol);
+        tv_nh_asset_delete_fee = findViewById(R.id.tv_nh_asset_delete_fee);
+        tv_delete_nh_asset = findViewById(R.id.tv_delete_nh_asset);
+
+        et_cancel_nh_asset_account = findViewById(R.id.et_cancel_nh_asset_account);
+        et_cancel_nh_asset_password = findViewById(R.id.et_cancel_nh_asset_password);
+        et_cancel_nh_asset_order_id = findViewById(R.id.et_cancel_nh_asset_order_id);
+        et_cancel_nh_asset_fee_symbol = findViewById(R.id.et_cancel_nh_asset_fee_symbol);
+        tv_cancel_nh_asset_order_fee = findViewById(R.id.tv_cancel_nh_asset_order_fee);
+        tv_cancel_nh_asset_order = findViewById(R.id.tv_cancel_nh_asset_order);
+
         et_nh_asset_buyer = findViewById(R.id.et_nh_asset_buyer);
         et_nh_asset_order_id = findViewById(R.id.et_nh_asset_order_id);
         tv_nh_asset_buy_fee = findViewById(R.id.tv_nh_asset_buy_fee);
         tv_nh_asset_buy = findViewById(R.id.tv_nh_asset_buy);
         et_buy_nh_password = findViewById(R.id.et_buy_nh_password);
         tv_get_contract_object = findViewById(R.id.tv_get_contract_object);
-
 
         et_upgrade_lifetime_account = findViewById(R.id.et_upgrade_lifetime_account);
         et_upgrade_lifetime_password = findViewById(R.id.et_upgrade_lifetime_password);
@@ -323,6 +357,18 @@ public class TestActivity extends AppCompatActivity {
         et_get_transaction_in_block_info = findViewById(R.id.et_get_transaction_in_block_info);
         tv_get_transaction_in_block_info = findViewById(R.id.tv_get_transaction_in_block_info);
         get_transaction_by_id = findViewById(R.id.get_transaction_by_id);
+
+
+        et_nh_asset_seller = findViewById(R.id.et_nh_asset_seller);
+        pending_order_seller_password = findViewById(R.id.pending_order_seller_password);
+        pending_order_nh_asset = findViewById(R.id.pending_order_nh_asset);
+        pending_order_fee = findViewById(R.id.pending_order_fee);
+        pending_order_memo = findViewById(R.id.pending_order_memo);
+        pending_order_price = findViewById(R.id.pending_order_price);
+        pending_order_price_symbol = findViewById(R.id.pending_order_price_symbol);
+        pending_order_valid_time = findViewById(R.id.pending_order_valid_time);
+        tv_create_nh_asset_order_fee = findViewById(R.id.tv_create_nh_asset_order_fee);
+        tv_create_nh_asset_order = findViewById(R.id.tv_create_nh_asset_order);
 
         initListener();
     }
@@ -945,6 +991,44 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * 获取删除NH资产费用
+         */
+        tv_nh_asset_delete_fee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().delete_nh_asset_fee(et_delete_nh_asset_account.getText().toString(),
+                        et_delete_nh_asset_id.getText().toString(),
+                        et_delete_nh_asset_fee_symbol.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("delete_nh_asset_fee", value);
+                            }
+                        });
+            }
+        });
+
+        /**
+         * 删除NH资产
+         */
+        tv_delete_nh_asset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().delete_nh_asset(et_delete_nh_asset_account.getText().toString(),
+                        et_delete_nh_asset_password.getText().toString(),
+                        et_delete_nh_asset_id.getText().toString(),
+                        et_delete_nh_asset_fee_symbol.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("delete_nh_asset", value);
+                            }
+                        });
+            }
+        });
 
         /**
          * 获取购买nh资产的费用
@@ -976,7 +1060,6 @@ public class TestActivity extends AppCompatActivity {
                         et_nh_asset_buyer.getText().toString(),
                         et_nh_asset_order_id.getText().toString(),
                         new IBcxCallBack() {
-
                             @Override
                             public void onReceiveValue(String value) {
                                 Log.i("buy_nh_asset", value);
@@ -984,6 +1067,153 @@ public class TestActivity extends AppCompatActivity {
                         });
             }
         });
+
+//        /**
+//         * 获取创建nh资产订单的费用
+//         */
+//        tv_create_nh_asset_order_fee.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order_fee(
+//                        et_nh_asset_seller.getText().toString(),
+//                        pending_order_nh_asset.getText().toString(),
+//                        pending_order_fee.getText().toString(),
+//                        pending_order_memo.getText().toString(),
+//                        pending_order_price.getText().toString(),
+//                        pending_order_price_symbol.getText().toString(),
+//                        Long.parseLong(pending_order_valid_time.getText().toString()),
+//                        new IBcxCallBack() {
+//                            @SuppressLint("LongLogTag")
+//                            @Override
+//                            public void onReceiveValue(String value) {
+//                                Log.i("create_nh_asset_order_fee", value);
+//                            }
+//                        });
+//            }
+//        });
+
+
+//        /**
+//         * 创建nh资产订单(出售)
+//         */
+//        tv_create_nh_asset_order.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order(
+//                        et_nh_asset_seller.getText().toString(),
+//                        pending_order_seller_password.getText().toString(),
+//                        pending_order_nh_asset.getText().toString(),
+//                        pending_order_fee.getText().toString(),
+//                        pending_order_memo.getText().toString(),
+//                        pending_order_price.getText().toString(),
+//                        pending_order_price_symbol.getText().toString(),
+//                        Long.parseLong(pending_order_valid_time.getText().toString()),
+//                        new IBcxCallBack() {
+//                            @SuppressLint("LongLogTag")
+//                            @Override
+//                            public void onReceiveValue(String value) {
+//                                Log.i("create_nh_asset_order", value);
+//                            }
+//                        });
+//            }
+//        });
+
+
+        /**
+         * 创建nh资产订单(出售)
+         */
+        tv_create_nh_asset_order_fee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order_fee(
+                        "otcaccount",
+                        "syling",
+                        "4.2.3290",
+                        "11",
+                        "COCOS",
+                        "test",
+                        "100",
+                        "COCOS",
+                        3600L,
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("create_nh_asset_order_fee", value);
+                            }
+                        });
+            }
+        });
+
+        /**
+         * 创建nh资产订单(出售)
+         */
+        tv_create_nh_asset_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order(
+                        "otcaccount",
+                        "syling",
+                        "1111aaaa",
+                        "4.2.3290",
+                        "11",
+                        "COCOS",
+                        "test",
+                        "100",
+                        "COCOS",
+                        3600L,
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("create_nh_asset_order", value);
+                            }
+                        });
+            }
+        });
+
+
+        /**
+         * 获取取消nh资产订单费用
+         */
+        tv_cancel_nh_asset_order_fee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().cancel_nh_asset_order_fee(
+                        et_cancel_nh_asset_account.getText().toString(),
+                        et_cancel_nh_asset_order_id.getText().toString(),
+                        et_cancel_nh_asset_fee_symbol.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("cancel_nh_asset_order_fee", value);
+                            }
+                        });
+            }
+        });
+
+        /**
+         * 取消nh资产订单
+         */
+        tv_cancel_nh_asset_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().cancel_nh_asset_order(
+                        et_cancel_nh_asset_account.getText().toString(),
+                        et_cancel_nh_asset_password.getText().toString(),
+                        et_cancel_nh_asset_order_id.getText().toString(),
+                        et_cancel_nh_asset_fee_symbol.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("cancel_nh_asset_order", value);
+                            }
+                        });
+            }
+        });
+
 
         /**
          * 获取合约详情
@@ -1009,13 +1239,13 @@ public class TestActivity extends AppCompatActivity {
         tv_upgrade_lifetime_fee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().upgrade_to_lifetime_member_fee(et_upgrade_lifetime_account.getText().toString(), et_upgrade_lifetime_asset.getText().toString(), new IBcxCallBack() {
-//                    @SuppressLint("LongLogTag")
-//                    @Override
-//                    public void onReceiveValue(String value) {
-//                        Log.i("upgrade_to_lifetime_member_fee", value);
-//                    }
-//                });
+                CocosBcxApiWrapper.getBcxInstance().upgrade_to_lifetime_member_fee(et_upgrade_lifetime_account.getText().toString(), et_upgrade_lifetime_asset.getText().toString(), new IBcxCallBack() {
+                    @SuppressLint("LongLogTag")
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i("upgrade_to_lifetime_member_fee", value);
+                    }
+                });
             }
         });
 
@@ -1026,15 +1256,15 @@ public class TestActivity extends AppCompatActivity {
         tv_upgrade_lifetime_member.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().upgrade_to_lifetime_member(et_upgrade_lifetime_account.getText().toString(),
-//                        et_upgrade_lifetime_password.getText().toString(),
-//                        et_upgrade_lifetime_asset.getText().toString(), new IBcxCallBack() {
-//                            @SuppressLint("LongLogTag")
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("upgrade_to_lifetime_member", value);
-//                            }
-//                        });
+                CocosBcxApiWrapper.getBcxInstance().upgrade_to_lifetime_member(et_upgrade_lifetime_account.getText().toString(),
+                        et_upgrade_lifetime_password.getText().toString(),
+                        et_upgrade_lifetime_asset.getText().toString(), new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("upgrade_to_lifetime_member", value);
+                            }
+                        });
             }
         });
 
@@ -1045,18 +1275,18 @@ public class TestActivity extends AppCompatActivity {
         tv_create_child_account_fee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().create_child_account_fee(et_create_child_account_name.getText().toString(),
-//                        et_create_child_account_password.getText().toString(),
-//                        et_create_child_registrar.getText().toString(),
-//                        et_create_child_fee_asset.getText().toString(),
-//                        "ACCOUNT",
-//                        new IBcxCallBack() {
-//                            @SuppressLint("LongLogTag")
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("create_child_account_fee", value);
-//                            }
-//                        });
+                CocosBcxApiWrapper.getBcxInstance().create_child_account_fee(et_create_child_account_name.getText().toString(),
+                        et_create_child_account_password.getText().toString(),
+                        et_create_child_registrar.getText().toString(),
+                        et_create_child_fee_asset.getText().toString(),
+                        "ACCOUNT",
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("create_child_account_fee", value);
+                            }
+                        });
             }
         });
 
@@ -1066,19 +1296,19 @@ public class TestActivity extends AppCompatActivity {
         tv_create_child_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().create_child_account(et_create_child_account_name.getText().toString(),
-//                        et_create_child_account_password.getText().toString(),
-//                        et_create_child_registrar.getText().toString(),
-//                        et_create_child_registrar_password.getText().toString(),
-//                        et_create_child_fee_asset.getText().toString(),
-//                        "ACCOUNT",
-//                        new IBcxCallBack() {
-//                            @SuppressLint("LongLogTag")
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("create_child_account", value);
-//                            }
-//                        });
+                CocosBcxApiWrapper.getBcxInstance().create_child_account(et_create_child_account_name.getText().toString(),
+                        et_create_child_account_password.getText().toString(),
+                        et_create_child_registrar.getText().toString(),
+                        et_create_child_registrar_password.getText().toString(),
+                        et_create_child_fee_asset.getText().toString(),
+                        "ACCOUNT",
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("create_child_account", value);
+                            }
+                        });
             }
         });
 
@@ -1091,7 +1321,7 @@ public class TestActivity extends AppCompatActivity {
                 String chainId = "9fc429a48b47447afa5e6618fde46d1a5f7b2266f00ce60866f9fdd92236e137";
                 String coreAsset = "COCOS";
                 boolean isOpenLog = true;
-                CocosBcxApiWrapper.getBcxInstance().init(TestActivity.this, chainId, mListNode, faucetUrl, coreAsset, isOpenLog,
+                CocosBcxApiWrapper.getBcxInstance().connect(TestActivity.this, chainId, mListNode, faucetUrl, coreAsset, isOpenLog,
                         new IBcxCallBack() {
                             @Override
                             public void onReceiveValue(String value) {
@@ -1102,6 +1332,9 @@ public class TestActivity extends AppCompatActivity {
         });
 
 
+        /**
+         * get transaction in block info
+         */
         tv_get_transaction_in_block_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1115,6 +1348,9 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * get transaction by id
+         */
         get_transaction_by_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

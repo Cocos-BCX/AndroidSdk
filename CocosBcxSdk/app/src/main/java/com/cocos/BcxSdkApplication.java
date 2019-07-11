@@ -27,7 +27,8 @@ public class BcxSdkApplication extends Application {
         String chainId = "7d89b84f22af0b150780a2b121aa6c715b19261c8b7fe0fda3a564574ed7d3e9";
         String coreAsset = "COCOS";
         boolean isOpenLog = true;
-        CocosBcxApiWrapper.getBcxInstance().init(this, chainId, mListNode, faucetUrl, coreAsset, isOpenLog,
+        CocosBcxApiWrapper.getBcxInstance().init(this);
+        CocosBcxApiWrapper.getBcxInstance().connect(this, chainId, mListNode, faucetUrl, coreAsset, isOpenLog,
                 new IBcxCallBack() {
                     @Override
                     public void onReceiveValue(String value) {

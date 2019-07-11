@@ -12,6 +12,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Base58;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
 import org.spongycastle.crypto.digests.SHA256Digest;
@@ -218,8 +219,9 @@ public class types {
             return Base58.encode(data);
         }
 
-        public private_key_type(String strBase58) throws KeyInvalideException {
+        public private_key_type(String strBase58) throws KeyInvalideException, AddressFormatException {
             byte wif_bytes[] = Base58.decode(strBase58);
+
             if (wif_bytes.length < key_data.length) {
                 throw new KeyInvalideException("Private key is not valid");
             }
