@@ -580,6 +580,27 @@ public class CocosBcxApiWrapper {
 
 
     /**
+     * list nh asset order no filter options
+     *
+     * @throws NetworkStatusException
+     */
+    public void list_nh_asset_order(final int page, final int pageSize, final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.list_nh_asset_order(page, pageSize)).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
+
+    /**
      * Seek World View Details
      *
      * @throws NetworkStatusException
@@ -664,7 +685,7 @@ public class CocosBcxApiWrapper {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.transfer_nh_asset_fee(account_from, account_to, fee_asset_symbol, nh_asset_id)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.transfer_nh_asset_fee(account_from, account_to, fee_asset_symbol, nh_asset_id).get(0)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
@@ -735,7 +756,7 @@ public class CocosBcxApiWrapper {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.delete_nh_asset_fee(fee_paying_account, nhasset_id, fee_symbol)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.delete_nh_asset_fee(fee_paying_account, nhasset_id, fee_symbol).get(0)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
@@ -814,7 +835,7 @@ public class CocosBcxApiWrapper {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.cancel_nh_asset_order_fee(fee_paying_account, order_id, fee_symbol)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.cancel_nh_asset_order_fee(fee_paying_account, order_id, fee_symbol).get(0)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
@@ -889,7 +910,7 @@ public class CocosBcxApiWrapper {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.buy_nh_asset_fee(fee_paying_account, order_Id)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.buy_nh_asset_fee(fee_paying_account, order_Id).get(0)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
@@ -966,7 +987,7 @@ public class CocosBcxApiWrapper {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.create_nh_asset_order_fee(otcaccount, seller, pending_order_nh_asset, pending_order_fee, pending_order_fee_symbol, pending_order_memo, pending_order_price, pending_order_price_symbol, pending_order_valid_time_millis)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.create_nh_asset_order_fee(otcaccount, seller, pending_order_nh_asset, pending_order_fee, pending_order_fee_symbol, pending_order_memo, pending_order_price, pending_order_price_symbol, pending_order_valid_time_millis).get(0)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
@@ -1057,7 +1078,7 @@ public class CocosBcxApiWrapper {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.upgrade_to_lifetime_member_fee(upgrade_account_id_or_symbol, fee_paying_asset_id_or_symbol)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.upgrade_to_lifetime_member_fee(upgrade_account_id_or_symbol, fee_paying_asset_id_or_symbol).get(0)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
@@ -1145,7 +1166,7 @@ public class CocosBcxApiWrapper {
                     } else if (TextUtils.equals(AccountType.WALLET.name(), accountType)) {
                         paramEntity.setAccountType(AccountType.WALLET);
                     }
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.create_child_account_fee(paramEntity, registrar_account_id_or_symbol, pay_asset_symbol_or_id)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.create_child_account_fee(paramEntity, registrar_account_id_or_symbol, pay_asset_symbol_or_id).get(0)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
