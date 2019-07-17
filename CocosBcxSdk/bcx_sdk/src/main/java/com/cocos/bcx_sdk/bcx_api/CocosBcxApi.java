@@ -1888,6 +1888,15 @@ public class CocosBcxApi {
         return mWebSocketApi.list_nh_asset_order(asset_id_or_symbol, world_view_name_or_ids, baseDescribe, pageSize, page);
     }
 
+    /**
+     * list nh asset order no filter options
+     *
+     * @throws NetworkStatusException
+     */
+    public List<Object> list_nh_asset_order(int page, int pageSize) throws NetworkStatusException {
+        return mWebSocketApi.list_nh_asset_order("", "", "", pageSize, page);
+    }
+
 
     /**
      * Seek World View Details
