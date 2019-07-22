@@ -223,6 +223,13 @@
             android:gravity="center"
             android:text="get_full_accounts(name or id)( same with get_account_object)" />
 
+
+        <TextView
+            android:id="@+id/tv_list_assets"
+            style="@style/TvBtn"
+            android:gravity="center"
+            android:text="查询链上发行的所有资产" />
+
         <!-- ********************* -->
         <TextView
             style="@style/TvEdTips1"

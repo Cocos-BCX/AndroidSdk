@@ -1820,6 +1820,16 @@ public class CocosBcxApi {
 
 
     /**
+     * list all assets in chain
+     *
+     * @throws NetworkStatusException
+     */
+    public List<asset_object> list_assets(String strLowerBound, int nLimit) throws NetworkStatusException {
+        return mWebSocketApi.list_assets(strLowerBound, nLimit);
+    }
+
+
+    /**
      * lookup_nh_asset get NH asset detail by NH asset id or hash
      *
      * @param nh_asset_ids_or_hash

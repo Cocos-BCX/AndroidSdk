@@ -511,6 +511,19 @@ public class CocosBcxApiWrapper {
 
 
     /**
+     * get nh asset order object
+     *
+     * @throws NetworkStatusException
+     */
+    public List<asset_object> list_assets(String strLowerBound, int nLimit) {
+        try {
+            return cocosBcxApi.list_assets(strLowerBound, nLimit);
+        } catch (NetworkStatusException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
      * lookup_nh_asset get NH asset by nh asset id
      *
      * @throws NetworkStatusException

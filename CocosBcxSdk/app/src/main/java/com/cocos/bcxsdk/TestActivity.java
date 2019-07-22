@@ -12,6 +12,7 @@ import com.cocos.bcx_sdk.bcx_api.CocosBcxApiWrapper;
 import com.cocos.bcx_sdk.bcx_callback.IBcxCallBack;
 import com.cocos.bcx_sdk.bcx_error.ContractNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
+import com.cocos.bcx_sdk.bcx_wallet.chain.asset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 
 import java.util.ArrayList;
@@ -178,6 +179,7 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_cancel_nh_asset_fee_symbol;
     private TextView tv_cancel_nh_asset_order_fee;
     private TextView tv_cancel_nh_asset_order;
+    private TextView tv_list_assets;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -205,6 +207,8 @@ public class TestActivity extends AppCompatActivity {
         tv_logout = findViewById(R.id.tv_logout);
 
         edt_account_name = findViewById(R.id.edt_account_name);
+
+        tv_list_assets = findViewById(R.id.tv_list_assets);
 
 
         tv_get_account_object = findViewById(R.id.tv_get_account_object);
@@ -667,6 +671,18 @@ public class TestActivity extends AppCompatActivity {
                                 Log.i("get_all_account_balances", value);
                             }
                         });
+            }
+        });
+
+
+        /**
+         * 查询账户对应资产余额,
+         */
+        tv_list_assets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<asset_object> asset_objects = CocosBcxApiWrapper.getBcxInstance().list_assets("A", 100);
+                Log.i("list_assets", String.valueOf(asset_objects));
             }
         });
 
