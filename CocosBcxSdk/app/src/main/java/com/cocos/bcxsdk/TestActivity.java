@@ -520,7 +520,7 @@ public class TestActivity extends AppCompatActivity {
         tv_transfer_assetGetFee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().transfer_calculate_fee(et_transfer_asset_password.getText().toString(),
+                CocosBcxApiWrapper.getBcxInstance().transfer_calculate_fee(
                         et_transfer_asset_from_account.getText().toString(),
                         et_transfer_asset_to_account.getText().toString(),
                         et_transfer_asset_amount.getText().toString(),
@@ -1072,9 +1072,9 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CocosBcxApiWrapper.getBcxInstance().buy_nh_asset(
-                        et_buy_nh_password.getText().toString(),
-                        et_nh_asset_buyer.getText().toString(),
-                        et_nh_asset_order_id.getText().toString(),
+                        "1111qqqq",
+                        "gnkhandsome1",
+                        "4.3.180",
                         new IBcxCallBack() {
                             @Override
                             public void onReceiveValue(String value) {
@@ -1143,14 +1143,14 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order_fee(
                         "otcaccount",
-                        "syling",
-                        "4.2.3290",
+                        "gnkhandsome1",
+                        "4.2.2589",
                         "11",
                         "COCOS",
                         "test",
-                        "100",
+                        "0",
                         "COCOS",
-                        3600L,
+                        5000L,
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override
@@ -1169,15 +1169,15 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order(
                         "otcaccount",
-                        "syling",
-                        "1111aaaa",
-                        "4.2.3290",
+                        "gnkhandsome1",
+                        "1111qqqq",
+                        "4.2.1838",
                         "11",
                         "COCOS",
                         "test",
                         "100",
                         "COCOS",
-                        3600L,
+                        (21474836478L - System.currentTimeMillis() / 1000L),
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override

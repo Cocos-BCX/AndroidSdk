@@ -1553,7 +1553,6 @@ public class CocosBcxApiWrapper {
     /**
      * calculate transfer fee
      *
-     * @param password         password
      * @param from             account from
      * @param to               account to
      * @param strAmount        transfer amount
@@ -1562,12 +1561,12 @@ public class CocosBcxApiWrapper {
      * @param strMemo          memo
      * @param callBack
      */
-    public void transfer_calculate_fee(final String password, final String from, final String to, final String strAmount, final String strAssetSymbol, final String strFeeSymbolOrId, final String strMemo, final IBcxCallBack callBack) {
+    public void transfer_calculate_fee(final String from, final String to, final String strAmount, final String strAssetSymbol, final String strFeeSymbolOrId, final String strMemo, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    List<asset_fee_object> requiredFees = cocosBcxApi.calculate_transfer_fee(password, from, to, strAmount, strAssetSymbol, strFeeSymbolOrId, strMemo, accountDao);
+                    List<asset_fee_object> requiredFees = cocosBcxApi.calculate_transfer_fee(from, to, strAmount, strAssetSymbol, strFeeSymbolOrId, strMemo);
                     rspText = new ResponseData(OPERATE_SUCCESS, "success", requiredFees.get(0)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (AccountNotFoundException e) {
@@ -1576,17 +1575,11 @@ public class CocosBcxApiWrapper {
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
-                } catch (PasswordVerifyException e) {
-                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
                 } catch (AssetNotFoundException e) {
                     rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (AuthorityException e) {
                     rspText = new ResponseData(AUTHORITY_EXCEPTION, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (KeyInvalideException e) {
-                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (AddressFormatException e) {
                     rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
