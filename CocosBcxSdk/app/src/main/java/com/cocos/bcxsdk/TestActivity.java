@@ -156,6 +156,7 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_get_transaction_in_block_info;
     private TextView tv_get_transaction_in_block_info;
     private TextView get_transaction_by_id;
+    private TextView get_global_properties;
     private TextView tv_get_contract;
     private EditText et_nh_asset_seller;
     private EditText pending_order_seller_password;
@@ -361,6 +362,7 @@ public class TestActivity extends AppCompatActivity {
         et_get_transaction_in_block_info = findViewById(R.id.et_get_transaction_in_block_info);
         tv_get_transaction_in_block_info = findViewById(R.id.tv_get_transaction_in_block_info);
         get_transaction_by_id = findViewById(R.id.get_transaction_by_id);
+        get_global_properties = findViewById(R.id.get_global_properties);
 
 
         et_nh_asset_seller = findViewById(R.id.et_nh_asset_seller);
@@ -1375,6 +1377,23 @@ public class TestActivity extends AppCompatActivity {
                     @Override
                     public void onReceiveValue(String value) {
                         Log.i("get_transaction_by_id", value);
+                    }
+                });
+            }
+        });
+
+
+        /**
+         * get transaction by id
+         */
+        get_global_properties.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().get_global_properties(new IBcxCallBack() {
+                    @SuppressLint("LongLogTag")
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i("get_global_properties", value);
                     }
                 });
             }

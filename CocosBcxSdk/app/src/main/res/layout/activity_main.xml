@@ -1030,6 +1030,12 @@
             style="@style/TvBtn"
             android:text="get_transaction_by_id" />
 
+
+        <TextView
+            android:id="@+id/get_global_properties"
+            style="@style/TvBtn"
+            android:text="get_global_properties" />
+
     </LinearLayout>
 </ScrollView>
 

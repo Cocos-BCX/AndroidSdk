@@ -35,6 +35,7 @@ import com.cocos.bcx_sdk.bcx_wallet.chain.contract_callback;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_operations;
 import com.cocos.bcx_sdk.bcx_wallet.chain.global_config_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.global_property_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.nh_asset_order_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.nhasset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.object_id;
@@ -2053,7 +2054,7 @@ public class CocosBcxApiWrapper {
 
 
     /**
-     * search  current dynamic_global_property_object
+     * search  current global_property_object
      *
      * @return
      * @throws NetworkStatusException
@@ -2071,6 +2072,20 @@ public class CocosBcxApiWrapper {
                 }
             }
         });
+    }
+
+    /**
+     * get  current dynamic_global_property_object
+     *
+     * @return
+     * @throws NetworkStatusException
+     */
+    public global_property_object get_global_properties() {
+        try {
+            return cocosBcxApi.get_global_properties();
+        } catch (NetworkStatusException e) {
+            return null;
+        }
     }
 
 
