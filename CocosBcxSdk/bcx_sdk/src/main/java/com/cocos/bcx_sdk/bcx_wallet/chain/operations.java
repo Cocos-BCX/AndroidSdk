@@ -1,5 +1,6 @@
 package com.cocos.bcx_sdk.bcx_wallet.chain;
 
+import com.cocos.bcx_sdk.bcx_log.LogUtils;
 import com.cocos.bcx_sdk.bcx_wallet.authority1;
 import com.cocos.bcx_sdk.bcx_wallet.fc.io.base_encoder;
 import com.cocos.bcx_sdk.bcx_wallet.fc.io.raw_type;
@@ -13,6 +14,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -172,7 +174,7 @@ public class operations {
             fee.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(caller.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(contract_id.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(function_name.length()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(function_name.getBytes().length));
             baseEncoder.write(function_name.getBytes());
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(value_list.size()));
             for (List<Object> value : value_list) {
@@ -232,10 +234,10 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(price_amount.length()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(price_amount.getBytes().length));
             baseEncoder.write(price_amount.getBytes());
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(price_asset_id.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(price_asset_symbol.length()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(price_asset_symbol.getBytes().length));
             baseEncoder.write(price_asset_symbol.getBytes());
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
@@ -293,7 +295,7 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(referrer.get_instance()));
             Integer reffer = Integer.valueOf(referrer_percent);
             baseEncoder.write(rawObject.get_byte_array(reffer.shortValue()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(name.length()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(name.getBytes().length));
             baseEncoder.write(name.getBytes());
             owner.write_to_encode(baseEncoder);
             active.write_to_encode(baseEncoder);
@@ -326,12 +328,12 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(otcaccount.get_instance()));
             pending_orders_fee.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(memo.length()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(memo.getBytes().length));
             baseEncoder.write(memo.getBytes());
+            LogUtils.i("memoBytes", Arrays.toString(memo.getBytes()));
             price.write_to_encoder(baseEncoder);
             baseEncoder.write(rawObject.get_byte_array(expiration));
         }
-
     }
 
     /**
