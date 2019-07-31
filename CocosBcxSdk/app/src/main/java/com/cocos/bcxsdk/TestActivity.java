@@ -522,7 +522,7 @@ public class TestActivity extends AppCompatActivity {
         tv_transfer_assetGetFee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().transfer_calculate_fee(
+                CocosBcxApiWrapper.getBcxInstance().transfer_calculate_fee(et_transfer_asset_password.getText().toString(),
                         et_transfer_asset_from_account.getText().toString(),
                         et_transfer_asset_to_account.getText().toString(),
                         et_transfer_asset_amount.getText().toString(),
@@ -1173,13 +1173,13 @@ public class TestActivity extends AppCompatActivity {
                         "otcaccount",
                         "gnkhandsome1",
                         "1111qqqq",
-                        "4.2.1838",
-                        "11",
+                        "4.2.2627",
+                        "0",
                         "COCOS",
-                        "test",
+                        "改为分发给我",
                         "100",
                         "COCOS",
-                        (21474836478L - System.currentTimeMillis() / 1000L),
+                        36000,
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override

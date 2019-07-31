@@ -671,7 +671,7 @@ public class CocosBcxApi {
      * @param strFeeSymbolOrId   transfer fee symbol or id
      * @param strMemo            memo
      */
-    public List<asset_fee_object> calculate_transfer_fee(String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strFeeSymbolOrId, String strMemo) throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AuthorityException, AddressFormatException {
+    public List<asset_fee_object> calculate_transfer_fee(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strFeeSymbolOrId, String strMemo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AuthorityException, AddressFormatException, PasswordVerifyException, KeyInvalideException {
 
         asset_object assetObject = lookup_asset_symbols(strAssetSymbolOrId);
         asset_object assetFeeObject = lookup_asset_symbols(strFeeSymbolOrId);
@@ -688,6 +688,11 @@ public class CocosBcxApi {
         account_object accountObjectTo = get_account_object(strTo);
         if (accountObjectTo == null) {
             throw new AccountNotFoundException("Account does not exist");
+        }
+
+        // verify tempory password and account model password
+        if (unlock(accountObjectFrom.name, password, accountDao) != OPERATE_SUCCESS && verify_password(accountObjectFrom.name, password).size() <= 0) {
+            throw new PasswordVerifyException("Wrong password");
         }
 
         operations.transfer_operation transferOperation = new operations.transfer_operation();

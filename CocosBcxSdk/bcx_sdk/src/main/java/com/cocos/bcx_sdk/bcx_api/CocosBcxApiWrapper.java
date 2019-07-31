@@ -1562,12 +1562,12 @@ public class CocosBcxApiWrapper {
      * @param strMemo          memo
      * @param callBack
      */
-    public void transfer_calculate_fee(final String from, final String to, final String strAmount, final String strAssetSymbol, final String strFeeSymbolOrId, final String strMemo, final IBcxCallBack callBack) {
+    public void transfer_calculate_fee(final String password, final String from, final String to, final String strAmount, final String strAssetSymbol, final String strFeeSymbolOrId, final String strMemo, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    List<asset_fee_object> requiredFees = cocosBcxApi.calculate_transfer_fee(from, to, strAmount, strAssetSymbol, strFeeSymbolOrId, strMemo);
+                    List<asset_fee_object> requiredFees = cocosBcxApi.calculate_transfer_fee(password, from, to, strAmount, strAssetSymbol, strFeeSymbolOrId, strMemo, accountDao);
                     rspText = new ResponseData(OPERATE_SUCCESS, "success", requiredFees.get(0)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (AccountNotFoundException e) {
@@ -1584,6 +1584,12 @@ public class CocosBcxApiWrapper {
                     callBack.onReceiveValue(rspText);
                 } catch (AddressFormatException e) {
                     rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (KeyInvalideException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (PasswordVerifyException e) {
+                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
