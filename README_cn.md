@@ -1,3 +1,5 @@
+[English](https://github.com/Cocos-BCX/AndroidSdk/blob/master/README.md "English")
+
 # Part 1
 ## 1.0 适用范围
 
