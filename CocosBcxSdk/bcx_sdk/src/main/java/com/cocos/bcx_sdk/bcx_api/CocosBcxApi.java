@@ -1774,7 +1774,7 @@ public class CocosBcxApi {
      * @param strAccountNameOrId ：strAccountNameOrId
      * @return account info
      */
-    public account_object get_account_object(String strAccountNameOrId) throws NetworkStatusException {
+    public account_object get_account_object(String strAccountNameOrId) throws NetworkStatusException, AccountNotFoundException {
 
         object_id<account_object> objectId = object_id.create_from_string(strAccountNameOrId);
 
@@ -1788,7 +1788,7 @@ public class CocosBcxApi {
             listAccountObject = mWebSocketApi.get_accounts(listObjectId);
         }
         if (listAccountObject.isEmpty()) {
-            return null;
+            throw new AccountNotFoundException("Account does not exist");
         }
         return listAccountObject.get(0);
     }
@@ -1980,7 +1980,7 @@ public class CocosBcxApi {
      * @return
      * @throws NetworkStatusException
      */
-    public List<operation_history_object> get_account_history(String accountNameOrId, int nLimit) throws NetworkStatusException {
+    public List<operation_history_object> get_account_history(String accountNameOrId, int nLimit) throws NetworkStatusException, AccountNotFoundException {
         account_object objectId = get_account_object(accountNameOrId);
         object_id<operation_history_object> startId = new object_id<>(0, operation_history_object.class);
         return mWebSocketApi.get_account_history(objectId.id, startId, nLimit);
