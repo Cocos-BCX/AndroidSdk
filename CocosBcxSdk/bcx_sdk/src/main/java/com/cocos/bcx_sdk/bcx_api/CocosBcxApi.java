@@ -1787,7 +1787,7 @@ public class CocosBcxApi {
             listObjectId.add(objectId);
             listAccountObject = mWebSocketApi.get_accounts(listObjectId);
         }
-        if (listAccountObject.isEmpty()) {
+        if (listAccountObject.isEmpty() || null == listAccountObject.get(0)) {
             throw new AccountNotFoundException("Account does not exist");
         }
         return listAccountObject.get(0);
