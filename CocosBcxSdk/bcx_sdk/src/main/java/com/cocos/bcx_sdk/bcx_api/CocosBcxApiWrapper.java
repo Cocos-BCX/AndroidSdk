@@ -388,6 +388,9 @@ public class CocosBcxApiWrapper {
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
                 }
             }
         });
@@ -403,6 +406,8 @@ public class CocosBcxApiWrapper {
             return cocosBcxApi.get_account_object(strAccountNameOrId);
         } catch (NetworkStatusException e) {
             return null;
+        } catch (AccountNotFoundException e) {
+           return null;
         }
     }
 
@@ -417,6 +422,8 @@ public class CocosBcxApiWrapper {
             account_object account_object = cocosBcxApi.get_account_object(accountName);
             return account_object.id.toString();
         } catch (NetworkStatusException e) {
+            return "";
+        } catch (AccountNotFoundException e) {
             return "";
         }
     }
@@ -433,6 +440,8 @@ public class CocosBcxApiWrapper {
             account_object account_object = cocosBcxApi.get_account_object(accountId);
             return account_object.name;
         } catch (NetworkStatusException e) {
+            return "";
+        } catch (AccountNotFoundException e) {
             return "";
         }
     }
@@ -1929,6 +1938,9 @@ public class CocosBcxApiWrapper {
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
