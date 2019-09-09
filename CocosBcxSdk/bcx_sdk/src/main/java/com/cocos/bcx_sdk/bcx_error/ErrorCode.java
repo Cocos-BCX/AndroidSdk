@@ -99,6 +99,11 @@ public class ErrorCode {
     public static final int ERROR_ORDERS_DO_NOT_EXIST = 161;
 
     /**
+     * not the creator of the Asset XX
+     */
+    public static final int ERROR_NOT_ASSET_CREATOR = 160;
+
+    /**
      * worldViews do not exist
      */
     public static final int ERROR_WORLDVIEW_DO_NOT_EXIST = 164;
