@@ -29,6 +29,7 @@ public class RPC {
     public static final String CALL_GET_BLOCK_HEADER = "get_block_header";
     public static final String CALL_GET_BLOCK = "get_block";
     public static final String CALL_GET_LIMIT_ORDERS = "get_limit_orders";
+    public static final String CALL_GET_FILL_ORDER_HISTORY = "get_fill_order_history";
     public static final String CALL_GET_ACCOUNT_HISTORY = "get_account_history";
     public static final String CALL_GET_TRADE_HISTORY = "get_trade_history";
     public static final String CALL_GET_MARKET_HISTORY = "get_market_history";

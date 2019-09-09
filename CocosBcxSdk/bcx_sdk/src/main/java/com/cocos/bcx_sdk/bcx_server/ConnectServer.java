@@ -16,8 +16,11 @@ import com.cocos.bcx_sdk.bcx_wallet.chain.block_header;
 import com.cocos.bcx_sdk.bcx_wallet.chain.block_info;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.dynamic_global_property_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.fill_order_history_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.global_config_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.global_property_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.limit_orders_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.market_history_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.nh_asset_order_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.nhasset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.object_id;
@@ -62,9 +65,12 @@ import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_BLOCK_HEADER;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_CHAIN_ID;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_CONTRACT;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_DYNAMIC_GLOBAL_PROPERTIES;
+import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_FILL_ORDER_HISTORY;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_FULL_ACCOUNTS;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_GLOBAL_PROPERTIES;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_KEY_REFERENCES;
+import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_LIMIT_ORDERS;
+import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_MARKET_HISTORY;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_NH_CREATOR;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_OBJECTS;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_REQUIRED_FEES;
@@ -1016,6 +1022,33 @@ public class ConnectServer extends WebSocketListener {
 
 
     /**
+     * get limit asset order object
+     *
+     * @throws NetworkStatusException
+     */
+    public limit_orders_object get_limit_order_object(String limit_order_id) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mDatabaseId);
+        callObject.params.add(CALL_GET_OBJECTS);
+
+        List<String> nh_order_ids = new ArrayList<>();
+        nh_order_ids.add(limit_order_id);
+        List<Object> listParams = new ArrayList<>();
+        listParams.add(nh_order_ids);
+        callObject.params.add(listParams);
+
+        ReplyObjectProcess<Reply<List<limit_orders_object>>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<List<limit_orders_object>>>() {
+        }.getType());
+        Reply<List<limit_orders_object>> reply = sendForReply(callObject, replyObject);
+
+        return reply.result.get(0);
+    }
+
+
+    /**
      * Seek World View Details
      *
      * @throws NetworkStatusException
@@ -1111,6 +1144,86 @@ public class ConnectServer extends WebSocketListener {
         Reply<transaction_in_block_info> replyLookupAccountNames = sendForReply(callObject, replyObject);
         return replyLookupAccountNames.result;
     }
+
+    /**
+     * get_limit_orders
+     *
+     * @throws NetworkStatusException
+     */
+    public List<limit_orders_object> get_limit_orders(String first_id, String second_id, int nLimit) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mDatabaseId);
+        callObject.params.add(CALL_GET_LIMIT_ORDERS);
+
+        List<Object> tr_ids = new ArrayList<>();
+        tr_ids.add(first_id);
+        tr_ids.add(second_id);
+        tr_ids.add(nLimit);
+        callObject.params.add(tr_ids);
+
+        ReplyObjectProcess<Reply<List<limit_orders_object>>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<List<limit_orders_object>>>() {
+        }.getType());
+        Reply<List<limit_orders_object>> replyLookupAccountNames = sendForReply(callObject, replyObject);
+        return replyLookupAccountNames.result;
+    }
+
+
+    /**
+     * get_fill_order_history
+     *
+     * @throws NetworkStatusException
+     */
+    public List<fill_order_history_object> get_fill_order_history(String first_id, String second_id, int nLimit) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mHistoryId);
+        callObject.params.add(CALL_GET_FILL_ORDER_HISTORY);
+
+        List<Object> tr_ids = new ArrayList<>();
+        tr_ids.add(first_id);
+        tr_ids.add(second_id);
+        tr_ids.add(nLimit);
+        callObject.params.add(tr_ids);
+
+        ReplyObjectProcess<Reply<List<fill_order_history_object>>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<List<fill_order_history_object>>>() {
+        }.getType());
+        Reply<List<fill_order_history_object>> replyLookupAccountNames = sendForReply(callObject, replyObject);
+        return replyLookupAccountNames.result;
+    }
+
+
+    /**
+     * get market history
+     *
+     * @throws NetworkStatusException
+     */
+    public List<market_history_object> get_market_history(String quote_asset_symbol_or_id, String base_asset_symbol_or_id, long seconds, String start_time, String end_time) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mHistoryId);
+        callObject.params.add(CALL_GET_MARKET_HISTORY);
+
+        List<Object> tr_ids = new ArrayList<>();
+        tr_ids.add(quote_asset_symbol_or_id);
+        tr_ids.add(base_asset_symbol_or_id);
+        tr_ids.add(seconds);
+        tr_ids.add(start_time);
+        tr_ids.add(end_time);
+        callObject.params.add(tr_ids);
+
+        ReplyObjectProcess<Reply<List<market_history_object>>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<List<market_history_object>>>() {
+        }.getType());
+        Reply<List<market_history_object>> replyLookupAccountNames = sendForReply(callObject, replyObject);
+        return replyLookupAccountNames.result;
+    }
+
 
 
     /**
