@@ -1,6 +1,7 @@
-package com.cocos.bcxsdk;
+package com.cocos.bcxsdk.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.cocos.bcx_sdk.bcx_error.ContractNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
+import com.cocos.bcxsdk.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -158,6 +160,7 @@ public class TestActivity extends AppCompatActivity {
     private TextView get_transaction_by_id;
     private TextView get_global_properties;
     private TextView tv_get_contract;
+    private EditText et_nh_asset_otcaccount;
     private EditText et_nh_asset_seller;
     private EditText pending_order_seller_password;
     private EditText pending_order_nh_asset;
@@ -181,6 +184,8 @@ public class TestActivity extends AppCompatActivity {
     private TextView tv_cancel_nh_asset_order_fee;
     private TextView tv_cancel_nh_asset_order;
     private TextView tv_list_assets;
+
+    private TextView market;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -364,7 +369,7 @@ public class TestActivity extends AppCompatActivity {
         get_transaction_by_id = findViewById(R.id.get_transaction_by_id);
         get_global_properties = findViewById(R.id.get_global_properties);
 
-
+        et_nh_asset_otcaccount = findViewById(R.id.et_nh_asset_otcaccount);
         et_nh_asset_seller = findViewById(R.id.et_nh_asset_seller);
         pending_order_seller_password = findViewById(R.id.pending_order_seller_password);
         pending_order_nh_asset = findViewById(R.id.pending_order_nh_asset);
@@ -375,6 +380,17 @@ public class TestActivity extends AppCompatActivity {
         pending_order_valid_time = findViewById(R.id.pending_order_valid_time);
         tv_create_nh_asset_order_fee = findViewById(R.id.tv_create_nh_asset_order_fee);
         tv_create_nh_asset_order = findViewById(R.id.tv_create_nh_asset_order);
+
+        market = findViewById(R.id.market);
+
+//
+//        get_fill_order_history = findViewById(R.id.get_fill_order_history);
+//
+//
+//        base_transaction = findViewById(R.id.base_transaction);
+//        transaction_pair_to_base_transaction = findViewById(R.id.transaction_pair_to_base_transaction);
+//        getMarketStats = findViewById(R.id.getMarketStats);
+//        is_subscribed1 = findViewById(R.id.is_subscribed1);
 
         initListener();
     }
@@ -729,68 +745,25 @@ public class TestActivity extends AppCompatActivity {
         });
 
 
-//        /**
-//         * 获取调用合约费用,
-//         */
-//        tv_calculate_invoking_contract_fee.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().calculate_invoking_contract_fee(et_calculate_invoking_contract_strAccount.getText().toString(),
-//                        et_calculate_invoking_contract_feeAssetSymbol.getText().toString(),
-//                        et_calculate_invoking_contract_contractId.getText().toString(),
-//                        et_calculate_invoking_contract_functionName.getText().toString(),
-//                        et_calculate_invoking_contract_params.getText().toString(),
-//                        new IBcxCallBack() {
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("cal_contract_fee", value);
-//                            }
-//                        });
-//            }
-//        });
-//
-//        /**
-//         * 调用合约方法,
-//         */
-//        tv_invoking_contract.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().invoking_contract(et_calculate_invoking_contract_strAccount.getText().toString(),
-//                        et_calculate_invoking_contract_pwd.getText().toString(),
-//                        et_calculate_invoking_contract_feeAssetSymbol.getText().toString(),
-//                        et_calculate_invoking_contract_contractId.getText().toString(),
-//                        et_calculate_invoking_contract_functionName.getText().toString(),
-//                        et_calculate_invoking_contract_params.getText().toString(),
-//                        new IBcxCallBack() {
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("invoking_contract", value);
-//                            }
-//                        });
-//            }
-//        });
-
-
         /**
          * 获取调用合约费用,
          */
         tv_calculate_invoking_contract_fee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().calculate_invoking_contract_fee("gnkhandsome1",
-                        "COCOS",
-                        "contract.dicegame",
-                        "bet",
-                        "50,1",
+                CocosBcxApiWrapper.getBcxInstance().calculate_invoking_contract_fee(et_calculate_invoking_contract_strAccount.getText().toString(),
+                        et_calculate_invoking_contract_feeAssetSymbol.getText().toString(),
+                        et_calculate_invoking_contract_contractId.getText().toString(),
+                        et_calculate_invoking_contract_functionName.getText().toString(),
+                        et_calculate_invoking_contract_params.getText().toString(),
                         new IBcxCallBack() {
                             @Override
                             public void onReceiveValue(String value) {
-                                Log.i("calculate_contract_fee", value);
+                                Log.i("cal_contract_fee", value);
                             }
                         });
             }
         });
-
 
         /**
          * 调用合约方法,
@@ -798,14 +771,13 @@ public class TestActivity extends AppCompatActivity {
         tv_invoking_contract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().invoking_contract("gnkhandsome1",
-                        "1111qqqq",
-                        "COCOS",
-                        "contract.ccshooter.lottery",
-                        "draw",
-                        "gnkhandsome1,100",
+                CocosBcxApiWrapper.getBcxInstance().invoking_contract(et_calculate_invoking_contract_strAccount.getText().toString(),
+                        et_calculate_invoking_contract_pwd.getText().toString(),
+                        et_calculate_invoking_contract_feeAssetSymbol.getText().toString(),
+                        et_calculate_invoking_contract_contractId.getText().toString(),
+                        et_calculate_invoking_contract_functionName.getText().toString(),
+                        et_calculate_invoking_contract_params.getText().toString(),
                         new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
                             @Override
                             public void onReceiveValue(String value) {
                                 Log.i("invoking_contract", value);
@@ -813,6 +785,50 @@ public class TestActivity extends AppCompatActivity {
                         });
             }
         });
+
+
+//        /**
+//         * 获取调用合约费用,
+//         */
+//        tv_calculate_invoking_contract_fee.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CocosBcxApiWrapper.getBcxInstance().calculate_invoking_contract_fee("gnkhandsome1",
+//                        "COCOS",
+//                        "contract.dicegame",
+//                        "bet",
+//                        "50,1",
+//                        new IBcxCallBack() {
+//                            @Override
+//                            public void onReceiveValue(String value) {
+//                                Log.i("calculate_contract_fee", value);
+//                            }
+//                        });
+//            }
+//        });
+//
+//
+//        /**
+//         * 调用合约方法,
+//         */
+//        tv_invoking_contract.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CocosBcxApiWrapper.getBcxInstance().invoking_contract("gnkhandsome1",
+//                        "1111qqqq",
+//                        "COCOS",
+//                        "contract.ccshooter.lottery",
+//                        "draw",
+//                        "gnkhandsome1,100",
+//                        new IBcxCallBack() {
+//                            @SuppressLint("LongLogTag")
+//                            @Override
+//                            public void onReceiveValue(String value) {
+//                                Log.i("invoking_contract", value);
+//                            }
+//                        });
+//            }
+//        });
 
         /**
          * 查询合约
@@ -1048,89 +1064,39 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
-        /**
-         * 获取购买nh资产的费用
-         */
-        tv_nh_asset_buy_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().buy_nh_asset_fee(et_nh_asset_buyer.getText().toString(),
-                        et_nh_asset_order_id.getText().toString(),
-                        new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("buy_nh_asset_fee", value);
-                            }
-                        });
-            }
-        });
-
-
-        /**
-         * 购买nh资产
-         */
-        tv_nh_asset_buy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().buy_nh_asset(
-                        "1111qqqq",
-                        "gnkhandsome1",
-                        "4.3.180",
-                        new IBcxCallBack() {
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("buy_nh_asset", value);
-                            }
-                        });
-            }
-        });
-
 //        /**
-//         * 获取创建nh资产订单的费用
+//         * 获取购买nh资产的费用
 //         */
-//        tv_create_nh_asset_order_fee.setOnClickListener(new View.OnClickListener() {
+//        tv_nh_asset_buy_fee.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order_fee(
-//                        et_nh_asset_seller.getText().toString(),
-//                        pending_order_nh_asset.getText().toString(),
-//                        pending_order_fee.getText().toString(),
-//                        pending_order_memo.getText().toString(),
-//                        pending_order_price.getText().toString(),
-//                        pending_order_price_symbol.getText().toString(),
-//                        Long.parseLong(pending_order_valid_time.getText().toString()),
+//                CocosBcxApiWrapper.getBcxInstance().buy_nh_asset_fee(et_nh_asset_buyer.getText().toString(),
+//                        et_nh_asset_order_id.getText().toString(),
 //                        new IBcxCallBack() {
 //                            @SuppressLint("LongLogTag")
 //                            @Override
 //                            public void onReceiveValue(String value) {
-//                                Log.i("create_nh_asset_order_fee", value);
+//                                Log.i("buy_nh_asset_fee", value);
 //                            }
 //                        });
 //            }
 //        });
-
-
+//
+//
 //        /**
-//         * 创建nh资产订单(出售)
+//         * 购买nh资产
 //         */
-//        tv_create_nh_asset_order.setOnClickListener(new View.OnClickListener() {
+//        tv_nh_asset_buy.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order(
-//                        et_nh_asset_seller.getText().toString(),
-//                        pending_order_seller_password.getText().toString(),
-//                        pending_order_nh_asset.getText().toString(),
-//                        pending_order_fee.getText().toString(),
-//                        pending_order_memo.getText().toString(),
-//                        pending_order_price.getText().toString(),
-//                        pending_order_price_symbol.getText().toString(),
-//                        Long.parseLong(pending_order_valid_time.getText().toString()),
+//                CocosBcxApiWrapper.getBcxInstance().buy_nh_asset(
+//                        "1111qqqq",
+//                        "gnkhandsome1",
+//                        "4.3.180",
 //                        new IBcxCallBack() {
-//                            @SuppressLint("LongLogTag")
 //                            @Override
 //                            public void onReceiveValue(String value) {
-//                                Log.i("create_nh_asset_order", value);
+//                                Log.i("buy_nh_asset", value);
 //                            }
 //                        });
 //            }
@@ -1138,21 +1104,21 @@ public class TestActivity extends AppCompatActivity {
 
 
         /**
-         * 创建nh资产订单(出售)
+         * 获取创建nh资产订单的费用
          */
         tv_create_nh_asset_order_fee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order_fee(
-                        "otcaccount",
-                        "gnkhandsome1",
-                        "4.2.2589",
-                        "11",
+                        et_nh_asset_otcaccount.getText().toString(),
+                        et_nh_asset_seller.getText().toString(),
+                        pending_order_nh_asset.getText().toString(),
+                        pending_order_fee.getText().toString(),
                         "COCOS",
-                        "test",
-                        "0",
-                        "COCOS",
-                        5000L,
+                        pending_order_memo.getText().toString(),
+                        pending_order_price.getText().toString(),
+                        pending_order_price_symbol.getText().toString(),
+                        Long.parseLong(pending_order_valid_time.getText().toString()),
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override
@@ -1163,6 +1129,7 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
+
         /**
          * 创建nh资产订单(出售)
          */
@@ -1170,16 +1137,16 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order(
-                        "otcaccount",
-                        "gnkhandsome1",
-                        "1111qqqq",
-                        "4.2.2627",
-                        "0",
+                        et_nh_asset_otcaccount.getText().toString(),
+                        et_nh_asset_seller.getText().toString(),
+                        pending_order_seller_password.getText().toString(),
+                        pending_order_nh_asset.getText().toString(),
+                        pending_order_fee.getText().toString(),
                         "COCOS",
-                        "改为分发给我",
-                        "100",
-                        "COCOS",
-                        36000,
+                        pending_order_memo.getText().toString(),
+                        pending_order_price.getText().toString(),
+                        pending_order_price_symbol.getText().toString(),
+                        Long.parseLong(pending_order_valid_time.getText().toString()),
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override
@@ -1189,6 +1156,60 @@ public class TestActivity extends AppCompatActivity {
                         });
             }
         });
+
+//
+//        /**
+//         * 创建nh资产订单(出售)
+//         */
+//        tv_create_nh_asset_order_fee.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order_fee(
+//                        "otcaccount",
+//                        "gnkhandsome1",
+//                        "4.2.2589",
+//                        "11",
+//                        "COCOS",
+//                        "test",
+//                        "0",
+//                        "COCOS",
+//                        5000L,
+//                        new IBcxCallBack() {
+//                            @SuppressLint("LongLogTag")
+//                            @Override
+//                            public void onReceiveValue(String value) {
+//                                Log.i("create_nh_asset_order_fee", value);
+//                            }
+//                        });
+//            }
+//        });
+//
+//        /**
+//         * 创建nh资产订单(出售)
+//         */
+//        tv_create_nh_asset_order.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order(
+//                        "otcaccount",
+//                        "gnkhandsome1",
+//                        "1111qqqq",
+//                        "4.2.2627",
+//                        "0",
+//                        "COCOS",
+//                        "改为分发给我",
+//                        "100",
+//                        "COCOS",
+//                        36000,
+//                        new IBcxCallBack() {
+//                            @SuppressLint("LongLogTag")
+//                            @Override
+//                            public void onReceiveValue(String value) {
+//                                Log.i("create_nh_asset_order", value);
+//                            }
+//                        });
+//            }
+//        });
 
 
         /**
@@ -1372,13 +1393,7 @@ public class TestActivity extends AppCompatActivity {
         get_transaction_by_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().get_transaction_by_id(et_get_transaction_in_block_info.getText().toString(), new IBcxCallBack() {
-                    @SuppressLint("LongLogTag")
-                    @Override
-                    public void onReceiveValue(String value) {
-                        Log.i("get_transaction_by_id", value);
-                    }
-                });
+
             }
         });
 
@@ -1398,6 +1413,60 @@ public class TestActivity extends AppCompatActivity {
                 });
             }
         });
+
+
+        market.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(TestActivity.this, MarketActivity.class));
+            }
+        });
+
+
+
+
+//        /**
+//         *  查询资产‘限价单’历史
+//         *   get_fill_order_history
+//         */
+//        get_fill_order_history.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CocosBcxApiWrapper.getBcxInstance().get_fill_order_history(transaction_pair.getText().toString(),
+//                        200,
+//                        new IBcxCallBack() {
+//                            @SuppressLint("LongLogTag")
+//                            @Override
+//                            public void onReceiveValue(String value) {
+//                                Log.i("get_fill_order_history", value);
+//                            }
+//                        });
+//            }
+//        });
+//
+//
+//        /**
+//         *  查询交易对K线数据
+//         *  get_market_history
+//         */
+//        getMarketStats.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CocosBcxApiWrapper.getBcxInstance().get_market_history(base_transaction.getText().toString(),
+//                        transaction_pair_to_base_transaction.getText().toString(),
+//                        86400,
+//                        "2019-08-30T03:37:01",
+//                        "2019-09-1T03:37:01",
+//                        new IBcxCallBack() {
+//                            @SuppressLint("LongLogTag")
+//                            @Override
+//                            public void onReceiveValue(String value) {
+//                                Log.i("get_market_history", value);
+//                            }
+//                        });
+//            }
+//        });
+
     }
 
 
