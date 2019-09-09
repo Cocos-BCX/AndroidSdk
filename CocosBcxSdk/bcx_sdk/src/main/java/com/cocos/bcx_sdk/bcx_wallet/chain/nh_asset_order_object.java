@@ -6,7 +6,7 @@ package com.cocos.bcx_sdk.bcx_wallet.chain;
  */
 public class nh_asset_order_object {
 
-    public  object_id<nh_asset_order_object> id;
+    public object_id<nh_asset_order_object> id;
     public object_id<account_object> seller;
     public object_id<account_object> otcaccount;
     public object_id<nhasset_object> nh_asset_id;
