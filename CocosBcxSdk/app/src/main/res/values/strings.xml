@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">BcxSDK</string>
+    <string name="settle_asset">资产清算</string>
+    <string name="asset_publish_feed">资产喂价</string>
+    <string name="create_limit_order">创建限价单</string>
+    <string name="trade_limit_order">所有委托单</string>
+    <string name="my_limit_order">我的委托单</string>
+    <string name="my_limit_order_history">我的交易历史</string>
+    <string name="all_limit_order_history">所有交易历史</string>
+    <string name="trade_pair_history">交易对K线数据</string>
 </resources>

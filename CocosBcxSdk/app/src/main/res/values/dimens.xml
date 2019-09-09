@@ -2,4 +2,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="margin_hor" tools:ignore="MissingDefaultResource">15dp</dimen>
     <dimen name="margin_ver">10dp</dimen>
+    <dimen name="dp_2">2dp</dimen>
+    <dimen name="dp_32">32dp</dimen>
+    <dimen name="dp_50">50dp</dimen>
+    <dimen name="sp_16">16sp</dimen>
+    <dimen name="dp_15">15dp</dimen>
+    <dimen name="dp_12">12dp</dimen>
+    <dimen name="dp_16">16dp</dimen>
+    <dimen name="dp_9">9dp</dimen>
+    <dimen name="dp_3">3dp</dimen>
+    <dimen name="sp_14">14sp</dimen>
+    <dimen name="sp_13">13sp</dimen>
+    <dimen name="sp_10">10sp</dimen>
+    <dimen name="dp_1">0.5dp</dimen>
+    <dimen name="dp_60">60dp</dimen>
+    <dimen name="dp_112">112dp</dimen>
+    <dimen name="sp_15">15sp</dimen>
 </resources>
