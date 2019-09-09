@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="个人资产清算" />
+
+        <EditText
+            android:id="@+id/settle_asset_account"
+            style="@style/EtSingleLine"
+            android:hint="账户" />
+
+        <EditText
+            android:id="@+id/settle_asset_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/settle_asset_symbol"
+            style="@style/EtSingleLine"
+            android:hint="资产符号" />
+
+        <EditText
+            android:id="@+id/settle_asset_amount"
+            style="@style/EtSingleLine"
+            android:inputType="number"
+            android:hint="金额" />
+
+        <TextView
+            android:id="@+id/settle_asset_get_fee"
+            style="@style/TvBtn"
+            android:text="获取手续费费用预估" />
+
+        <TextView
+            android:id="@+id/settle_asset"
+            style="@style/TvBtn"
+            android:text="确认清算" />
+
+        <EditText
+            android:id="@+id/settle_asset_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="全局资产清算" />
+
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="全局清算根据当前提供的价格立即清算，个人清算是以资产设定的延迟清算时间到来时的喂价价格执行清算" />
+
+
+        <EditText
+            android:id="@+id/global_settle_asset_account"
+            style="@style/EtSingleLine"
+            android:hint="账户" />
+
+        <EditText
+            android:id="@+id/global_settle_asset_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/global_settle_asset_symbol"
+            style="@style/EtSingleLine"
+            android:hint="资产符号" />
+
+        <EditText
+            android:id="@+id/global_settle_asset_price"
+            style="@style/EtSingleLine"
+            android:inputType="number"
+            android:hint="价格" />
+
+        <TextView
+            android:id="@+id/global_settle_asset_get_fee"
+            style="@style/TvBtn"
+            android:text="获取手续费费用预估" />
+
+        <TextView
+            android:id="@+id/global_settle_asset"
+            style="@style/TvBtn"
+            android:text="确认清算" />
+
+        <EditText
+            android:id="@+id/global_settle_asset_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+    </LinearLayout>
+</ScrollView>

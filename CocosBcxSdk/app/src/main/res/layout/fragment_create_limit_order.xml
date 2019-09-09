@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="代币资产“限价单”交易" />
+
+        <EditText
+            android:id="@+id/createLimitOrder_account"
+            style="@style/EtSingleLine"
+            android:hint="账户" />
+
+        <EditText
+            android:id="@+id/createLimitOrder_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/createLimitOrder_transaction_pair"
+            style="@style/EtSingleLine"
+            android:hint="交易对（TEST_COCOS）" />
+
+        <EditText
+            android:id="@+id/createLimitOrder_type"
+            style="@style/EtSingleLine"
+            android:hint="交易类型type（0:卖单，1:买单）；"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/createLimitOrder_valide_time"
+            style="@style/EtSingleLine"
+            android:hint="订单有效期（单位：天 最大:200000）"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/createLimitOrder_price"
+            style="@style/EtSingleLine"
+            android:hint="价格(单位为交易市场顶级资产,如COCOS)"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/createLimitOrder_amount"
+            style="@style/EtSingleLine"
+            android:hint="数量(单位如二级资产TEST)："
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/createLimitOrder_fee"
+            style="@style/TvBtn"
+            android:text="获取手续费费用预估" />
+
+        <TextView
+            android:id="@+id/createLimitOrder"
+            style="@style/TvBtn"
+            android:text="立即下单" />
+
+        <TextView
+            android:id="@+id/to_my_limit_order"
+            style="@style/TvBtn"
+            android:text="查看我的委托单" />
+
+        <TextView
+            android:id="@+id/to_all_limit_order"
+            style="@style/TvBtn"
+            android:text="查看所有委托单" />
+
+        <EditText
+            android:id="@+id/createLimitOrder_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+
+    </LinearLayout>
+</ScrollView>

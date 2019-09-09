@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="交易对transactionPair(TEST_COCOS为买卖COCOS交易市场的TEST)" />
+
+        <EditText
+            android:id="@+id/transaction_pair"
+            style="@style/EtSingleLine"
+            android:text="COCOS_USDT" />
+
+        <EditText
+            android:id="@+id/transaction_limit"
+            style="@style/EtSingleLine"
+            android:inputType="number"
+            android:text="200" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                style="@style/TvEdTips"
+                android:text="是否订阅：" />
+
+            <CheckBox
+                android:id="@+id/is_subscribed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/get_all_limit_orders"
+            style="@style/TvBtn"
+            android:text="查询委托单" />
+
+        <EditText
+            android:id="@+id/all_limit_orders_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_all_limit_orders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+
+</LinearLayout>

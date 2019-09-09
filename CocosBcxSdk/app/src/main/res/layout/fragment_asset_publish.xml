@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="资产喂价提供者更新" />
+
+        <EditText
+            android:id="@+id/assetUpdateFeed_symbol_account"
+            style="@style/EtSingleLine"
+            android:hint="账户" />
+
+        <EditText
+            android:id="@+id/assetUpdateFeed_symbol_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+
+        <EditText
+            android:id="@+id/assetUpdateFeed_symbol"
+            style="@style/EtSingleLine"
+            android:hint="资产符号" />
+
+        <EditText
+            android:id="@+id/assetUpdateFeed_producers"
+            style="@style/EtSingleLine"
+            android:hint="喂价提供者账户(Array) " />
+
+        <TextView
+            android:id="@+id/assetUpdateFeed_fee"
+            style="@style/TvBtn"
+            android:text="获取手续费费用预估" />
+
+        <TextView
+            android:id="@+id/assetUpdateFeed"
+            style="@style/TvBtn"
+            android:text="确认更新喂价者" />
+
+
+        <EditText
+            android:id="@+id/assetUpdateFeed_producers_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="资产喂价" />
+
+        <EditText
+            android:id="@+id/assetPublishFeed_account"
+            style="@style/EtSingleLine"
+            android:hint="账户" />
+
+        <EditText
+            android:id="@+id/assetPublishFeed_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/assetPublishFeed_symbol"
+            style="@style/EtSingleLine"
+            android:hint="资产符号" />
+
+        <EditText
+            android:id="@+id/assetPublishFeed_price"
+            style="@style/EtSingleLine"
+            android:inputType="number"
+            android:hint="价格" />
+
+        <EditText
+            android:id="@+id/assetPublishFeed_maintaining_mortgage_rate"
+            style="@style/EtSingleLine"
+            android:inputType="numberDecimal"
+            android:hint="维持抵押率" />
+
+        <EditText
+            android:id="@+id/assetPublishFeed_upper_limit_of_compulsory_ratio"
+            style="@style/EtSingleLine"
+            android:inputType="numberDecimal"
+            android:hint="强制平仓比例上限" />
+
+        <EditText
+            android:id="@+id/assetPublishFeed_number_benchmark_assets"
+            style="@style/EtSingleLine"
+            android:inputType="numberDecimal"
+            android:hint="基准资产数量" />
+
+        <EditText
+            android:id="@+id/assetPublishFeed_number_of_listed_assets"
+            style="@style/EtSingleLine"
+            android:hint="标价资产数量（COCOS）："
+            android:inputType="numberDecimal"/>
+
+        <TextView
+            android:id="@+id/assetPublishFeed_fee"
+            style="@style/TvBtn"
+            android:text="获取手续费费用预估" />
+
+        <TextView
+            android:id="@+id/assetPublishFeed"
+            style="@style/TvBtn"
+            android:text="确认喂价" />
+
+
+        <EditText
+            android:id="@+id/assetPublishFeed_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+    </LinearLayout>
+</ScrollView>
