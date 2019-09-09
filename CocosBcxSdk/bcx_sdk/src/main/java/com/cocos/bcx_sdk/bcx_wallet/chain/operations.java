@@ -44,6 +44,18 @@ public class operations {
 
     public static final int ID_CREATE_CHILD_ACCOUNT_OPERATION = 5;
 
+    public static final int ID_CREATE_LIMIT_ORDER = 1;
+
+    public static final int ID_CANCEL_LIMIT_ORDER = 2;
+
+    public static final int ID_UPDATE_FEED_PRODUCT = 12;
+
+    public static final int ID_PUBLISH_FEED = 18;
+
+    public static final int ID_ASSET_SETTLE = 16;
+
+    public static final int ID_GLOBAL_ASSET_SETTLE = 17;
+
     public static operation_id_map operations_map = new operation_id_map();
 
     public static class operation_id_map {
@@ -60,6 +72,12 @@ public class operations {
             mHashId2Operation.put(ID_CREATE_NH_ASSET_ORDER_OPERATION, create_nhasset_order_operation.class);
             mHashId2Operation.put(ID_DELETE_NH_ASSET_OPERATION, delete_nhasset_operation.class);
             mHashId2Operation.put(ID_CANCEL_NH_ASSET_ORDER_OPERATION, cancel_nhasset_order_operation.class);
+            mHashId2Operation.put(ID_CREATE_LIMIT_ORDER, create_limit_order_operation.class);
+            mHashId2Operation.put(ID_CANCEL_LIMIT_ORDER, cancel_limit_order_operation.class);
+            mHashId2Operation.put(ID_UPDATE_FEED_PRODUCT, update_feed_product_operation.class);
+            mHashId2Operation.put(ID_PUBLISH_FEED, publish_feed_operation.class);
+            mHashId2Operation.put(ID_ASSET_SETTLE, asset_settle_operation.class);
+            mHashId2Operation.put(ID_GLOBAL_ASSET_SETTLE, global_asset_settle_operation.class);
         }
 
         public Type getOperationObjectById(int nId) {
@@ -376,5 +394,144 @@ public class operations {
         }
     }
 
+
+    /**
+     * create limit order operation
+     */
+    public static class create_limit_order_operation implements base_operation {
+
+        public asset fee;
+        public object_id<account_object> seller;
+        public asset amount_to_sell;
+        public asset min_to_receive;
+        public Date expiration;
+        public boolean fill_or_kill;
+        public Set<types.void_t> extensions;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            fee.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
+            amount_to_sell.write_to_encoder(baseEncoder);
+            min_to_receive.write_to_encoder(baseEncoder);
+            baseEncoder.write(rawObject.get_byte_array(expiration));
+            baseEncoder.write(rawObject.get_byte(fill_or_kill));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
+        }
+    }
+
+
+    /**
+     * cancel limit order operation
+     */
+    public static class cancel_limit_order_operation implements base_operation {
+
+        public asset fee;
+        public object_id<account_object> fee_paying_account;
+        public object_id<limit_orders_object> order;
+        public Set<types.void_t> extensions;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            fee.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(order.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
+        }
+    }
+
+
+    /**
+     * update feed_object product operation
+     */
+    public static class update_feed_product_operation implements base_operation {
+
+        public asset fee;
+        public object_id<account_object> issuer;
+        public object_id<asset_object> asset_to_update;
+        public List<object_id<account_object>> new_feed_producers;
+        public Set<types.void_t> extensions;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            fee.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(issuer.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_to_update.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(new_feed_producers.size()));
+            for (object_id<account_object> produceIds : new_feed_producers) {
+                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(produceIds.get_instance()));
+            }
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
+        }
+    }
+
+
+    /**
+     * publish feed operation
+     */
+    public static class publish_feed_operation implements base_operation {
+
+        public asset fee;
+        public object_id<account_object> publisher;
+        public object_id<asset_object> asset_id;
+        public feed_object feed;
+        public Set<types.void_t> extensions;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            fee.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(publisher.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_id.get_instance()));
+            feed.write_to_encoder(baseEncoder, rawObject);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
+        }
+    }
+
+    /**
+     * asset settle operation
+     */
+    public static class asset_settle_operation implements base_operation {
+
+        public asset fee;
+        public object_id<account_object> account;
+        public asset amount;
+        public Set<types.void_t> extensions;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            fee.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account.get_instance()));
+            amount.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
+        }
+    }
+
+
+    /**
+     * global asset settle operation
+     */
+    public static class global_asset_settle_operation implements base_operation {
+
+        public asset fee;
+        public object_id<account_object> issuer;
+        public object_id<asset_object> asset_to_settle;
+        public settle_price_object settle_price;
+        public Set<types.void_t> extensions;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            fee.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(issuer.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_to_settle.get_instance()));
+            settle_price.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
+        }
+    }
 
 }
