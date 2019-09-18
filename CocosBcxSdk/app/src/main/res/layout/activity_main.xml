@@ -1047,84 +1047,12 @@
             android:layout_height="60dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginBottom="20dp"
             android:background="#EC7263"
             android:gravity="center"
             android:text="交易市场"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
-
-        <TextView
-            style="@style/TvTitle"
-            android:text="查询&amp;订阅交易市场行情" />
-
-        <EditText
-            android:id="@+id/base_transaction"
-            style="@style/EtSingleLine"
-            android:hint="交易市场" />
-
-        <TextView
-            style="@style/TvEdTips"
-            android:text="相关交易对的币种（使用英文逗号“,”分开)" />
-
-        <EditText
-            android:id="@+id/transaction_pair_to_base_transaction"
-            style="@style/EtSingleLine"
-            android:hint="COCOS,TEST" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-
-            <TextView
-                style="@style/TvEdTips"
-                android:text="是否订阅：" />
-
-            <CheckBox
-                android:id="@+id/is_subscribed1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/getMarketStats"
-            style="@style/TvBtn"
-            android:text="立即查询" />
-
-        <ListView
-            android:id="@+id/lv_MarketStats"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </ListView>
-
-        <TextView
-            style="@style/TvTitle"
-            android:text="查询交易对K线数据" />
-
-        <TextView
-            style="@style/TvEdTips"
-            android:text="交易对trx_symbol(TEST_USDT为买卖USDT交易市场的TEST)" />
-
-        <EditText
-            android:id="@+id/trx_symbol"
-            style="@style/EtSingleLine"
-            android:hint="TEST_USDT" />
-
-
-        <TextView
-            style="@style/TvEdTips"
-            android:text="周期（单位：秒）" />
-
-        <EditText
-            android:id="@+id/cycle"
-            style="@style/EtSingleLine"
-            android:hint="86400" />
-
-        <TextView
-            android:id="@+id/queryPriceHistory"
-            style="@style/TvBtn"
-            android:text="立即查询" />
 
     </LinearLayout>
 </ScrollView>

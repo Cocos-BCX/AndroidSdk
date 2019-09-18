@@ -2077,7 +2077,7 @@ public class CocosBcxApiWrapper {
      *
      * @throws NetworkStatusException
      */
-    public void get_block_header(final double nBlockNumber, final IBcxCallBack callBack) {
+    public void get_block_header(final String nBlockNumber, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {

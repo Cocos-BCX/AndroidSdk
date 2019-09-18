@@ -152,16 +152,18 @@ public class ConnectServer extends WebSocketListener {
 
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, @Nullable Response response) {
-        if (t instanceof IOException) {
-            synchronized (mWebSocket) {
-                mnConnectStatus = OPERATE_FAILED;
-                mWebSocket.notify();
-            }
-            synchronized (mHashMapIdToProcess) {
-                for (Map.Entry<Integer, IReplyObjectProcess> entry : mHashMapIdToProcess.entrySet()) {
-                    entry.getValue().notifyFailure(t);
+        if (null != mWebSocket) {
+            if (t instanceof IOException) {
+                synchronized (mWebSocket) {
+                    mnConnectStatus = OPERATE_FAILED;
+                    mWebSocket.notify();
                 }
-                mHashMapIdToProcess.clear();
+                synchronized (mHashMapIdToProcess) {
+                    for (Map.Entry<Integer, IReplyObjectProcess> entry : mHashMapIdToProcess.entrySet()) {
+                        entry.getValue().notifyFailure(t);
+                    }
+                    mHashMapIdToProcess.clear();
+                }
             }
         }
     }
@@ -715,7 +717,7 @@ public class ConnectServer extends WebSocketListener {
      *
      * @throws NetworkStatusException
      */
-    public block_header get_block_header(double nBlockNumber) throws NetworkStatusException {
+    public block_header get_block_header(String nBlockNumber) throws NetworkStatusException {
         Call callObject = new Call();
         callObject.id = mnCallId.getAndIncrement();
         callObject.method = "call";
@@ -1223,7 +1225,6 @@ public class ConnectServer extends WebSocketListener {
         Reply<List<market_history_object>> replyLookupAccountNames = sendForReply(callObject, replyObject);
         return replyLookupAccountNames.result;
     }
-
 
 
     /**

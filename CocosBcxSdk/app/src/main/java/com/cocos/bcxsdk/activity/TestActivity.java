@@ -383,15 +383,6 @@ public class TestActivity extends AppCompatActivity {
 
         market = findViewById(R.id.market);
 
-//
-//        get_fill_order_history = findViewById(R.id.get_fill_order_history);
-//
-//
-//        base_transaction = findViewById(R.id.base_transaction);
-//        transaction_pair_to_base_transaction = findViewById(R.id.transaction_pair_to_base_transaction);
-//        getMarketStats = findViewById(R.id.getMarketStats);
-//        is_subscribed1 = findViewById(R.id.is_subscribed1);
-
         initListener();
     }
 
@@ -632,7 +623,7 @@ public class TestActivity extends AppCompatActivity {
         tv_get_block_header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().get_block_header(Integer.valueOf(et_block_number.getText().toString()), new IBcxCallBack() {
+                CocosBcxApiWrapper.getBcxInstance().get_objects(et_block_number.getText().toString(), new IBcxCallBack() {
                     @Override
                     public void onReceiveValue(String value) {
                         Log.i("get_block_header", value);
@@ -1414,7 +1405,6 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
-
         market.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1422,50 +1412,6 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-//        /**
-//         *  查询资产‘限价单’历史
-//         *   get_fill_order_history
-//         */
-//        get_fill_order_history.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().get_fill_order_history(transaction_pair.getText().toString(),
-//                        200,
-//                        new IBcxCallBack() {
-//                            @SuppressLint("LongLogTag")
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("get_fill_order_history", value);
-//                            }
-//                        });
-//            }
-//        });
-//
-//
-//        /**
-//         *  查询交易对K线数据
-//         *  get_market_history
-//         */
-//        getMarketStats.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().get_market_history(base_transaction.getText().toString(),
-//                        transaction_pair_to_base_transaction.getText().toString(),
-//                        86400,
-//                        "2019-08-30T03:37:01",
-//                        "2019-09-1T03:37:01",
-//                        new IBcxCallBack() {
-//                            @SuppressLint("LongLogTag")
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("get_market_history", value);
-//                            }
-//                        });
-//            }
-//        });
 
     }
 

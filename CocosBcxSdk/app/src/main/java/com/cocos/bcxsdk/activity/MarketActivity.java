@@ -17,7 +17,7 @@ import com.cocos.bcxsdk.fragments.MyLimitOrderFragment;
 import com.cocos.bcxsdk.fragments.MyLimitOrderHistoryFragment;
 import com.cocos.bcxsdk.fragments.SettleAssetFragment;
 import com.cocos.bcxsdk.fragments.TradeLimitOrderFragment;
-import com.cocos.bcxsdk.fragments.TradePairHistoryFragment;
+import com.cocos.bcxsdk.fragments.MarketStateFragment;
 import com.cocos.bcxsdk.utils.Utils;
 import com.cocos.bcxsdk.utils.ViewFindUtils;
 import com.flyco.tablayout.SlidingTabLayout;
@@ -56,7 +56,7 @@ public class MarketActivity extends AppCompatActivity implements OnTabSelectList
         MyLimitOrderFragment my_limit_order = new MyLimitOrderFragment();
         MyLimitOrderHistoryFragment my_limit_order_history = new MyLimitOrderHistoryFragment();
         AllLimitOrderHistoryFragment all_limit_order_history = new AllLimitOrderHistoryFragment();
-        TradePairHistoryFragment trade_pair_history = new TradePairHistoryFragment();
+        MarketStateFragment trade_pair_history = new MarketStateFragment();
         mFragments.add(settle_asset);
         mFragments.add(asset_publish_feed);
         mFragments.add(create_limit_order);

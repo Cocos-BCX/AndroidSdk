@@ -2130,7 +2130,7 @@ public class CocosBcxApi {
      *
      * @throws NetworkStatusException
      */
-    public block_header get_block_header(double nBlockNumber) throws NetworkStatusException {
+    public block_header get_block_header(String nBlockNumber) throws NetworkStatusException {
         return mWebSocketApi.get_block_header(nBlockNumber);
     }
 

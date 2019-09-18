@@ -114,12 +114,22 @@ public class AllLimitOrderHistoryFragment extends Fragment {
                 asset_object assetQuoteObject = CocosBcxApi.getBcxInstance().lookup_asset_symbols(fill_order_history_object.op.fill_price.quote.asset_id.toString());
                 asset_object assetBaseObject = CocosBcxApi.getBcxInstance().lookup_asset_symbols(fill_order_history_object.op.fill_price.base.asset_id.toString());
                 asset_object assetPayObject = CocosBcxApi.getBcxInstance().lookup_asset_symbols(fill_order_history_object.op.pays.asset_id.toString());
-                holder.price.setText((fill_order_history_object.op.fill_price.quote.amount / Math.pow(10, assetQuoteObject.precision)) / (fill_order_history_object.op.fill_price.base.amount / Math.pow(10, assetBaseObject.precision)) + assetQuoteObject.symbol + "/" + assetBaseObject.symbol);
-                holder.deal_amount.setText(fill_order_history_object.op.receives.amount / Math.pow(10, assetQuoteObject.precision) + assetQuoteObject.symbol);
-                holder.valide_time.setText(fill_order_history_object.time);
-                holder.amount.setText(fill_order_history_object.op.pays.amount / Math.pow(10, assetPayObject.precision) + assetPayObject.symbol);
-//                holder.tv_account.setText();
-                holder.account_name.setText(account_object.name);
+                if (fill_order_history_object.op.is_maker) {
+                    holder.price.setText((fill_order_history_object.op.fill_price.quote.amount / Math.pow(10, assetQuoteObject.precision)) / (fill_order_history_object.op.fill_price.base.amount / Math.pow(10, assetBaseObject.precision)) + assetQuoteObject.symbol + "/" + assetBaseObject.symbol);
+                    holder.amount.setText(fill_order_history_object.op.receives.amount / Math.pow(10, assetQuoteObject.precision) + assetQuoteObject.symbol);
+                    holder.valide_time.setText(fill_order_history_object.time);
+                    holder.deal_amount.setText(fill_order_history_object.op.pays.amount / Math.pow(10, assetPayObject.precision) + assetPayObject.symbol);
+                    holder.tv_account.setText("卖方");
+                    holder.account_name.setText(account_object.name);
+                } else {
+                    holder.price.setText((fill_order_history_object.op.fill_price.quote.amount / Math.pow(10, assetQuoteObject.precision)) / (fill_order_history_object.op.fill_price.base.amount / Math.pow(10, assetBaseObject.precision)) + assetQuoteObject.symbol + "/" + assetBaseObject.symbol);
+                    holder.amount.setText(fill_order_history_object.op.receives.amount / Math.pow(10, assetQuoteObject.precision) + assetQuoteObject.symbol);
+                    holder.valide_time.setText(fill_order_history_object.time);
+                    holder.deal_amount.setText(fill_order_history_object.op.pays.amount / Math.pow(10, assetPayObject.precision) + assetPayObject.symbol);
+                    holder.tv_account.setText("买方");
+                    holder.account_name.setText(account_object.name);
+                }
+
             } catch (NetworkStatusException e) {
                 e.printStackTrace();
             } catch (UnLegalInputException e) {
