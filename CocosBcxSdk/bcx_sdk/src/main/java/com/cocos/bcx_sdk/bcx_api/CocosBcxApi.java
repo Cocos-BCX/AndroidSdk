@@ -264,20 +264,18 @@ public class CocosBcxApi {
             if (response.isSuccessful()) {
                 // parse create account data model
                 create_account_object createAccountObject = global_config_object.getInstance().getGsonBuilder().create().fromJson(strResponse, create_account_object.class);
-
+                long startTime = System.currentTimeMillis();
+                long endTime;
+                do {
+                    accountObject = lookup_account_names(createAccountObject.getData().getAccount().getName());
+                    endTime = System.currentTimeMillis();
+                    if (endTime - startTime > 6000) {
+                        rspText = new ResponseData(OPERATE_FAILED, "operate failed", null).toString();
+                        callBack.onReceiveValue(rspText);
+                        return;
+                    }
+                } while (accountObject == null);
                 if (isAutoLogin) {
-                    long startTime = System.currentTimeMillis();
-                    long endTime;
-                    do {
-                        accountObject = lookup_account_names(createAccountObject.getData().getAccount().getName());
-                        endTime = System.currentTimeMillis();
-                        if (endTime - startTime > 6000) {
-                            rspText = new ResponseData(OPERATE_FAILED, "operate failed", null).toString();
-                            callBack.onReceiveValue(rspText);
-                            return;
-                        }
-                    } while (accountObject == null);
-
                     // get account object
                     //prepare data to store keystore
                     List<types.public_key_type> listPublicKeyType = new ArrayList<>();
@@ -289,10 +287,13 @@ public class CocosBcxApi {
                     save_account(paramEntity.getAccountName(), accountObject.id.toString(), paramEntity.getPassword(), paramEntity.getAccountType().name(), accountDao);
                     rspText = new ResponseData(OPERATE_SUCCESS, createAccountObject.getMsg(), createAccountObject.getData()).toString();
                     callBack.onReceiveValue(rspText);
+                } else {
+                    rspText = new ResponseData(OPERATE_SUCCESS, createAccountObject.getMsg(), createAccountObject.getData()).toString();
+                    callBack.onReceiveValue(rspText);
                 }
             } else {
                 if (response.body().contentLength() != 0) {
-                    rspText = new ResponseData(OPERATE_FAILED, "", strResponse).toString();
+                    rspText = new ResponseData(OPERATE_FAILED, "operate failed", strResponse).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
