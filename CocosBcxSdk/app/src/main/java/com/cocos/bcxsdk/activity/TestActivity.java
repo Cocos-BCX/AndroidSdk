@@ -1384,13 +1384,19 @@ public class TestActivity extends AppCompatActivity {
         get_transaction_by_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                CocosBcxApiWrapper.getBcxInstance().get_transaction_by_id(et_get_transaction_in_block_info.getText().toString(), new IBcxCallBack() {
+                    @SuppressLint("LongLogTag")
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i("get_transaction_by_id", value);
+                    }
+                });
             }
         });
 
 
         /**
-         * get transaction by id
+         * get global properties
          */
         get_global_properties.setOnClickListener(new View.OnClickListener() {
             @Override
