@@ -22,23 +22,29 @@ import java.util.Set;
 
 
 /**
- *
+ * operations
  */
 public class operations {
 
     public static final int ID_TRANSFER_OPERATION = 0;
 
-    public static final int ID_CALCULATE_INVOKING_CONTRACT_OPERATION = 44;
+    public static final int ID_CALCULATE_INVOKING_CONTRACT_OPERATION = 35;
 
-    public static final int ID_DELETE_NH_ASSET_OPERATION = 50;
+    public static final int ID_REGISTOR_CREATOR_OPERATION = 37;
 
-    public static final int ID_TRANSFER_NH_ASSET_OPERATION = 51;
+    public static final int ID_CREATE_WORLDVIEW_OPERATION = 38;
 
-    public static final int ID_CREATE_NH_ASSET_ORDER_OPERATION = 52;
+    public static final int ID_CREATE_NH_ASSET_OPERATION = 40;
 
-    public static final int ID_CANCEL_NH_ASSET_ORDER_OPERATION = 53;
+    public static final int ID_DELETE_NH_ASSET_OPERATION = 41;
 
-    public static final int ID_BUY_NH_ASSET_OPERATION = 54;
+    public static final int ID_TRANSFER_NH_ASSET_OPERATION = 42;
+
+    public static final int ID_CREATE_NH_ASSET_ORDER_OPERATION = 43;
+
+    public static final int ID_CANCEL_NH_ASSET_ORDER_OPERATION = 44;
+
+    public static final int ID_BUY_NH_ASSET_OPERATION = 45;
 
     public static final int ID_UPGRADE_TO_LIFETIME_MEMBER_OPERATION = 7;
 
@@ -55,6 +61,10 @@ public class operations {
     public static final int ID_ASSET_SETTLE = 16;
 
     public static final int ID_GLOBAL_ASSET_SETTLE = 17;
+
+    public static final int ID_UPDATE_COLLATERAL_FOR_GAS = 54;
+
+    public static final int ID_RECEIVE_VESTING_BALANCES = 27;
 
     public static operation_id_map operations_map = new operation_id_map();
 
@@ -78,6 +88,11 @@ public class operations {
             mHashId2Operation.put(ID_PUBLISH_FEED, publish_feed_operation.class);
             mHashId2Operation.put(ID_ASSET_SETTLE, asset_settle_operation.class);
             mHashId2Operation.put(ID_GLOBAL_ASSET_SETTLE, global_asset_settle_operation.class);
+            mHashId2Operation.put(ID_UPDATE_COLLATERAL_FOR_GAS, update_collateral_for_gas_operation.class);
+            mHashId2Operation.put(ID_CREATE_NH_ASSET_OPERATION, create_nhasset_operation.class);
+            mHashId2Operation.put(ID_REGISTOR_CREATOR_OPERATION, register_creator_operation.class);
+            mHashId2Operation.put(ID_CREATE_WORLDVIEW_OPERATION, create_worldview_operation.class);
+            mHashId2Operation.put(ID_RECEIVE_VESTING_BALANCES, receive_vesting_balances_operation.class);
         }
 
         public Type getOperationObjectById(int nId) {
@@ -132,7 +147,6 @@ public class operations {
      */
     public static class transfer_operation implements base_operation {
 
-        public asset fee;
         public object_id<account_object> from;
         public object_id<account_object> to;
         public asset amount;
@@ -142,7 +156,6 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            fee.write_to_encoder(baseEncoder);
             //baseEncoder.write(rawObject.get_byte_array(from.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(from.get_instance()));
             //baseEncoder.write(rawObject.get_byte_array(to.get_instance()));
@@ -178,7 +191,6 @@ public class operations {
             public String v;
         }
 
-        public asset fee;
         public object_id<account_object> caller;
         public object_id<contract_object> contract_id;
         public String function_name;
@@ -189,7 +201,6 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            fee.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(caller.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(contract_id.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(function_name.getBytes().length));
@@ -208,11 +219,71 @@ public class operations {
 
 
     /**
+     * register creator operation
+     */
+    public static class register_creator_operation implements base_operation {
+
+        public object_id<account_object> fee_paying_account;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+        }
+
+    }
+
+
+    /**
+     * register creator operation
+     */
+    public static class create_worldview_operation implements base_operation {
+
+        public object_id<account_object> fee_paying_account;
+        public String world_view;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(world_view.getBytes().length));
+            baseEncoder.write(world_view.getBytes());
+        }
+
+    }
+
+
+    /**
+     * create_nhasset_operation
+     */
+    public static class create_nhasset_operation implements base_operation {
+
+        public object_id<account_object> fee_paying_account;
+        public object_id<account_object> owner;
+        public String asset_id;
+        public String world_view;
+        public String base_describe;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(owner.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_id.getBytes().length));
+            baseEncoder.write(asset_id.getBytes());
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(world_view.getBytes().length));
+            baseEncoder.write(world_view.getBytes());
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(base_describe.getBytes().length));
+            baseEncoder.write(base_describe.getBytes());
+        }
+
+    }
+
+    /**
      * transfer nhasset operation
      */
     public static class transfer_nhasset_operation implements base_operation {
 
-        public asset fee;
         public object_id<account_object> from;
         public object_id<account_object> to;
         public object_id<nhasset_object> nh_asset;
@@ -220,7 +291,6 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            fee.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(from.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(to.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
@@ -234,7 +304,6 @@ public class operations {
      */
     public static class buy_nhasset_operation implements base_operation {
 
-        public asset fee;
         public object_id<nh_asset_order_object> order;
         public object_id<account_object> fee_paying_account;
         public object_id<account_object> seller;
@@ -247,7 +316,6 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            fee.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(order.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
@@ -268,7 +336,6 @@ public class operations {
      */
     public static class upgrade_to_lifetime_member_operation implements base_operation {
 
-        public asset fee;
         public object_id<account_object> account_to_upgrade;
         public boolean upgrade_to_lifetime_member;
         public Set<types.void_t> extensions;
@@ -276,7 +343,6 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            fee.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account_to_upgrade.get_instance()));
             baseEncoder.write(rawObject.get_byte(upgrade_to_lifetime_member));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
@@ -290,7 +356,6 @@ public class operations {
      */
     public static class create_child_account_operation implements base_operation {
 
-        public asset fee;
         public object_id<account_object> registrar;
         public object_id<account_object> referrer;
         public int referrer_percent;
@@ -303,12 +368,6 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            if (fee == null) {
-                object_id<asset_object> object_id = com.cocos.bcx_sdk.bcx_wallet.chain.object_id.create_from_string("1.3.0");
-                new asset(1, object_id).write_to_encoder(baseEncoder);
-            } else {
-                fee.write_to_encoder(baseEncoder);
-            }
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(registrar.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(referrer.get_instance()));
             Integer reffer = Integer.valueOf(referrer_percent);
@@ -329,7 +388,6 @@ public class operations {
      */
     public static class create_nhasset_order_operation implements base_operation {
 
-        public asset fee;
         public object_id<account_object> seller;
         public object_id<account_object> otcaccount;
         public asset pending_orders_fee;
@@ -341,7 +399,6 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            fee.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(otcaccount.get_instance()));
             pending_orders_fee.write_to_encoder(baseEncoder);
@@ -359,14 +416,12 @@ public class operations {
      */
     public static class delete_nhasset_operation implements base_operation {
 
-        public asset fee;
         public object_id<account_object> fee_paying_account;
         public object_id<nhasset_object> nh_asset;
 
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            fee.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
         }
@@ -379,7 +434,6 @@ public class operations {
      */
     public static class cancel_nhasset_order_operation implements base_operation {
 
-        public asset fee;
         public object_id<nh_asset_order_object> order;
         public object_id<account_object> fee_paying_account;
         public Set<types.void_t> extensions;
@@ -387,7 +441,6 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            fee.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(order.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
@@ -531,6 +584,42 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_to_settle.get_instance()));
             settle_price.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
+        }
+    }
+
+    /**
+     * update_collateral_for_gas
+     */
+    public static class update_collateral_for_gas_operation implements base_operation {
+
+        public object_id<account_object> mortgager;
+        public object_id<account_object> beneficiary;
+        public long collateral;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(mortgager.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(beneficiary.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(collateral));
+        }
+    }
+
+    /**
+     * update_collateral_for_gas
+     */
+    public static class receive_vesting_balances_operation implements base_operation {
+
+        public object_id<vesting_balances_object> vesting_balance;
+        public object_id<account_object> owner;
+        public asset amount;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(vesting_balance.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(owner.get_instance()));
+            amount.write_to_encoder(baseEncoder);
         }
     }
 

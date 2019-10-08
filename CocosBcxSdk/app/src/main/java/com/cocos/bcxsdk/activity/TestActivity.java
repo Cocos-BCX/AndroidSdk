@@ -16,6 +16,7 @@ import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 import com.cocos.bcxsdk.R;
+import com.cocos.bcxsdk.utils.MainHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +58,6 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_transfer_asset_password;
     private EditText et_transfer_asset_amount;
     private EditText et_transfer_asset_asset_type;
-    private EditText et_transfer_fee_asset_type;
     private EditText et_transfer_asset_memo;
     private TextView tv_transfer_assetGetFee;
     private TextView tv_transfer_asset;
@@ -92,11 +92,9 @@ public class TestActivity extends AppCompatActivity {
     private TextView tv_get_account_names;
 
     private EditText et_calculate_invoking_contract_strAccount;
-    private EditText et_calculate_invoking_contract_feeAssetSymbol;
     private EditText et_calculate_invoking_contract_contractId;
     private EditText et_calculate_invoking_contract_functionName;
     private EditText et_calculate_invoking_contract_params;
-    private TextView tv_calculate_invoking_contract_fee;
     private EditText et_calculate_invoking_contract_pwd;
     private TextView tv_invoking_contract;
     private TextView tv_look_up_nh_asset;
@@ -127,14 +125,11 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_nh_asset_transfer_from_account;
     private EditText et_nh_asset_transfer_to_account;
     private EditText et_nh_asset_id;
-    private EditText et_nh_asset_fee_symbol;
     private EditText et_password;
     private TextView tv_send_nh_asset;
-    private TextView tv_nh_asset_transfer_fee;
     private EditText et_nh_asset_buyer;
     private EditText et_nh_asset_order_id;
     private EditText et_buy_nh_password;
-    private TextView tv_nh_asset_buy_fee;
     private TextView tv_nh_asset_buy;
     private TextView tv_get_contract_object;
     private TextView get_all_account_balances;
@@ -144,15 +139,11 @@ public class TestActivity extends AppCompatActivity {
     private TextView tv_get_dao_accounts;
     private EditText et_upgrade_lifetime_account;
     private EditText et_upgrade_lifetime_password;
-    private EditText et_upgrade_lifetime_asset;
-    private TextView tv_upgrade_lifetime_fee;
     private TextView tv_upgrade_lifetime_member;
     private EditText et_create_child_account_name;
     private EditText et_create_child_account_password;
     private EditText et_create_child_registrar;
     private EditText et_create_child_registrar_password;
-    private EditText et_create_child_fee_asset;
-    private TextView tv_create_child_account_fee;
     private TextView tv_create_child_account;
     private TextView tv_switch_node_url;
     private EditText et_get_transaction_in_block_info;
@@ -169,23 +160,44 @@ public class TestActivity extends AppCompatActivity {
     private EditText pending_order_price;
     private EditText pending_order_price_symbol;
     private EditText pending_order_valid_time;
-    private TextView tv_create_nh_asset_order_fee;
     private TextView tv_create_nh_asset_order;
     private EditText et_delete_nh_asset_account;
     private EditText et_delete_nh_asset_password;
     private EditText et_delete_nh_asset_id;
-    private EditText et_delete_nh_asset_fee_symbol;
-    private TextView tv_nh_asset_delete_fee;
     private TextView tv_delete_nh_asset;
     private EditText et_cancel_nh_asset_account;
     private EditText et_cancel_nh_asset_password;
     private EditText et_cancel_nh_asset_order_id;
-    private EditText et_cancel_nh_asset_fee_symbol;
-    private TextView tv_cancel_nh_asset_order_fee;
     private TextView tv_cancel_nh_asset_order;
     private TextView tv_list_assets;
 
     private TextView market;
+    private EditText estimation_gas_amount;
+    private EditText estimation_gas_mortgagor;
+    private EditText estimation_gas_mortgagor_password;
+    private EditText estimation_gas_beneficiary;
+    private TextView get_estimation_gas;
+    private TextView get_update_collateral_for_gas;
+    private EditText et_create_nh_asset_creator;
+    private EditText et_create_nh_asset_creator_password;
+    private EditText et_create_nh_asset_owner;
+    private EditText et_create_nh_asset_asset_id;
+    private EditText et_create_nh_asset_world_view;
+    private EditText et_create_nh_asset_base_describe;
+    private TextView tv_create_nh_asset;
+    private EditText et_register_creator;
+    private EditText et_register_creator_password;
+    private TextView tv_register_creator;
+    private EditText et_create_world_view;
+    private EditText et_create_worldview_account;
+    private EditText et_create_worldview_account_password;
+    private TextView tv_create_worldview;
+    private EditText vesting_balances_account;
+    private TextView tv_vesting_balances;
+    private TextView tv_vesting_balances_content;
+    private TextView tv_get_vesting_balances;
+    private EditText get_vesting_balances_account;
+    private EditText get_vesting_balances_account_password;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -236,7 +248,6 @@ public class TestActivity extends AppCompatActivity {
         et_transfer_asset_password = findViewById(R.id.et_transfer_asset_password);
         et_transfer_asset_amount = findViewById(R.id.et_transfer_asset_amount);
         et_transfer_asset_asset_type = findViewById(R.id.et_transfer_asset_asset_type);
-        et_transfer_fee_asset_type = findViewById(R.id.et_transfer_fee_asset_type);
         et_transfer_asset_memo = findViewById(R.id.et_transfer_asset_memo);
         tv_transfer_assetGetFee = findViewById(R.id.tv_transfer_assetGetFee);
         tv_transfer_asset = findViewById(R.id.tv_transfer_asset);
@@ -277,11 +288,9 @@ public class TestActivity extends AppCompatActivity {
 
 
         et_calculate_invoking_contract_strAccount = findViewById(R.id.et_calculate_invoking_contract_strAccount);
-        et_calculate_invoking_contract_feeAssetSymbol = findViewById(R.id.et_calculate_invoking_contract_feeAssetSymbol);
         et_calculate_invoking_contract_contractId = findViewById(R.id.et_calculate_invoking_contract_contractId);
         et_calculate_invoking_contract_functionName = findViewById(R.id.et_calculate_invoking_contract_functionName);
         et_calculate_invoking_contract_params = findViewById(R.id.et_calculate_invoking_contract_params);
-        tv_calculate_invoking_contract_fee = findViewById(R.id.tv_calculate_invoking_contract_fee);
         et_calculate_invoking_contract_pwd = findViewById(R.id.et_calculate_invoking_contract_pwd);
         tv_invoking_contract = findViewById(R.id.tv_invoking_contract);
         tv_get_contract = findViewById(R.id.tv_get_contract);
@@ -320,37 +329,28 @@ public class TestActivity extends AppCompatActivity {
 
         et_nh_asset_transfer_from_account = findViewById(R.id.et_nh_asset_transfer_from_account);
         et_nh_asset_transfer_to_account = findViewById(R.id.et_nh_asset_transfer_to_account);
-        et_nh_asset_fee_symbol = findViewById(R.id.et_nh_asset_fee_symbol);
         et_nh_asset_id = findViewById(R.id.et_nh_asset_id);
         et_password = findViewById(R.id.et_password);
         tv_send_nh_asset = findViewById(R.id.tv_send_nh_asset);
-        tv_nh_asset_transfer_fee = findViewById(R.id.tv_nh_asset_transfer_fee);
 
         et_delete_nh_asset_account = findViewById(R.id.et_delete_nh_asset_account);
         et_delete_nh_asset_password = findViewById(R.id.et_delete_nh_asset_password);
         et_delete_nh_asset_id = findViewById(R.id.et_delete_nh_asset_id);
-        et_delete_nh_asset_fee_symbol = findViewById(R.id.et_delete_nh_asset_fee_symbol);
-        tv_nh_asset_delete_fee = findViewById(R.id.tv_nh_asset_delete_fee);
         tv_delete_nh_asset = findViewById(R.id.tv_delete_nh_asset);
 
         et_cancel_nh_asset_account = findViewById(R.id.et_cancel_nh_asset_account);
         et_cancel_nh_asset_password = findViewById(R.id.et_cancel_nh_asset_password);
         et_cancel_nh_asset_order_id = findViewById(R.id.et_cancel_nh_asset_order_id);
-        et_cancel_nh_asset_fee_symbol = findViewById(R.id.et_cancel_nh_asset_fee_symbol);
-        tv_cancel_nh_asset_order_fee = findViewById(R.id.tv_cancel_nh_asset_order_fee);
         tv_cancel_nh_asset_order = findViewById(R.id.tv_cancel_nh_asset_order);
 
         et_nh_asset_buyer = findViewById(R.id.et_nh_asset_buyer);
         et_nh_asset_order_id = findViewById(R.id.et_nh_asset_order_id);
-        tv_nh_asset_buy_fee = findViewById(R.id.tv_nh_asset_buy_fee);
         tv_nh_asset_buy = findViewById(R.id.tv_nh_asset_buy);
         et_buy_nh_password = findViewById(R.id.et_buy_nh_password);
         tv_get_contract_object = findViewById(R.id.tv_get_contract_object);
 
         et_upgrade_lifetime_account = findViewById(R.id.et_upgrade_lifetime_account);
         et_upgrade_lifetime_password = findViewById(R.id.et_upgrade_lifetime_password);
-        et_upgrade_lifetime_asset = findViewById(R.id.et_upgrade_lifetime_asset);
-        tv_upgrade_lifetime_fee = findViewById(R.id.tv_upgrade_lifetime_fee);
         tv_upgrade_lifetime_member = findViewById(R.id.tv_upgrade_lifetime_member);
 
 
@@ -358,8 +358,6 @@ public class TestActivity extends AppCompatActivity {
         et_create_child_account_password = findViewById(R.id.et_create_child_account_password);
         et_create_child_registrar = findViewById(R.id.et_create_child_registrar);
         et_create_child_registrar_password = findViewById(R.id.et_create_child_registrar_password);
-        et_create_child_fee_asset = findViewById(R.id.et_create_child_fee_asset);
-        tv_create_child_account_fee = findViewById(R.id.tv_create_child_account_fee);
         tv_create_child_account = findViewById(R.id.tv_create_child_account);
 
         tv_switch_node_url = findViewById(R.id.tv_switch_node_url);
@@ -378,10 +376,41 @@ public class TestActivity extends AppCompatActivity {
         pending_order_price = findViewById(R.id.pending_order_price);
         pending_order_price_symbol = findViewById(R.id.pending_order_price_symbol);
         pending_order_valid_time = findViewById(R.id.pending_order_valid_time);
-        tv_create_nh_asset_order_fee = findViewById(R.id.tv_create_nh_asset_order_fee);
         tv_create_nh_asset_order = findViewById(R.id.tv_create_nh_asset_order);
 
         market = findViewById(R.id.market);
+
+        estimation_gas_mortgagor = findViewById(R.id.estimation_gas_mortgagor);
+        estimation_gas_mortgagor_password = findViewById(R.id.estimation_gas_mortgagor_password);
+        estimation_gas_beneficiary = findViewById(R.id.estimation_gas_beneficiary);
+        estimation_gas_amount = findViewById(R.id.estimation_gas_amount);
+        get_estimation_gas = findViewById(R.id.get_estimation_gas);
+        get_update_collateral_for_gas = findViewById(R.id.get_update_collateral_for_gas);
+
+        tv_register_creator = findViewById(R.id.tv_register_creator);
+        et_register_creator = findViewById(R.id.et_register_creator);
+        et_register_creator_password = findViewById(R.id.et_register_creator_password);
+
+        et_create_world_view = findViewById(R.id.et_create_world_view);
+        et_create_worldview_account = findViewById(R.id.et_create_worldview_account);
+        et_create_worldview_account_password = findViewById(R.id.et_create_worldview_account_password);
+        tv_create_worldview = findViewById(R.id.tv_create_worldview);
+
+        et_create_nh_asset_creator = findViewById(R.id.et_create_nh_asset_creator);
+        et_create_nh_asset_creator_password = findViewById(R.id.et_create_nh_asset_creator_password);
+        et_create_nh_asset_owner = findViewById(R.id.et_create_nh_asset_owner);
+        et_create_nh_asset_asset_id = findViewById(R.id.et_create_nh_asset_asset_id);
+        et_create_nh_asset_world_view = findViewById(R.id.et_create_nh_asset_world_view);
+        et_create_nh_asset_base_describe = findViewById(R.id.et_create_nh_asset_base_describe);
+        tv_create_nh_asset = findViewById(R.id.tv_create_nh_asset);
+
+        vesting_balances_account = findViewById(R.id.vesting_balances_account);
+        tv_vesting_balances = findViewById(R.id.tv_vesting_balances);
+        tv_vesting_balances_content = findViewById(R.id.tv_vesting_balances_content);
+        tv_get_vesting_balances = findViewById(R.id.tv_get_vesting_balances);
+        get_vesting_balances_account = findViewById(R.id.get_vesting_balances_account);
+        get_vesting_balances_account_password = findViewById(R.id.get_vesting_balances_account_password);
+
 
         initListener();
     }
@@ -524,27 +553,6 @@ public class TestActivity extends AppCompatActivity {
         });
 
         /**
-         * 查询转账费用
-         */
-        tv_transfer_assetGetFee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().transfer_calculate_fee(et_transfer_asset_password.getText().toString(),
-                        et_transfer_asset_from_account.getText().toString(),
-                        et_transfer_asset_to_account.getText().toString(),
-                        et_transfer_asset_amount.getText().toString(),
-                        et_transfer_asset_asset_type.getText().toString(),
-                        et_transfer_fee_asset_type.getText().toString(),
-                        et_transfer_asset_memo.getText().toString(), new IBcxCallBack() {
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("transfer_calculate_fee", value);
-                            }
-                        });
-            }
-        });
-
-        /**
          * 转账
          */
         tv_transfer_asset.setOnClickListener(new View.OnClickListener() {
@@ -555,7 +563,7 @@ public class TestActivity extends AppCompatActivity {
                         , et_transfer_asset_from_account.getText().toString(),
                         et_transfer_asset_to_account.getText().toString(),
                         et_transfer_asset_amount.getText().toString(),
-                        et_transfer_asset_asset_type.getText().toString(), et_transfer_fee_asset_type.getText().toString(),
+                        et_transfer_asset_asset_type.getText().toString(),
                         et_transfer_asset_memo.getText().toString(), new IBcxCallBack() {
                             @Override
                             public void onReceiveValue(String value) {
@@ -725,6 +733,7 @@ public class TestActivity extends AppCompatActivity {
                 } else {
                     accountType = et_import_wallet_type.getText().toString();
                 }
+
                 CocosBcxApiWrapper.getBcxInstance().import_keystore("{\"chain_id\":\"b9e7cee4709ddaf08e3b7cba63b71c211c845e37c9bf2b865a7b2a592c8adb28\",\"cipher_keys\":\"f0383afcab59c113a7979809356e275995b040871d751c594f5f7dfef4788149856b239611985048e60a45f73a25c1cfacc367c377e18a73d21e56e45fe560d673aaa324f26fe5e64e5c82a726745dadd6dc15a6f1d08c8be1d41e348ef6ec9f8249a88853eab80beeb4b4ac9f2f34cbd4e1921bd6154b6e681cb721e7b4f5b2ca34415451a3742dd488ddfd803b86a502f08706bfa43aecd2d6eef9d7f3325e716f3fb4bbe66bfb87027ec3e601bcbab4f4a6c185b1cb0ab11be14fca4354b1f0d859be88e509dc34ba975fa78f428d045adfa3c491e32f12a4ddbbf73d86ca250ea93d58b7f7e6cceaf1d19b9c54cb\",\"extra_keys\":[[\"1.2.135\",[\"COCOS5NSJhzxxwNbxAqw2UPq36Zap8VKvrubxWQWiW1R14EBvhmNffH\",\"COCOS8Kocns5RidEyFsdrZfDVezA6vvnHQP32H4JnWoABsxbswp79Ej\"]]],\"my_accounts\":[{\"active\":{\"account_auths\":{},\"address_auths\":[],\"key_auths\":[[\"COCOS5NSJhzxxwNbxAqw2UPq36Zap8VKvrubxWQWiW1R14EBvhmNffH\",1]],\"weight_threshold\":1},\"id\":\"1.2.135\",\"lifetime_referrer\":\"1.2.15\",\"lifetime_referrer_fee_percentage\":3000,\"membership_expiration_date\":\"1970-01-01T00:00:00\",\"name\":\"gnkhandsome1616\",\"network_fee_percentage\":2000,\"options\":{\"extensions\":[],\"memo_key\":\"COCOS5NSJhzxxwNbxAqw2UPq36Zap8VKvrubxWQWiW1R14EBvhmNffH\",\"num_committee\":0,\"num_witness\":0,\"votes\":[],\"voting_account\":\"1.2.2\"},\"owner\":{\"account_auths\":{},\"address_auths\":[],\"key_auths\":[[\"COCOS8Kocns5RidEyFsdrZfDVezA6vvnHQP32H4JnWoABsxbswp79Ej\",1]],\"weight_threshold\":1},\"referrer\":\"1.2.15\",\"referrer_rewards_percentage\":5000,\"registrar\":\"1.2.15\",\"statistics\":\"2.6.135\"}]}", "123456", accountType,
                         new IBcxCallBack() {
                             @Override
@@ -737,26 +746,6 @@ public class TestActivity extends AppCompatActivity {
 
 
         /**
-         * 获取调用合约费用,
-         */
-        tv_calculate_invoking_contract_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().calculate_invoking_contract_fee(et_calculate_invoking_contract_strAccount.getText().toString(),
-                        et_calculate_invoking_contract_feeAssetSymbol.getText().toString(),
-                        et_calculate_invoking_contract_contractId.getText().toString(),
-                        et_calculate_invoking_contract_functionName.getText().toString(),
-                        et_calculate_invoking_contract_params.getText().toString(),
-                        new IBcxCallBack() {
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("cal_contract_fee", value);
-                            }
-                        });
-            }
-        });
-
-        /**
          * 调用合约方法,
          */
         tv_invoking_contract.setOnClickListener(new View.OnClickListener() {
@@ -764,7 +753,6 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CocosBcxApiWrapper.getBcxInstance().invoking_contract(et_calculate_invoking_contract_strAccount.getText().toString(),
                         et_calculate_invoking_contract_pwd.getText().toString(),
-                        et_calculate_invoking_contract_feeAssetSymbol.getText().toString(),
                         et_calculate_invoking_contract_contractId.getText().toString(),
                         et_calculate_invoking_contract_functionName.getText().toString(),
                         et_calculate_invoking_contract_params.getText().toString(),
@@ -778,49 +766,6 @@ public class TestActivity extends AppCompatActivity {
         });
 
 
-//        /**
-//         * 获取调用合约费用,
-//         */
-//        tv_calculate_invoking_contract_fee.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().calculate_invoking_contract_fee("gnkhandsome1",
-//                        "COCOS",
-//                        "contract.dicegame",
-//                        "bet",
-//                        "50,1",
-//                        new IBcxCallBack() {
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("calculate_contract_fee", value);
-//                            }
-//                        });
-//            }
-//        });
-//
-//
-//        /**
-//         * 调用合约方法,
-//         */
-//        tv_invoking_contract.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().invoking_contract("gnkhandsome1",
-//                        "1111qqqq",
-//                        "COCOS",
-//                        "contract.ccshooter.lottery",
-//                        "draw",
-//                        "gnkhandsome1,100",
-//                        new IBcxCallBack() {
-//                            @SuppressLint("LongLogTag")
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("invoking_contract", value);
-//                            }
-//                        });
-//            }
-//        });
-
         /**
          * 查询合约
          */
@@ -833,6 +778,178 @@ public class TestActivity extends AppCompatActivity {
                             @Override
                             public void onReceiveValue(String value) {
                                 Log.i("get_contract", value);
+                            }
+                        });
+            }
+        });
+
+
+        /**
+         * 注册开发者
+         */
+        tv_register_creator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().register_creator(
+                        et_register_creator.getText().toString(),
+                        et_register_creator_password.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("tv_register_creator", value);
+                            }
+                        });
+            }
+        });
+
+        /**
+         * 创建世界观
+         */
+        tv_create_worldview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().create_worldview(
+                        et_create_world_view.getText().toString(),
+                        et_create_worldview_account.getText().toString(),
+                        et_create_worldview_account_password.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("tv_create_worldview", value);
+                            }
+                        });
+            }
+        });
+
+        /**
+         * 创建NH资产
+         */
+        tv_create_nh_asset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().create_nh_asset(
+                        et_create_nh_asset_creator.getText().toString(),
+                        et_create_nh_asset_creator_password.getText().toString(),
+                        et_create_nh_asset_owner.getText().toString(),
+                        et_create_nh_asset_asset_id.getText().toString(),
+                        et_create_nh_asset_world_view.getText().toString(),
+                        et_create_nh_asset_base_describe.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("tv_create_nh_asset", value);
+                            }
+                        });
+            }
+        });
+
+
+        /**
+         * 转移NH资产
+         */
+        tv_send_nh_asset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().transfer_nh_asset(et_password.getText().toString(),
+                        et_nh_asset_transfer_from_account.getText().toString(),
+                        et_nh_asset_transfer_to_account.getText().toString(),
+                        et_nh_asset_id.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("transfer_nh_asset", value);
+                            }
+                        });
+            }
+        });
+
+
+        /**
+         * 删除NH资产
+         */
+        tv_delete_nh_asset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().delete_nh_asset(et_delete_nh_asset_account.getText().toString(),
+                        et_delete_nh_asset_password.getText().toString(),
+                        et_delete_nh_asset_id.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("delete_nh_asset", value);
+                            }
+                        });
+            }
+        });
+
+
+        /**
+         * 创建nh资产订单(出售)
+         */
+        tv_create_nh_asset_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order(
+                        et_nh_asset_otcaccount.getText().toString(),
+                        et_nh_asset_seller.getText().toString(),
+                        pending_order_seller_password.getText().toString(),
+                        pending_order_nh_asset.getText().toString(),
+                        pending_order_fee.getText().toString(),
+                        "COCOS",
+                        pending_order_memo.getText().toString(),
+                        pending_order_price.getText().toString(),
+                        pending_order_price_symbol.getText().toString(),
+                        Long.parseLong(pending_order_valid_time.getText().toString()),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("create_nh_asset_order", value);
+                            }
+                        });
+            }
+        });
+
+        /**
+         * 购买nh资产
+         */
+        tv_nh_asset_buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().buy_nh_asset(
+                        et_nh_asset_buyer.getText().toString(),
+                        et_buy_nh_password.getText().toString(),
+                        et_nh_asset_order_id.getText().toString(),
+                        new IBcxCallBack() {
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("buy_nh_asset", value);
+                            }
+                        });
+            }
+        });
+
+
+        /**
+         * 取消nh资产订单
+         */
+        tv_cancel_nh_asset_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().cancel_nh_asset_order(
+                        et_cancel_nh_asset_account.getText().toString(),
+                        et_cancel_nh_asset_password.getText().toString(),
+                        et_cancel_nh_asset_order_id.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("cancel_nh_asset_order", value);
                             }
                         });
             }
@@ -975,277 +1092,6 @@ public class TestActivity extends AppCompatActivity {
 
 
         /**
-         * 获取NH资产转移费用
-         */
-        tv_nh_asset_transfer_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().transfer_nh_asset_fee(et_nh_asset_transfer_from_account.getText().toString(),
-                        et_nh_asset_transfer_to_account.getText().toString(),
-                        et_nh_asset_fee_symbol.getText().toString(),
-                        et_nh_asset_id.getText().toString(),
-                        new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("transfer_nh_asset_fee", value);
-                            }
-                        });
-            }
-        });
-
-
-        /**
-         * 转移NH资产
-         */
-        tv_send_nh_asset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().transfer_nh_asset(et_password.getText().toString(),
-                        et_nh_asset_transfer_from_account.getText().toString(),
-                        et_nh_asset_transfer_to_account.getText().toString(),
-                        et_nh_asset_fee_symbol.getText().toString(),
-                        et_nh_asset_id.getText().toString(),
-                        new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("transfer_nh_asset", value);
-                            }
-                        });
-            }
-        });
-
-        /**
-         * 获取删除NH资产费用
-         */
-        tv_nh_asset_delete_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().delete_nh_asset_fee(et_delete_nh_asset_account.getText().toString(),
-                        et_delete_nh_asset_id.getText().toString(),
-                        et_delete_nh_asset_fee_symbol.getText().toString(),
-                        new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("delete_nh_asset_fee", value);
-                            }
-                        });
-            }
-        });
-
-        /**
-         * 删除NH资产
-         */
-        tv_delete_nh_asset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().delete_nh_asset(et_delete_nh_asset_account.getText().toString(),
-                        et_delete_nh_asset_password.getText().toString(),
-                        et_delete_nh_asset_id.getText().toString(),
-                        et_delete_nh_asset_fee_symbol.getText().toString(),
-                        new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("delete_nh_asset", value);
-                            }
-                        });
-            }
-        });
-
-//        /**
-//         * 获取购买nh资产的费用
-//         */
-//        tv_nh_asset_buy_fee.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().buy_nh_asset_fee(et_nh_asset_buyer.getText().toString(),
-//                        et_nh_asset_order_id.getText().toString(),
-//                        new IBcxCallBack() {
-//                            @SuppressLint("LongLogTag")
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("buy_nh_asset_fee", value);
-//                            }
-//                        });
-//            }
-//        });
-//
-//
-//        /**
-//         * 购买nh资产
-//         */
-//        tv_nh_asset_buy.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().buy_nh_asset(
-//                        "1111qqqq",
-//                        "gnkhandsome1",
-//                        "4.3.180",
-//                        new IBcxCallBack() {
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("buy_nh_asset", value);
-//                            }
-//                        });
-//            }
-//        });
-
-
-        /**
-         * 获取创建nh资产订单的费用
-         */
-        tv_create_nh_asset_order_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order_fee(
-                        et_nh_asset_otcaccount.getText().toString(),
-                        et_nh_asset_seller.getText().toString(),
-                        pending_order_nh_asset.getText().toString(),
-                        pending_order_fee.getText().toString(),
-                        "COCOS",
-                        pending_order_memo.getText().toString(),
-                        pending_order_price.getText().toString(),
-                        pending_order_price_symbol.getText().toString(),
-                        Long.parseLong(pending_order_valid_time.getText().toString()),
-                        new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("create_nh_asset_order_fee", value);
-                            }
-                        });
-            }
-        });
-
-
-        /**
-         * 创建nh资产订单(出售)
-         */
-        tv_create_nh_asset_order.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order(
-                        et_nh_asset_otcaccount.getText().toString(),
-                        et_nh_asset_seller.getText().toString(),
-                        pending_order_seller_password.getText().toString(),
-                        pending_order_nh_asset.getText().toString(),
-                        pending_order_fee.getText().toString(),
-                        "COCOS",
-                        pending_order_memo.getText().toString(),
-                        pending_order_price.getText().toString(),
-                        pending_order_price_symbol.getText().toString(),
-                        Long.parseLong(pending_order_valid_time.getText().toString()),
-                        new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("create_nh_asset_order", value);
-                            }
-                        });
-            }
-        });
-
-//
-//        /**
-//         * 创建nh资产订单(出售)
-//         */
-//        tv_create_nh_asset_order_fee.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order_fee(
-//                        "otcaccount",
-//                        "gnkhandsome1",
-//                        "4.2.2589",
-//                        "11",
-//                        "COCOS",
-//                        "test",
-//                        "0",
-//                        "COCOS",
-//                        5000L,
-//                        new IBcxCallBack() {
-//                            @SuppressLint("LongLogTag")
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("create_nh_asset_order_fee", value);
-//                            }
-//                        });
-//            }
-//        });
-//
-//        /**
-//         * 创建nh资产订单(出售)
-//         */
-//        tv_create_nh_asset_order.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CocosBcxApiWrapper.getBcxInstance().create_nh_asset_order(
-//                        "otcaccount",
-//                        "gnkhandsome1",
-//                        "1111qqqq",
-//                        "4.2.2627",
-//                        "0",
-//                        "COCOS",
-//                        "改为分发给我",
-//                        "100",
-//                        "COCOS",
-//                        36000,
-//                        new IBcxCallBack() {
-//                            @SuppressLint("LongLogTag")
-//                            @Override
-//                            public void onReceiveValue(String value) {
-//                                Log.i("create_nh_asset_order", value);
-//                            }
-//                        });
-//            }
-//        });
-
-
-        /**
-         * 获取取消nh资产订单费用
-         */
-        tv_cancel_nh_asset_order_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().cancel_nh_asset_order_fee(
-                        et_cancel_nh_asset_account.getText().toString(),
-                        et_cancel_nh_asset_order_id.getText().toString(),
-                        et_cancel_nh_asset_fee_symbol.getText().toString(),
-                        new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("cancel_nh_asset_order_fee", value);
-                            }
-                        });
-            }
-        });
-
-        /**
-         * 取消nh资产订单
-         */
-        tv_cancel_nh_asset_order.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().cancel_nh_asset_order(
-                        et_cancel_nh_asset_account.getText().toString(),
-                        et_cancel_nh_asset_password.getText().toString(),
-                        et_cancel_nh_asset_order_id.getText().toString(),
-                        et_cancel_nh_asset_fee_symbol.getText().toString(),
-                        new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("cancel_nh_asset_order", value);
-                            }
-                        });
-            }
-        });
-
-
-        /**
          * 获取合约详情
          */
         tv_get_contract_object.setOnClickListener(new View.OnClickListener() {
@@ -1264,31 +1110,13 @@ public class TestActivity extends AppCompatActivity {
 
 
         /**
-         * 获取升级终身会员手续费
-         */
-        tv_upgrade_lifetime_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().upgrade_to_lifetime_member_fee(et_upgrade_lifetime_account.getText().toString(), et_upgrade_lifetime_asset.getText().toString(), new IBcxCallBack() {
-                    @SuppressLint("LongLogTag")
-                    @Override
-                    public void onReceiveValue(String value) {
-                        Log.i("upgrade_to_lifetime_member_fee", value);
-                    }
-                });
-            }
-        });
-
-
-        /**
          * 升级终身会员
          */
         tv_upgrade_lifetime_member.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CocosBcxApiWrapper.getBcxInstance().upgrade_to_lifetime_member(et_upgrade_lifetime_account.getText().toString(),
-                        et_upgrade_lifetime_password.getText().toString(),
-                        et_upgrade_lifetime_asset.getText().toString(), new IBcxCallBack() {
+                        et_upgrade_lifetime_password.getText().toString(), new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override
                             public void onReceiveValue(String value) {
@@ -1300,27 +1128,6 @@ public class TestActivity extends AppCompatActivity {
 
 
         /**
-         * 获取注册子账号手续费
-         */
-        tv_create_child_account_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().create_child_account_fee(et_create_child_account_name.getText().toString(),
-                        et_create_child_account_password.getText().toString(),
-                        et_create_child_registrar.getText().toString(),
-                        et_create_child_fee_asset.getText().toString(),
-                        "ACCOUNT",
-                        new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("create_child_account_fee", value);
-                            }
-                        });
-            }
-        });
-
-        /**
          * 注册子账号
          */
         tv_create_child_account.setOnClickListener(new View.OnClickListener() {
@@ -1330,7 +1137,6 @@ public class TestActivity extends AppCompatActivity {
                         et_create_child_account_password.getText().toString(),
                         et_create_child_registrar.getText().toString(),
                         et_create_child_registrar_password.getText().toString(),
-                        et_create_child_fee_asset.getText().toString(),
                         "ACCOUNT",
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
@@ -1378,6 +1184,7 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
+
         /**
          * get transaction by id
          */
@@ -1417,6 +1224,78 @@ public class TestActivity extends AppCompatActivity {
                 startActivity(new Intent(TestActivity.this, MarketActivity.class));
             }
         });
+
+        get_estimation_gas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().get_estimation_gas(estimation_gas_amount.getText().toString(), new IBcxCallBack() {
+                    @SuppressLint("LongLogTag")
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i("get_estimation_gas", value);
+                    }
+                });
+            }
+        });
+
+        get_update_collateral_for_gas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().update_collateral_for_gas(estimation_gas_mortgagor.getText().toString(),
+                        estimation_gas_mortgagor_password.getText().toString(),
+                        estimation_gas_beneficiary.getText().toString(),
+                        estimation_gas_amount.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("update_collateral_for_gas", value);
+                            }
+                        });
+            }
+        });
+
+        tv_vesting_balances.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().get_vesting_balances(vesting_balances_account.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("get_vesting_balances", value);
+                                MainHandler.getInstance().post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tv_vesting_balances_content.setText(value);
+                                    }
+                                });
+                            }
+                        });
+            }
+        });
+
+        tv_get_vesting_balances.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().receive_vesting_balances(get_vesting_balances_account.getText().toString(),
+                        get_vesting_balances_account_password.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("receive_vesting_balances", value);
+                                MainHandler.getInstance().post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tv_vesting_balances_content.setText(value);
+                                    }
+                                });
+                            }
+                        });
+            }
+        });
+
 
 
     }

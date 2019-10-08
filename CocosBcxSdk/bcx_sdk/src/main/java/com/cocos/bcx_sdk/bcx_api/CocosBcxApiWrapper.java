@@ -19,10 +19,12 @@ import com.cocos.bcx_sdk.bcx_error.CreateAccountException;
 import com.cocos.bcx_sdk.bcx_error.KeyInvalideException;
 import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
 import com.cocos.bcx_sdk.bcx_error.NhAssetNotFoundException;
+import com.cocos.bcx_sdk.bcx_error.NoRewardAvailableException;
 import com.cocos.bcx_sdk.bcx_error.NotAssetCreatorException;
 import com.cocos.bcx_sdk.bcx_error.OrderNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.PasswordVerifyException;
 import com.cocos.bcx_sdk.bcx_error.UnLegalInputException;
+import com.cocos.bcx_sdk.bcx_error.WordViewExistException;
 import com.cocos.bcx_sdk.bcx_error.WordViewNotExistException;
 import com.cocos.bcx_sdk.bcx_log.LogUtils;
 import com.cocos.bcx_sdk.bcx_sql.dao.AccountDao;
@@ -74,9 +76,11 @@ import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_NOT_ASSET_CREATOR;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_OBJECT_NOT_FOUND;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_ORDERS_DO_NOT_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_PARAMETER;
+import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_WORLDVIEW_AREADY_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_WORLDVIEW_DO_NOT_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_WRONG_PASSWORD;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.NO_ACCOUNT_INFORMATION;
+import static com.cocos.bcx_sdk.bcx_error.ErrorCode.NO_REWARD_AVAILABLE;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.OPERATE_FAILED;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.OPERATE_SUCCESS;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.RPC_NETWORK_EXCEPTION;
@@ -176,6 +180,7 @@ public class CocosBcxApiWrapper {
             rspText = new ResponseData(OPERATE_SUCCESS, "Rpc connected", null).toString();
             callBack.onReceiveValue(rspText);
         } else if (nRet == ERROR_NETWORK_FAIL) {
+            LogUtils.i("ERROR_NETWORK_FAIL", "ERROR_NETWORK_FAIL");
             // failed
             rspText = new ResponseData(ERROR_NETWORK_FAIL, "Rpc connection failed", null).toString();
             callBack.onReceiveValue(rspText);
@@ -194,6 +199,7 @@ public class CocosBcxApiWrapper {
         } else if (nRet == OPERATE_FAILED) {
             rspText = new ResponseData(OPERATE_FAILED, "Rpc connection failed", null).toString();
             callBack.onReceiveValue(rspText);
+            LogUtils.i("OPERATE_FAILED", "OPERATE_FAILED");
         }
     }
 
@@ -658,9 +664,6 @@ public class CocosBcxApiWrapper {
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
-                } catch (WordViewNotExistException e) {
-                    rspText = new ResponseData(ERROR_WORLDVIEW_DO_NOT_EXIST, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
                 }
             }
         });
@@ -719,31 +722,74 @@ public class CocosBcxApiWrapper {
 
 
     /**
-     * get NH assets transfer fee
+     * register_creator
      *
      * @throws NetworkStatusException
      */
-    public void transfer_nh_asset_fee(final String account_from, final String account_to, final String fee_asset_symbol, final String nh_asset_id, final IBcxCallBack callBack) {
+    public void register_creator(final String register_creator, final String register_creator_password, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.transfer_nh_asset_fee(account_from, account_to, fee_asset_symbol, nh_asset_id).get(0)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.register_creator(register_creator, register_creator_password, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
+                    cocosBcxApi.lock();
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (AccountNotFoundException e) {
                     rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
-                } catch (NhAssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_NHASSET_DO_NOT_EXIST, e.getMessage(), null).toString();
+                } catch (AuthorityException e) {
+                    rspText = new ResponseData(AUTHORITY_EXCEPTION, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
-                } catch (NotAssetCreatorException e) {
-                    rspText = new ResponseData(ERROR_NOT_ASSET_CREATOR, e.getMessage(), null).toString();
+                } catch (PasswordVerifyException e) {
+                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
-                } catch (AssetNotFoundException e) {
+                } catch (KeyInvalideException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AddressFormatException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
+    /**
+     * create_worldview
+     *
+     * @throws NetworkStatusException
+     */
+    public void create_worldview(final String world_view, final String create_worldview_account, final String create_worldview_account_password, final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.create_worldview(world_view, create_worldview_account, create_worldview_account_password, accountDao)).toString();
+                    callBack.onReceiveValue(rspText);
+                    cocosBcxApi.lock();
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
                     rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AuthorityException e) {
+                    rspText = new ResponseData(AUTHORITY_EXCEPTION, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (PasswordVerifyException e) {
+                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (KeyInvalideException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AddressFormatException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (WordViewExistException e) {
+                    rspText = new ResponseData(ERROR_WORLDVIEW_AREADY_EXIST, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
@@ -752,16 +798,58 @@ public class CocosBcxApiWrapper {
 
 
     /**
-     * transfer NH assets
+     * create_nh_asset
      *
      * @throws NetworkStatusException
      */
-    public void transfer_nh_asset(final String password, final String account_from, final String account_to, final String fee_asset_symbol, final String nh_asset_id, final IBcxCallBack callBack) {
+    public void create_nh_asset(final String fee_paying_account, final String password, final String owner, final String asset_id, final String world_view, final String base_describe, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.transfer_nh_asset(password, account_from, account_to, fee_asset_symbol, nh_asset_id, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.create_nh_asset(fee_paying_account, password, owner, asset_id, world_view, base_describe, accountDao)).toString();
+                    callBack.onReceiveValue(rspText);
+                    cocosBcxApi.lock();
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AuthorityException e) {
+                    rspText = new ResponseData(AUTHORITY_EXCEPTION, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (PasswordVerifyException e) {
+                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (KeyInvalideException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AddressFormatException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AssetNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (WordViewNotExistException e) {
+                    rspText = new ResponseData(ERROR_WORLDVIEW_DO_NOT_EXIST, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
+    /**
+     * transfer NH assets
+     *
+     * @throws NetworkStatusException
+     */
+    public void transfer_nh_asset(final String password, final String account_from, final String account_to, final String nh_asset_id, final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.transfer_nh_asset(password, account_from, account_to, nh_asset_id, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                     cocosBcxApi.lock();
                 } catch (NetworkStatusException e) {
@@ -790,43 +878,6 @@ public class CocosBcxApiWrapper {
                     callBack.onReceiveValue(rspText);
                 } catch (AssetNotFoundException e) {
                     rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                }
-            }
-        });
-    }
-
-
-    /**
-     * get delete nhasset fee
-     *
-     * @return
-     * @throws NetworkStatusException
-     * @throws AccountNotFoundException
-     * @throws NhAssetNotFoundException
-     */
-    public void delete_nh_asset_fee(final String fee_paying_account, final String nhasset_id, final String fee_symbol, final IBcxCallBack callBack) {
-
-        proxy.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.delete_nh_asset_fee(fee_paying_account, nhasset_id, fee_symbol).get(0)).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NetworkStatusException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AccountNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NhAssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_NHASSET_DO_NOT_EXIST, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NotAssetCreatorException e) {
-                    rspText = new ResponseData(ERROR_NOT_ASSET_CREATOR, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
@@ -842,13 +893,13 @@ public class CocosBcxApiWrapper {
      * @throws AccountNotFoundException
      * @throws NhAssetNotFoundException
      */
-    public void delete_nh_asset(final String fee_paying_account, final String password, final String nhasset_id, final String fee_symbol, final IBcxCallBack callBack) {
+    public void delete_nh_asset(final String fee_paying_account, final String password, final String nhasset_id, final IBcxCallBack callBack) {
 
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.delete_nh_asset(fee_paying_account, password, nhasset_id, fee_symbol, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.delete_nh_asset(fee_paying_account, password, nhasset_id, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
@@ -882,41 +933,6 @@ public class CocosBcxApiWrapper {
         });
     }
 
-
-    /**
-     * get cancel nhasset order fee
-     *
-     * @return
-     * @throws NetworkStatusException
-     * @throws AccountNotFoundException
-     * @throws NhAssetNotFoundException
-     */
-    public void cancel_nh_asset_order_fee(final String fee_paying_account, final String order_id, final String fee_symbol, final IBcxCallBack callBack) {
-        proxy.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.cancel_nh_asset_order_fee(fee_paying_account, order_id, fee_symbol).get(0)).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NetworkStatusException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AccountNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (OrderNotFoundException e) {
-                    rspText = new ResponseData(ERROR_ORDERS_DO_NOT_EXIST, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NotAssetCreatorException e) {
-                    rspText = new ResponseData(ERROR_NOT_ASSET_CREATOR, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                }
-            }
-        });
-    }
 
     /**
      * cancel nhasset order
@@ -926,13 +942,13 @@ public class CocosBcxApiWrapper {
      * @throws AccountNotFoundException
      * @throws NhAssetNotFoundException
      */
-    public void cancel_nh_asset_order(final String fee_paying_account, final String password, final String order_id, final String fee_symbol, final IBcxCallBack callBack) {
+    public void cancel_nh_asset_order(final String fee_paying_account, final String password, final String order_id, final IBcxCallBack callBack) {
 
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.cancel_nh_asset_order(fee_paying_account, password, order_id, fee_symbol, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.cancel_nh_asset_order(fee_paying_account, password, order_id, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
@@ -960,36 +976,6 @@ public class CocosBcxApiWrapper {
                     callBack.onReceiveValue(rspText);
                 } catch (NotAssetCreatorException e) {
                     rspText = new ResponseData(ERROR_NOT_ASSET_CREATOR, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                }
-            }
-        });
-    }
-
-
-    /**
-     * get buy NH assets operate fee
-     *
-     * @throws NetworkStatusException
-     */
-    public void buy_nh_asset_fee(final String fee_paying_account, final String order_Id, final IBcxCallBack callBack) {
-        proxy.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.buy_nh_asset_fee(fee_paying_account, order_Id).get(0)).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NetworkStatusException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AccountNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (OrderNotFoundException e) {
-                    rspText = new ResponseData(ERROR_ORDERS_DO_NOT_EXIST, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NhAssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_NHASSET_DO_NOT_EXIST, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
@@ -1002,12 +988,12 @@ public class CocosBcxApiWrapper {
      *
      * @throws NetworkStatusException
      */
-    public void buy_nh_asset(final String password, final String fee_paying_account, final String order_Id, final IBcxCallBack callBack) {
+    public void buy_nh_asset(final String fee_paying_account, final String password, final String order_Id, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.buy_nh_asset(password, fee_paying_account, order_Id, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.buy_nh_asset(fee_paying_account, password, order_Id, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                     cocosBcxApi.lock();
                 } catch (NetworkStatusException e) {
@@ -1036,45 +1022,6 @@ public class CocosBcxApiWrapper {
         });
     }
 
-
-    /**
-     * create nh asset order fee
-     *
-     * @param pending_order_nh_asset
-     * @param pending_order_fee
-     * @param pending_order_memo
-     * @param pending_order_price
-     * @param pending_order_price_symbol
-     * @return
-     * @throws NetworkStatusException
-     * @throws NhAssetNotFoundException
-     */
-    public void create_nh_asset_order_fee(final String otcaccount, final String seller, final String pending_order_nh_asset, final String pending_order_fee, final String pending_order_fee_symbol, final String pending_order_memo, final String pending_order_price, final String pending_order_price_symbol, final long pending_order_valid_time_millis, final IBcxCallBack callBack) {
-        proxy.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.create_nh_asset_order_fee(otcaccount, seller, pending_order_nh_asset, pending_order_fee, pending_order_fee_symbol, pending_order_memo, pending_order_price, pending_order_price_symbol, pending_order_valid_time_millis).get(0)).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NetworkStatusException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AccountNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NhAssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_NHASSET_DO_NOT_EXIST, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (ParseException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                }
-            }
-        });
-    }
 
     /**
      * create nh asset order
@@ -1129,43 +1076,8 @@ public class CocosBcxApiWrapper {
 
 
     /**
-     * calculate upgrade to lifetime member fee
-     *
-     * @param fee_paying_asset_id_or_symbol
-     * @param upgrade_account_id_or_symbol
-     * @return
-     * @throws NetworkStatusException
-     * @throws AccountNotFoundException
-     * @throws NhAssetNotFoundException
-     * @throws OrderNotFoundException
-     * @throws UnLegalInputException
-     */
-    public void upgrade_to_lifetime_member_fee(final String upgrade_account_id_or_symbol, final String fee_paying_asset_id_or_symbol, final IBcxCallBack callBack) {
-        proxy.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.upgrade_to_lifetime_member_fee(upgrade_account_id_or_symbol, fee_paying_asset_id_or_symbol).get(0)).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NetworkStatusException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AccountNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                }
-            }
-        });
-    }
-
-
-    /**
      * calculate upgrade to lifetime member
      *
-     * @param fee_paying_asset_id_or_symbol
      * @param upgrade_account_id_or_symbol
      * @return
      * @throws NetworkStatusException
@@ -1174,12 +1086,12 @@ public class CocosBcxApiWrapper {
      * @throws OrderNotFoundException
      * @throws UnLegalInputException
      */
-    public void upgrade_to_lifetime_member(final String upgrade_account_id_or_symbol, final String upgrade_account_password, final String fee_paying_asset_id_or_symbol, final IBcxCallBack callBack) {
+    public void upgrade_to_lifetime_member(final String upgrade_account_id_or_symbol, final String upgrade_account_password, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.upgrade_to_lifetime_member(upgrade_account_id_or_symbol, upgrade_account_password, fee_paying_asset_id_or_symbol, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.upgrade_to_lifetime_member(upgrade_account_id_or_symbol, upgrade_account_password, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                     cocosBcxApi.lock();
                 } catch (NetworkStatusException e) {
@@ -1209,54 +1121,6 @@ public class CocosBcxApiWrapper {
     }
 
     /**
-     * create child account fee
-     *
-     * @param child_account
-     * @param child_account_password
-     * @return
-     * @throws NetworkStatusException
-     * @throws AccountNotFoundException
-     * @throws NhAssetNotFoundException
-     * @throws OrderNotFoundException
-     * @throws UnLegalInputException
-     */
-    public void create_child_account_fee(final String child_account, final String child_account_password, final String registrar_account_id_or_symbol, final String pay_asset_symbol_or_id, final String accountType, final IBcxCallBack callBack) {
-        proxy.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    CreateAccountParamEntity paramEntity = new CreateAccountParamEntity();
-                    paramEntity.setAccountName(child_account);
-                    paramEntity.setPassword(child_account_password);
-                    if (TextUtils.equals(AccountType.ACCOUNT.name(), accountType)) {
-                        paramEntity.setAccountType(AccountType.ACCOUNT);
-                    } else if (TextUtils.equals(AccountType.WALLET.name(), accountType)) {
-                        paramEntity.setAccountType(AccountType.WALLET);
-                    }
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.create_child_account_fee(paramEntity, registrar_account_id_or_symbol, pay_asset_symbol_or_id).get(0)).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NetworkStatusException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AccountNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AccountExistException e) {
-                    rspText = new ResponseData(ERROR_ACCOUNT_OBJECT_EXIST, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (UnLegalInputException e) {
-                    rspText = new ResponseData(ERROR_PARAMETER, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                }
-            }
-        });
-    }
-
-
-    /**
      * create child account
      *
      * @param child_account
@@ -1268,7 +1132,7 @@ public class CocosBcxApiWrapper {
      * @throws OrderNotFoundException
      * @throws UnLegalInputException
      */
-    public void create_child_account(final String child_account, final String child_account_password, final String registrar_account_id_or_symbol, final String registrar_account_password, final String pay_asset_symbol_or_id, final String accountType, final IBcxCallBack callBack) {
+    public void create_child_account(final String child_account, final String child_account_password, final String registrar_account_id_or_symbol, final String registrar_account_password, final String accountType, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
@@ -1281,16 +1145,13 @@ public class CocosBcxApiWrapper {
                     } else if (TextUtils.equals(AccountType.WALLET.name(), accountType)) {
                         paramEntity.setAccountType(AccountType.WALLET);
                     }
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.create_child_account(paramEntity, registrar_account_id_or_symbol, registrar_account_password, pay_asset_symbol_or_id, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.create_child_account(paramEntity, registrar_account_id_or_symbol, registrar_account_password, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                     cocosBcxApi.lock();
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (AccountNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AssetNotFoundException e) {
                     rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (AccountExistException e) {
@@ -1605,103 +1466,20 @@ public class CocosBcxApiWrapper {
 
 
     /**
-     * calculate transfer fee
-     *
-     * @param from             account from
-     * @param to               account to
-     * @param strAmount        transfer amount
-     * @param strAssetSymbol   tranfer asset symbol
-     * @param strFeeSymbolOrId tranfer asset fee symbol
-     * @param strMemo          memo
-     * @param callBack
-     */
-    public void transfer_calculate_fee(final String password, final String from, final String to, final String strAmount, final String strAssetSymbol, final String strFeeSymbolOrId, final String strMemo, final IBcxCallBack callBack) {
-        proxy.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    List<asset_fee_object> requiredFees = cocosBcxApi.calculate_transfer_fee(password, from, to, strAmount, strAssetSymbol, strFeeSymbolOrId, strMemo, accountDao);
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", requiredFees.get(0)).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AccountNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NetworkStatusException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AuthorityException e) {
-                    rspText = new ResponseData(AUTHORITY_EXCEPTION, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AddressFormatException e) {
-                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (KeyInvalideException e) {
-                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (PasswordVerifyException e) {
-                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                }
-            }
-        });
-    }
-
-
-    /**
      * calculate invoking contract fee
      *
      * @param strAccount
-     * @param feeAssetSymbol
-     * @param contractId
-     * @param functionName
-     * @param params
-     * @param callBack
-     */
-    public void calculate_invoking_contract_fee(final String strAccount, final String feeAssetSymbol, final String contractId, final String functionName, final String params, final IBcxCallBack callBack) {
-        proxy.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    List<asset_fee_object> requiredFees = cocosBcxApi.calculate_invoking_contract_fee(strAccount, feeAssetSymbol, contractId, functionName, params);
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", requiredFees.get(0)).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AccountNotFoundException e) {
-                    // not found account
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (NetworkStatusException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (ContractNotFoundException e) {
-                    rspText = new ResponseData(ERROR_CONTRACT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                } catch (AssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
-                }
-            }
-        });
-    }
-
-    /**
-     * calculate invoking contract fee
-     *
-     * @param strAccount
-     * @param feeAssetSymbol
      * @param contractNameOrId
      * @param functionName
      * @param params
      * @param callBack
      */
-    private void get_invoking_contract_tx_id(final String strAccount, final String password, final String feeAssetSymbol, final String contractNameOrId, final String functionName, final String params, final IBcxCallBack callBack) {
+    private void get_invoking_contract_tx_id(final String strAccount, final String password, final String contractNameOrId, final String functionName, final String params, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String hash = cocosBcxApi.invoking_contract(strAccount, password, feeAssetSymbol, contractNameOrId, functionName, params, accountDao);
+                    String hash = cocosBcxApi.invoking_contract(strAccount, password, contractNameOrId, functionName, params, accountDao);
                     rspText = new ResponseData(OPERATE_SUCCESS, "success", hash).toString();
                     callBack.onReceiveValue(rspText);
                     cocosBcxApi.lock();
@@ -1721,9 +1499,6 @@ public class CocosBcxApiWrapper {
                 } catch (ContractNotFoundException e) {
                     rspText = new ResponseData(ERROR_CONTRACT_NOT_FOUND, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
-                } catch (AssetNotFoundException e) {
-                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
                 } catch (KeyInvalideException e) {
                     rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
@@ -1739,15 +1514,14 @@ public class CocosBcxApiWrapper {
     /**
      * @param strAccount
      * @param password
-     * @param feeAssetSymbol
      * @param contractNameOrId
      * @param functionName
      * @param params
      * @param callBack
      */
-    public void invoking_contract(final String strAccount, final String password, final String feeAssetSymbol, final String contractNameOrId, final String functionName, final String params, final IBcxCallBack callBack) {
+    public void invoking_contract(final String strAccount, final String password, final String contractNameOrId, final String functionName, final String params, final IBcxCallBack callBack) {
 
-        get_invoking_contract_tx_id(strAccount, password, feeAssetSymbol, contractNameOrId, functionName, params, new IBcxCallBack() {
+        get_invoking_contract_tx_id(strAccount, password, contractNameOrId, functionName, params, new IBcxCallBack() {
 
             private object_id<account_object> caller = null;
 
@@ -1903,12 +1677,12 @@ public class CocosBcxApiWrapper {
      * @return
      * @throws NetworkStatusException
      */
-    public void transfer(final String password, final String strFrom, final String strTo, final String strAmount, final String strAssetSymbol, final String strFeeSymbol, final String strMemo, final IBcxCallBack callBack) {
+    public void transfer(final String password, final String strFrom, final String strTo, final String strAmount, final String strAssetSymbol, final String strMemo, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String hash = cocosBcxApi.transfer(password, strFrom, strTo, strAmount, strAssetSymbol, strFeeSymbol, strMemo, accountDao);
+                    String hash = cocosBcxApi.transfer(password, strFrom, strTo, strAmount, strAssetSymbol, strMemo, accountDao);
                     rspText = new ResponseData(OPERATE_SUCCESS, "success", hash).toString();
                     callBack.onReceiveValue(rspText);
                     cocosBcxApi.lock();
@@ -2735,6 +2509,128 @@ public class CocosBcxApiWrapper {
                     callBack.onReceiveValue(rspText);
                 } catch (AccountNotFoundException e) {
                     rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
+    /**
+     * estimation_gas
+     *
+     * @return string
+     */
+    public void get_estimation_gas(final String amount, final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    asset_fee_object asset_gas_object = cocosBcxApi.estimation_gas(amount);
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", asset_gas_object).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AssetNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
+    /**
+     * estimation_gas
+     *
+     * @return string
+     */
+    public void update_collateral_for_gas(final String mortgagor, final String password, final String beneficiary, final String amount, final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.update_collateral_for_gas(mortgagor, password, beneficiary, amount, accountDao)).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AssetNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AuthorityException e) {
+                    rspText = new ResponseData(AUTHORITY_EXCEPTION, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (KeyInvalideException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (PasswordVerifyException e) {
+                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
+    /**
+     * get_vesting_balances
+     */
+    public void get_vesting_balances(final String accountNameOrId, final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.get_vesting_balances(accountNameOrId)).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NoRewardAvailableException e) {
+                    rspText = new ResponseData(NO_REWARD_AVAILABLE, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AssetNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
+    /**
+     * receive_vesting_balances
+     */
+    public void receive_vesting_balances(final String accountNameOrId, final String password, final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.receive_vesting_balances(accountNameOrId, password, accountDao)).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (KeyInvalideException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (PasswordVerifyException e) {
+                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AuthorityException e) {
+                    rspText = new ResponseData(AUTHORITY_EXCEPTION, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AssetNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NoRewardAvailableException e) {
+                    rspText = new ResponseData(NO_REWARD_AVAILABLE, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }

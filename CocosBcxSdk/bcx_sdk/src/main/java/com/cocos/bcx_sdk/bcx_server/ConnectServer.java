@@ -10,6 +10,7 @@ import com.cocos.bcx_sdk.bcx_server.entity.Reply;
 import com.cocos.bcx_sdk.bcx_server.entity.ReplyBase;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_related_word_view_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.asset;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_fee_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.block_header;
@@ -27,10 +28,13 @@ import com.cocos.bcx_sdk.bcx_wallet.chain.object_id;
 import com.cocos.bcx_sdk.bcx_wallet.chain.operation_history_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.transaction;
 import com.cocos.bcx_sdk.bcx_wallet.chain.transaction_in_block_info;
+import com.cocos.bcx_sdk.bcx_wallet.chain.vesting_balances_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.world_view_object;
 import com.cocos.bcx_sdk.bcx_wallet.fc.crypto.sha256_object;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
@@ -56,6 +60,7 @@ import static com.cocos.bcx_sdk.bcx_error.ErrorCode.WEBSOCKET_CONNECT_INVALID;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_BROADCAST_TRANSACTION;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_BROADCAST_TRANSACTION_WITH_CALLBACK;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_DATABASE;
+import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_ESTIMATION_GAS;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_ACCOUNTS;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_ACCOUNT_BALANCES;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_ACCOUNT_HISTORY;
@@ -76,6 +81,7 @@ import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_OBJECTS;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_REQUIRED_FEES;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_TRANSACTION_BY_ID;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_TRANSACTION_IN_BLOCK_INFO;
+import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_VESTING_BALANCES;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_HISTORY;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_LIST_ACCOUNT_NH_ASSET;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_LIST_ACCOUNT_NH_ASSET_ORDER;
@@ -176,6 +182,7 @@ public class ConnectServer extends WebSocketListener {
      */
     public synchronized int connect() {
         String strServer = FullNodeServer.getConnectServers();
+        LogUtils.i("ConnectedServerUrl", strServer);
         if (TextUtils.isEmpty(strServer)) {
             return OPERATE_FAILED;
         }
@@ -1226,6 +1233,52 @@ public class ConnectServer extends WebSocketListener {
         return replyLookupAccountNames.result;
     }
 
+
+    /**
+     * estimation_gas
+     *
+     * @throws NetworkStatusException
+     */
+    public asset_fee_object estimation_gas(asset tr_id) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mDatabaseId);
+        callObject.params.add(CALL_ESTIMATION_GAS);
+
+        List<asset> asset_fee_objects = new ArrayList<>();
+        asset_fee_objects.add(tr_id);
+        callObject.params.add(asset_fee_objects);
+
+        ReplyObjectProcess<Reply<asset_fee_object>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<asset_fee_object>>() {
+        }.getType());
+        Reply<asset_fee_object> replyLookupAccountNames = sendForReply(callObject, replyObject);
+        return replyLookupAccountNames.result;
+    }
+
+    /**
+     * get_vesting_balances
+     *
+     * @throws NetworkStatusException
+     */
+    public List<vesting_balances_object> get_vesting_balances(String account_id) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mDatabaseId);
+        callObject.params.add(CALL_GET_VESTING_BALANCES);
+
+        List<String> asset_fee_objects = new ArrayList<>();
+        asset_fee_objects.add(account_id);
+        callObject.params.add(asset_fee_objects);
+
+        ReplyObjectProcess<Reply<List<vesting_balances_object>>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<List<vesting_balances_object>>>() {
+        }.getType());
+        Reply<List<vesting_balances_object>> replyLookupAccountNames = sendForReply(callObject, replyObject);
+        return replyLookupAccountNames.result;
+    }
 
     /**
      * get transaction by tr_id

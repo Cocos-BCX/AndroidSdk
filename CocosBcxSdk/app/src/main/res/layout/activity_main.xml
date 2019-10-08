@@ -318,11 +318,6 @@
             android:hint="转账资产类型" />
 
         <EditText
-            android:id="@+id/et_transfer_fee_asset_type"
-            style="@style/EtSingleLine"
-            android:hint="支付手续费资产类型" />
-
-        <EditText
             android:id="@+id/et_transfer_asset_memo"
             style="@style/EtSingleLine"
             android:hint="备注消息" />
@@ -527,11 +522,6 @@
             android:hint="帐户名" />
 
         <EditText
-            android:id="@+id/et_calculate_invoking_contract_feeAssetSymbol"
-            style="@style/EtSingleLine"
-            android:hint="调用合约的手续费币种symbol" />
-
-        <EditText
             android:id="@+id/et_calculate_invoking_contract_contractId"
             style="@style/EtSingleLine"
             android:hint="合约id" />
@@ -552,11 +542,6 @@
             android:hint="密码" />
 
         <TextView
-            android:id="@+id/tv_calculate_invoking_contract_fee"
-            style="@style/TvBtn"
-            android:text="获取合约调用费用（不需要密码）" />
-
-        <TextView
             android:id="@+id/tv_invoking_contract"
             style="@style/TvBtn"
             android:text="调用合约方法（需要验证密码）" />
@@ -570,7 +555,246 @@
 
         <TextView
             style="@style/TvTitle"
-            android:text="NH资产" />
+            android:text="NH资产操作" />
+
+        <EditText
+            android:id="@+id/et_register_creator"
+            style="@style/EtSingleLine"
+            android:hint="注册开发者的账户名" />
+
+        <EditText
+            android:id="@+id/et_register_creator_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <TextView
+            android:id="@+id/tv_register_creator"
+            style="@style/TvBtn"
+            android:text="注册开发者" />
+
+        <EditText
+            android:id="@+id/et_create_world_view"
+            style="@style/EtSingleLine"
+            android:hint="世界观名称" />
+
+        <EditText
+            android:id="@+id/et_create_worldview_account"
+            style="@style/EtSingleLine"
+            android:hint="创建世界观的账户名" />
+
+        <EditText
+            android:id="@+id/et_create_worldview_account_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <TextView
+            android:id="@+id/tv_create_worldview"
+            style="@style/TvBtn"
+            android:text="创建世界观" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="创建NH资产" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_creator"
+            style="@style/EtSingleLine"
+            android:hint="资产创建者" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_creator_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_owner"
+            style="@style/EtSingleLine"
+            android:hint="资产归属者" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_asset_id"
+            style="@style/EtSingleLine"
+            android:hint="通行资产" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_world_view"
+            style="@style/EtSingleLine"
+            android:hint="世界观" />
+
+        <EditText
+            android:id="@+id/et_create_nh_asset_base_describe"
+            style="@style/EtSingleLine"
+            android:hint="基础数据" />
+
+        <TextView
+            android:id="@+id/tv_create_nh_asset"
+            style="@style/TvBtn"
+            android:text="创建资产" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="NH资产转移" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_transfer_from_account"
+            style="@style/EtSingleLine"
+            android:hint="资产发送方" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_transfer_to_account"
+            style="@style/EtSingleLine"
+            android:hint="资产接收方" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_id"
+            style="@style/EtSingleLine"
+            android:hint="nh 资产id" />
+
+        <EditText
+            android:id="@+id/et_password"
+            style="@style/EtSingleLine"
+            android:hint="验证密码" />
+
+        <TextView
+            android:id="@+id/tv_send_nh_asset"
+            style="@style/TvBtn"
+            android:text="确认发送（需要验证密码）" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="删除NH资产" />
+
+
+        <EditText
+            android:id="@+id/et_delete_nh_asset_account"
+            style="@style/EtSingleLine"
+            android:hint="账户名" />
+
+        <EditText
+            android:id="@+id/et_delete_nh_asset_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/et_delete_nh_asset_id"
+            style="@style/EtSingleLine"
+            android:hint="nh 资产id" />
+
+        <TextView
+            android:id="@+id/tv_delete_nh_asset"
+            style="@style/TvBtn"
+            android:text="确认删除（需要验证密码）" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="购买NH资产" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_buyer"
+            style="@style/EtSingleLine"
+            android:hint="购买者" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_order_id"
+            style="@style/EtSingleLine"
+            android:hint="nh订单Id" />
+
+        <EditText
+            android:id="@+id/et_buy_nh_password"
+            style="@style/EtSingleLine"
+            android:hint="验证密码" />
+
+        <TextView
+            android:id="@+id/tv_nh_asset_buy"
+            style="@style/TvBtn"
+            android:text="购买" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="创建NH资产订单（出售）" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_otcaccount"
+            style="@style/EtSingleLine"
+            android:hint="otcaccount" />
+
+        <EditText
+            android:id="@+id/et_nh_asset_seller"
+            style="@style/EtSingleLine"
+            android:hint="seller" />
+
+        <EditText
+            android:id="@+id/pending_order_seller_password"
+            style="@style/EtSingleLine"
+            android:hint="账户密码" />
+
+        <EditText
+            android:id="@+id/pending_order_nh_asset"
+            style="@style/EtSingleLine"
+            android:hint="nh资产Id" />
+
+        <EditText
+            android:id="@+id/pending_order_fee"
+            style="@style/EtSingleLine"
+            android:hint="挂单费用fee" />
+
+        <EditText
+            android:id="@+id/pending_order_memo"
+            style="@style/EtSingleLine"
+            android:hint="挂单备注信息memo" />
+
+        <EditText
+            android:id="@+id/pending_order_price"
+            style="@style/EtSingleLine"
+            android:hint="商品挂单价格price" />
+
+        <EditText
+            android:id="@+id/pending_order_price_symbol"
+            style="@style/EtSingleLine"
+            android:hint="商品挂单价格币种priceAssetSymbol" />
+
+        <EditText
+            android:id="@+id/pending_order_valid_time"
+            style="@style/EtSingleLine"
+            android:hint="过期时间(即挂卖时间,number类型,如3600，表示3600秒后过期)" />
+
+        <TextView
+            android:id="@+id/tv_create_nh_asset_order"
+            style="@style/TvBtn"
+            android:text="确认卖出NH资产" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="取消账户NH资产售卖单" />
+
+        <EditText
+            android:id="@+id/et_cancel_nh_asset_account"
+            style="@style/EtSingleLine"
+            android:hint="账户名" />
+
+        <EditText
+            android:id="@+id/et_cancel_nh_asset_order_id"
+            style="@style/EtSingleLine"
+            android:hint="订单id" />
+
+        <EditText
+            android:id="@+id/et_cancel_nh_asset_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <TextView
+            android:id="@+id/tv_cancel_nh_asset_order"
+            style="@style/TvBtn"
+            android:text="取消订单（需要验证密码）" />
+
+
+        <include layout="@layout/include_line" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="NH资产查询" />
 
         <TextView
             style="@style/TvTitle"
@@ -731,204 +955,6 @@
             style="@style/TvBtn"
             android:text="立即查询" />
 
-        <TextView
-            style="@style/TvTitle"
-            android:text="NH资产转移" />
-
-        <EditText
-            android:id="@+id/et_nh_asset_transfer_from_account"
-            style="@style/EtSingleLine"
-            android:hint="资产发送方" />
-
-        <EditText
-            android:id="@+id/et_nh_asset_transfer_to_account"
-            style="@style/EtSingleLine"
-            android:hint="资产接收方" />
-
-        <EditText
-            android:id="@+id/et_nh_asset_fee_symbol"
-            style="@style/EtSingleLine"
-            android:hint="nh资产转移费用symbol" />
-
-        <EditText
-            android:id="@+id/et_nh_asset_id"
-            style="@style/EtSingleLine"
-            android:hint="nh 资产id" />
-
-        <EditText
-            android:id="@+id/et_password"
-            style="@style/EtSingleLine"
-            android:hint="验证密码" />
-
-
-        <TextView
-            android:id="@+id/tv_nh_asset_transfer_fee"
-            style="@style/TvBtn"
-            android:text="获取本次交易费用" />
-
-        <TextView
-            android:id="@+id/tv_send_nh_asset"
-            style="@style/TvBtn"
-            android:text="确认发送（需要验证密码）" />
-
-        <TextView
-            style="@style/TvTitle"
-            android:text="删除NH资产" />
-
-
-        <EditText
-            android:id="@+id/et_delete_nh_asset_account"
-            style="@style/EtSingleLine"
-            android:hint="账户名" />
-
-        <EditText
-            android:id="@+id/et_delete_nh_asset_password"
-            style="@style/EtSingleLine"
-            android:hint="密码" />
-
-        <EditText
-            android:id="@+id/et_delete_nh_asset_id"
-            style="@style/EtSingleLine"
-            android:hint="nh 资产id" />
-
-        <EditText
-            android:id="@+id/et_delete_nh_asset_fee_symbol"
-            style="@style/EtSingleLine"
-            android:hint="费用symbol" />
-
-        <TextView
-            android:id="@+id/tv_nh_asset_delete_fee"
-            style="@style/TvBtn"
-            android:text="获取本次交易费用" />
-
-        <TextView
-            android:id="@+id/tv_delete_nh_asset"
-            style="@style/TvBtn"
-            android:text="确认删除（需要验证密码）" />
-
-        <TextView
-            style="@style/TvTitle"
-            android:text="购买NH资产" />
-
-        <EditText
-            android:id="@+id/et_nh_asset_buyer"
-            style="@style/EtSingleLine"
-            android:hint="购买者" />
-
-        <EditText
-            android:id="@+id/et_nh_asset_order_id"
-            style="@style/EtSingleLine"
-            android:hint="nh订单Id" />
-
-        <EditText
-            android:id="@+id/et_buy_nh_password"
-            style="@style/EtSingleLine"
-            android:hint="验证密码" />
-
-        <TextView
-            android:id="@+id/tv_nh_asset_buy_fee"
-            style="@style/TvBtn"
-            android:text="获取本次交易费用" />
-
-        <TextView
-            android:id="@+id/tv_nh_asset_buy"
-            style="@style/TvBtn"
-            android:text="购买" />
-
-        <TextView
-            style="@style/TvTitle"
-            android:text="创建NH资产订单（出售）" />
-
-        <EditText
-            android:id="@+id/et_nh_asset_otcaccount"
-            style="@style/EtSingleLine"
-            android:hint="otcaccount" />
-
-        <EditText
-            android:id="@+id/et_nh_asset_seller"
-            style="@style/EtSingleLine"
-            android:hint="seller" />
-
-        <EditText
-            android:id="@+id/pending_order_seller_password"
-            style="@style/EtSingleLine"
-            android:hint="账户密码" />
-
-        <EditText
-            android:id="@+id/pending_order_nh_asset"
-            style="@style/EtSingleLine"
-            android:hint="nh资产Id" />
-
-        <EditText
-            android:id="@+id/pending_order_fee"
-            style="@style/EtSingleLine"
-            android:hint="挂单费用fee" />
-
-        <EditText
-            android:id="@+id/pending_order_memo"
-            style="@style/EtSingleLine"
-            android:hint="挂单备注信息memo" />
-
-        <EditText
-            android:id="@+id/pending_order_price"
-            style="@style/EtSingleLine"
-            android:hint="商品挂单价格price" />
-
-        <EditText
-            android:id="@+id/pending_order_price_symbol"
-            style="@style/EtSingleLine"
-            android:hint="商品挂单价格币种priceAssetSymbol" />
-
-        <EditText
-            android:id="@+id/pending_order_valid_time"
-            style="@style/EtSingleLine"
-            android:hint="过期时间(即挂卖时间,number类型,如3600，表示3600秒后过期)" />
-
-        <TextView
-            android:id="@+id/tv_create_nh_asset_order_fee"
-            style="@style/TvBtn"
-            android:text="获取本次交易费用" />
-
-        <TextView
-            android:id="@+id/tv_create_nh_asset_order"
-            style="@style/TvBtn"
-            android:text="确认卖出NH资产" />
-
-
-        <TextView
-            style="@style/TvTitle"
-            android:text="取消账户NH资产售卖单" />
-
-        <EditText
-            android:id="@+id/et_cancel_nh_asset_account"
-            style="@style/EtSingleLine"
-            android:hint="账户名" />
-
-        <EditText
-            android:id="@+id/et_cancel_nh_asset_order_id"
-            style="@style/EtSingleLine"
-            android:hint="订单id" />
-
-        <EditText
-            android:id="@+id/et_cancel_nh_asset_fee_symbol"
-            style="@style/EtSingleLine"
-            android:hint="费用symbol" />
-
-        <EditText
-            android:id="@+id/et_cancel_nh_asset_password"
-            style="@style/EtSingleLine"
-            android:hint="密码" />
-
-        <TextView
-            android:id="@+id/tv_cancel_nh_asset_order_fee"
-            style="@style/TvBtn"
-            android:text="获取本次交易费用" />
-
-        <TextView
-            android:id="@+id/tv_cancel_nh_asset_order"
-            style="@style/TvBtn"
-            android:text="取消订单（需要验证密码）" />
-
 
         <TextView
             style="@style/TvTitle"
@@ -944,16 +970,6 @@
             android:id="@+id/et_upgrade_lifetime_password"
             style="@style/EtSingleLine"
             android:hint="密码" />
-
-        <EditText
-            android:id="@+id/et_upgrade_lifetime_asset"
-            style="@style/EtSingleLine"
-            android:hint="手续费资产" />
-
-        <TextView
-            android:id="@+id/tv_upgrade_lifetime_fee"
-            style="@style/TvBtn"
-            android:text="获取升级终身会员手续费" />
 
         <TextView
             android:id="@+id/tv_upgrade_lifetime_member"
@@ -985,16 +1001,6 @@
             android:id="@+id/et_create_child_registrar_password"
             style="@style/EtSingleLine"
             android:hint="注册官账户密码" />
-
-        <EditText
-            android:id="@+id/et_create_child_fee_asset"
-            style="@style/EtSingleLine"
-            android:hint="手续费币种" />
-
-        <TextView
-            android:id="@+id/tv_create_child_account_fee"
-            style="@style/TvBtn"
-            android:text="获取注册子账号手续费" />
 
         <TextView
             android:id="@+id/tv_create_child_account"
@@ -1053,6 +1059,79 @@
             android:text="交易市场"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="为gas调整质押物" />
+
+        <EditText
+            android:id="@+id/estimation_gas_mortgagor"
+            style="@style/EtSingleLine"
+            android:hint="抵押人" />
+
+        <EditText
+            android:id="@+id/estimation_gas_mortgagor_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <EditText
+            android:id="@+id/estimation_gas_beneficiary"
+            style="@style/EtSingleLine"
+            android:hint="受益人" />
+
+        <EditText
+            android:id="@+id/estimation_gas_amount"
+            style="@style/EtSingleLine"
+            android:hint="抵押数量(COCOS)" />
+
+        <TextView
+            android:id="@+id/get_estimation_gas"
+            style="@style/TvBtn"
+            android:text="确认获取预估Gas" />
+
+
+        <TextView
+            android:id="@+id/get_update_collateral_for_gas"
+            style="@style/TvBtn"
+            android:text="确认抵押Gas" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="查看待领取GAS或节点出块奖励并领取" />
+
+        <TextView
+            style="@style/TvEdTips"
+            android:text="查看账户的待领取GAS或出块奖励" />
+
+        <EditText
+            android:id="@+id/vesting_balances_account"
+            style="@style/EtSingleLine"
+            android:hint="账户名" />
+
+        <TextView
+            android:id="@+id/tv_vesting_balances"
+            style="@style/TvBtn"
+            android:text="立即查看" />
+
+        <TextView
+            android:id="@+id/tv_vesting_balances_content"
+            style="@style/TvEdTips" />
+
+        <EditText
+            android:id="@+id/get_vesting_balances_account"
+            style="@style/EtSingleLine"
+            android:hint="账户名" />
+
+        <EditText
+            android:id="@+id/get_vesting_balances_account_password"
+            style="@style/EtSingleLine"
+            android:hint="密码" />
+
+        <TextView
+            android:id="@+id/tv_get_vesting_balances"
+            style="@style/TvBtn"
+            android:text="立即领取" />
 
     </LinearLayout>
 </ScrollView>

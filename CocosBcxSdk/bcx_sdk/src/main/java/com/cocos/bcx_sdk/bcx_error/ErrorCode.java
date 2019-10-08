@@ -70,12 +70,10 @@ public class ErrorCode {
      */
     public static final int AUTHORITY_EXCEPTION = 112;
 
-
     /**
-     * The Wallet Chain ID does not match the current chain configuration information.
+     * No reward available
      */
-    public static final int CHAIN_ID_NOT_MATCH = 166;
-
+    public static final int NO_REWARD_AVAILABLE = 127;
 
     /**
      * please check parameter data type
@@ -107,6 +105,16 @@ public class ErrorCode {
      * worldViews do not exist
      */
     public static final int ERROR_WORLDVIEW_DO_NOT_EXIST = 164;
+
+    /**
+     * The Wallet Chain ID does not match the current chain configuration information.
+     */
+    public static final int CHAIN_ID_NOT_MATCH = 166;
+
+    /**
+     * worldViews exist
+     */
+    public static final int ERROR_WORLDVIEW_AREADY_EXIST = 167;
 
     /**
      * Parameter error

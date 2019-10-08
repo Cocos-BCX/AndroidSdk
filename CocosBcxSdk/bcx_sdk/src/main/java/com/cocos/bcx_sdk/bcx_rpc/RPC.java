@@ -44,4 +44,6 @@ public class RPC {
     public static final String CALL_LIST_NH_ASSET_BY_CREATOR = "list_nh_asset_by_creator";
     public static final String CALL_GET_TRANSACTION_IN_BLOCK_INFO = "get_transaction_in_block_info";
     public static final String CALL_GET_TRANSACTION_BY_ID = "get_transaction_by_id";
+    public static final String CALL_ESTIMATION_GAS = "estimation_gas";
+    public static final String CALL_GET_VESTING_BALANCES = "get_vesting_balances";
 }
