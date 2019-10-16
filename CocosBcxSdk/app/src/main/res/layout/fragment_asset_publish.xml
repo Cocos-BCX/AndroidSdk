@@ -36,11 +36,6 @@
             android:hint="喂价提供者账户(Array) " />
 
         <TextView
-            android:id="@+id/assetUpdateFeed_fee"
-            style="@style/TvBtn"
-            android:text="获取手续费费用预估" />
-
-        <TextView
             android:id="@+id/assetUpdateFeed"
             style="@style/TvBtn"
             android:text="确认更新喂价者" />
@@ -100,11 +95,6 @@
             style="@style/EtSingleLine"
             android:hint="标价资产数量（COCOS）："
             android:inputType="numberDecimal"/>
-
-        <TextView
-            android:id="@+id/assetPublishFeed_fee"
-            style="@style/TvBtn"
-            android:text="获取手续费费用预估" />
 
         <TextView
             android:id="@+id/assetPublishFeed"

@@ -31,7 +31,6 @@ public class AssetPublishFeedFragment extends Fragment {
     private EditText assetUpdateFeed_symbol_password;
     private EditText assetUpdateFeed_symbol;
     private EditText assetUpdateFeed_producers;
-    private TextView assetUpdateFeed_fee;
     private TextView assetUpdateFeed;
     private EditText assetPublishFeed_account;
     private EditText assetPublishFeed_password;
@@ -41,7 +40,6 @@ public class AssetPublishFeedFragment extends Fragment {
     private EditText assetPublishFeed_upper_limit_of_compulsory_ratio;
     private EditText assetPublishFeed_number_benchmark_assets;
     private EditText assetPublishFeed_number_of_listed_assets;
-    private TextView assetPublishFeed_fee;
     private TextView assetPublishFeed;
     private EditText assetUpdateFeed_producers_result;
     private EditText assetPublishFeed_result;
@@ -58,7 +56,6 @@ public class AssetPublishFeedFragment extends Fragment {
         assetUpdateFeed_symbol_password = v.findViewById(R.id.assetUpdateFeed_symbol_password);
         assetUpdateFeed_symbol = v.findViewById(R.id.assetUpdateFeed_symbol);
         assetUpdateFeed_producers = v.findViewById(R.id.assetUpdateFeed_producers);
-        assetUpdateFeed_fee = v.findViewById(R.id.assetUpdateFeed_fee);
         assetUpdateFeed = v.findViewById(R.id.assetUpdateFeed);
         assetUpdateFeed_producers_result = v.findViewById(R.id.assetUpdateFeed_producers_result);
 
@@ -70,7 +67,6 @@ public class AssetPublishFeedFragment extends Fragment {
         assetPublishFeed_upper_limit_of_compulsory_ratio = v.findViewById(R.id.assetPublishFeed_upper_limit_of_compulsory_ratio);
         assetPublishFeed_number_benchmark_assets = v.findViewById(R.id.assetPublishFeed_number_benchmark_assets);
         assetPublishFeed_number_of_listed_assets = v.findViewById(R.id.assetPublishFeed_number_of_listed_assets);
-        assetPublishFeed_fee = v.findViewById(R.id.assetPublishFeed_fee);
         assetPublishFeed = v.findViewById(R.id.assetPublishFeed);
         assetPublishFeed_result = v.findViewById(R.id.assetPublishFeed_result);
         initData();
@@ -78,32 +74,6 @@ public class AssetPublishFeedFragment extends Fragment {
     }
 
     private void initData() {
-
-        /**
-         *   更新喂价提供者费用
-         *   update_feed_product_fee
-         */
-        assetUpdateFeed_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String[] strings = assetUpdateFeed_producers.getText().toString().trim().split(",");
-                List<String> products = Arrays.asList(strings);
-                CocosBcxApiWrapper.getBcxInstance().update_feed_product_fee(assetUpdateFeed_symbol_account.getText().toString(), assetUpdateFeed_symbol.getText().toString(), products, "COCOS", new IBcxCallBack() {
-                    @SuppressLint("LongLogTag")
-                    @Override
-                    public void onReceiveValue(String value) {
-                        Log.i("update_feed_product_fee", value);
-                        MainHandler.getInstance().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                assetUpdateFeed_producers_result.setText(value);
-                            }
-                        });
-                    }
-                });
-            }
-        });
-
 
         /**
          *  更新喂价提供者
@@ -127,37 +97,6 @@ public class AssetPublishFeedFragment extends Fragment {
                         });
                     }
                 });
-            }
-        });
-
-
-        /**
-         * 资产喂价费用
-         *   publish_feed_fee
-         */
-        assetPublishFeed_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().publish_feed_fee(assetPublishFeed_account.getText().toString(),
-                        assetPublishFeed_symbol.getText().toString(),
-                        assetPublishFeed_price.getText().toString(),
-                        new BigDecimal(assetPublishFeed_maintaining_mortgage_rate.getText().toString()),
-                        new BigDecimal(assetPublishFeed_upper_limit_of_compulsory_ratio.getText().toString()),
-                        assetPublishFeed_number_benchmark_assets.getText().toString(),
-                        assetPublishFeed_number_of_listed_assets.getText().toString(),
-                        "COCOS", "COCOS", new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("publish_feed_fee", value);
-                                MainHandler.getInstance().post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        assetPublishFeed_result.setText(value);
-                                    }
-                                });
-                            }
-                        });
             }
         });
 

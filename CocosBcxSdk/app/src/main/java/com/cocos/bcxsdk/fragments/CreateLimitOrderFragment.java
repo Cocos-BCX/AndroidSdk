@@ -34,7 +34,6 @@ public class CreateLimitOrderFragment extends Fragment {
     private EditText createLimitOrder_amount;
     private EditText createLimitOrder_valide_time;
     private TextView createLimitOrder;
-    private TextView createLimitOrder_fee;
     private TextView to_my_limit_order;
     private TextView to_all_limit_order;
     private EditText createLimitOrder_result;
@@ -55,7 +54,6 @@ public class CreateLimitOrderFragment extends Fragment {
         createLimitOrder_price = v.findViewById(R.id.createLimitOrder_price);
         createLimitOrder_amount = v.findViewById(R.id.createLimitOrder_amount);
         createLimitOrder = v.findViewById(R.id.createLimitOrder);
-        createLimitOrder_fee = v.findViewById(R.id.createLimitOrder_fee);
         to_my_limit_order = v.findViewById(R.id.to_my_limit_order);
         to_all_limit_order = v.findViewById(R.id.to_all_limit_order);
         createLimitOrder_result = v.findViewById(R.id.createLimitOrder_result);
@@ -84,35 +82,6 @@ public class CreateLimitOrderFragment extends Fragment {
                             @Override
                             public void onReceiveValue(String value) {
                                 Log.i("create_limit_order", value);
-                                MainHandler.getInstance().post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        createLimitOrder_result.setText(value);
-                                    }
-                                });
-                            }
-                        });
-            }
-        });
-
-        /**
-         *   创建代币资产‘限价单’交易费用
-         *   create_limit_order_fee
-         */
-        createLimitOrder_fee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().create_limit_order_fee(createLimitOrder_account.getText().toString(),
-                        createLimitOrder_transaction_pair.getText().toString(),
-                        Integer.parseInt(createLimitOrder_type.getText().toString()),
-                        Integer.parseInt(createLimitOrder_valide_time.getText().toString()),
-                        new BigDecimal(createLimitOrder_price.getText().toString()),
-                        new BigDecimal(createLimitOrder_amount.getText().toString()),
-                        "COCOS", new IBcxCallBack() {
-                            @SuppressLint("LongLogTag")
-                            @Override
-                            public void onReceiveValue(String value) {
-                                Log.i("publish_feed", value);
                                 MainHandler.getInstance().post(new Runnable() {
                                     @Override
                                     public void run() {

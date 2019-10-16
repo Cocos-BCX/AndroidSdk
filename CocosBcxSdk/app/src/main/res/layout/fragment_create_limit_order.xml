@@ -55,11 +55,6 @@
             android:inputType="number" />
 
         <TextView
-            android:id="@+id/createLimitOrder_fee"
-            style="@style/TvBtn"
-            android:text="获取手续费费用预估" />
-
-        <TextView
             android:id="@+id/createLimitOrder"
             style="@style/TvBtn"
             android:text="立即下单" />

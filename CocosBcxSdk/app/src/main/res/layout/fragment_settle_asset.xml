@@ -36,11 +36,6 @@
             android:hint="金额" />
 
         <TextView
-            android:id="@+id/settle_asset_get_fee"
-            style="@style/TvBtn"
-            android:text="获取手续费费用预估" />
-
-        <TextView
             android:id="@+id/settle_asset"
             style="@style/TvBtn"
             android:text="确认清算" />
@@ -81,11 +76,6 @@
             style="@style/EtSingleLine"
             android:inputType="number"
             android:hint="价格" />
-
-        <TextView
-            android:id="@+id/global_settle_asset_get_fee"
-            style="@style/TvBtn"
-            android:text="获取手续费费用预估" />
 
         <TextView
             android:id="@+id/global_settle_asset"
