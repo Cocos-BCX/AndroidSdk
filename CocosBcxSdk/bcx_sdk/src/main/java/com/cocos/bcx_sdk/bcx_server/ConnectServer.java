@@ -33,8 +33,6 @@ import com.cocos.bcx_sdk.bcx_wallet.chain.world_view_object;
 import com.cocos.bcx_sdk.bcx_wallet.fc.crypto.sha256_object;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
@@ -78,7 +76,6 @@ import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_LIMIT_ORDERS;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_MARKET_HISTORY;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_NH_CREATOR;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_OBJECTS;
-import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_REQUIRED_FEES;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_TRANSACTION_BY_ID;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_TRANSACTION_IN_BLOCK_INFO;
 import static com.cocos.bcx_sdk.bcx_rpc.RPC.CALL_GET_VESTING_BALANCES;
@@ -206,7 +203,7 @@ public class ConnectServer extends WebSocketListener {
         int nRet = OPERATE_SUCCESS;
 
         try {
-            boolean bLogin = login("", "");
+            boolean bLogin = login();
             if (bLogin) {
                 mDatabaseId = getApiId(CALL_DATABASE);
                 mHistoryId = getApiId(CALL_HISTORY);
@@ -307,7 +304,7 @@ public class ConnectServer extends WebSocketListener {
         }
     }
 
-    private boolean login(String strUserName, String strPassword) throws NetworkStatusException {
+    private boolean login() throws NetworkStatusException {
         Call callObject = new Call();
         callObject.id = mnCallId.getAndIncrement();
         callObject.method = "call";
@@ -316,8 +313,8 @@ public class ConnectServer extends WebSocketListener {
         callObject.params.add(CALL_LOGIN);
 
         List<Object> listLoginParams = new ArrayList<>();
-        listLoginParams.add(strUserName);
-        listLoginParams.add(strPassword);
+        listLoginParams.add("");
+        listLoginParams.add("");
         callObject.params.add(listLoginParams);
 
         ReplyObjectProcess<Reply<Boolean>> replyObject = new ReplyObjectProcess<>(new com.google.gson.reflect.TypeToken<Reply<Boolean>>() {
@@ -764,30 +761,6 @@ public class ConnectServer extends WebSocketListener {
         Reply<block_info> replyObject = sendForReply(callObject, replyObjectProcess);
         return replyObject.result;
     }
-
-
-    /**
-     * get_required_fees
-     *
-     * @param operation
-     * @return
-     * @throws NetworkStatusException
-     */
-    public List<asset_fee_object> get_required_fees(List<Object> operation) throws NetworkStatusException {
-        Call callObject = new Call();
-        callObject.id = mnCallId.getAndIncrement();
-        callObject.method = "call";
-        callObject.params = new ArrayList<>();
-        callObject.params.add(mDatabaseId);
-        callObject.params.add(CALL_GET_REQUIRED_FEES);
-        callObject.params.add(operation);
-
-        ReplyObjectProcess<Reply<List<asset_fee_object>>> replyObjectProcess = new ReplyObjectProcess<>(new TypeToken<Reply<List<asset_fee_object>>>() {
-        }.getType());
-        Reply<List<asset_fee_object>> replyObject = sendForReply(callObject, replyObjectProcess);
-        return replyObject.result;
-    }
-
 
     /**
      * get_contract
