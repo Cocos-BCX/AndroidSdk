@@ -59,7 +59,6 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_transfer_asset_amount;
     private EditText et_transfer_asset_asset_type;
     private EditText et_transfer_asset_memo;
-    private TextView tv_transfer_assetGetFee;
     private TextView tv_transfer_asset;
     private TextView tv_get_accounts;
 
@@ -198,6 +197,7 @@ public class TestActivity extends AppCompatActivity {
     private TextView tv_get_vesting_balances;
     private EditText get_vesting_balances_account;
     private EditText get_vesting_balances_account_password;
+    private TextView tv_get_block;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -249,7 +249,6 @@ public class TestActivity extends AppCompatActivity {
         et_transfer_asset_amount = findViewById(R.id.et_transfer_asset_amount);
         et_transfer_asset_asset_type = findViewById(R.id.et_transfer_asset_asset_type);
         et_transfer_asset_memo = findViewById(R.id.et_transfer_asset_memo);
-        tv_transfer_assetGetFee = findViewById(R.id.tv_transfer_assetGetFee);
         tv_transfer_asset = findViewById(R.id.tv_transfer_asset);
         tv_get_dao_accounts = findViewById(R.id.tv_get_dao_accounts);
 
@@ -259,6 +258,7 @@ public class TestActivity extends AppCompatActivity {
         tv_get_memo = findViewById(R.id.tv_get_memo);
 
         et_block_number = findViewById(R.id.et_block_number);
+        tv_get_block = findViewById(R.id.tv_get_block);
         tv_get_block_header = findViewById(R.id.tv_get_block_header);
 
 
@@ -626,15 +626,30 @@ public class TestActivity extends AppCompatActivity {
         });
 
         /**
-         * 获取头区块信息；
+         * 获取区块头信息；
          */
         tv_get_block_header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().get_objects(et_block_number.getText().toString(), new IBcxCallBack() {
+                CocosBcxApiWrapper.getBcxInstance().get_block_header(et_block_number.getText().toString(), new IBcxCallBack() {
                     @Override
                     public void onReceiveValue(String value) {
                         Log.i("get_block_header", value);
+                    }
+                });
+            }
+        });
+
+        /**
+         * 获取区块信息；
+         */
+        tv_get_block.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().get_block(et_block_number.getText().toString(), new IBcxCallBack() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i("get_block", value);
                     }
                 });
             }
@@ -1295,7 +1310,6 @@ public class TestActivity extends AppCompatActivity {
                         });
             }
         });
-
 
 
     }

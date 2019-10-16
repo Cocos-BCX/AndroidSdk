@@ -323,11 +323,6 @@
             android:hint="备注消息" />
 
         <TextView
-            android:id="@+id/tv_transfer_assetGetFee"
-            style="@style/TvBtn"
-            android:text="获取本次转账所需手续费" />
-
-        <TextView
             android:id="@+id/tv_transfer_asset"
             style="@style/TvBtn"
             android:text="转账" />
@@ -406,6 +401,11 @@
             android:id="@+id/tv_get_block_header"
             style="@style/TvBtn"
             android:text="获取头区块信息；" />
+
+        <TextView
+            android:id="@+id/tv_get_block"
+            style="@style/TvBtn"
+            android:text="获取区块信息；" />
 
         <include layout="@layout/include_line" />
 
