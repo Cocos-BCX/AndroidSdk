@@ -29,6 +29,7 @@ import com.cocos.bcx_sdk.bcx_error.WordViewNotExistException;
 import com.cocos.bcx_sdk.bcx_log.LogUtils;
 import com.cocos.bcx_sdk.bcx_server.ConnectServer;
 import com.cocos.bcx_sdk.bcx_sql.dao.AccountDao;
+import com.cocos.bcx_sdk.bcx_utils.utils.IDHelper;
 import com.cocos.bcx_sdk.bcx_wallet.authority1;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_related_word_view_object;
@@ -37,6 +38,8 @@ import com.cocos.bcx_sdk.bcx_wallet.chain.asset_fee_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.block_header;
 import com.cocos.bcx_sdk.bcx_wallet.chain.block_info;
+import com.cocos.bcx_sdk.bcx_wallet.chain.committee_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.committee_object_result;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.create_account_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.dynamic_global_property_object;
@@ -60,6 +63,9 @@ import com.cocos.bcx_sdk.bcx_wallet.chain.transaction_in_block_info;
 import com.cocos.bcx_sdk.bcx_wallet.chain.types;
 import com.cocos.bcx_sdk.bcx_wallet.chain.vesting_balances_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.vesting_balances_result;
+import com.cocos.bcx_sdk.bcx_wallet.chain.vote_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.witnesses_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.witnesses_object_result;
 import com.cocos.bcx_sdk.bcx_wallet.chain.world_view_object;
 import com.cocos.bcx_sdk.bcx_wallet.fc.crypto.aes;
 import com.cocos.bcx_sdk.bcx_wallet.fc.crypto.sha256_object;
@@ -73,6 +79,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import org.bitcoinj.core.AddressFormatException;
 
@@ -1502,7 +1509,6 @@ public class CocosBcxApi {
         return mWebSocketApi.get_objects(ids);
     }
 
-
     /**
      * get account by account_names_or_ids
      *
@@ -2437,6 +2443,127 @@ public class CocosBcxApi {
         availableBalanceBean.precision = asset_object.precision;
         vesting_balances_results.available_balance = availableBalanceBean;
         return vesting_balances_results;
+    }
+
+
+    /**
+     * get_committee_members
+     *
+     * @return get_committee_members
+     */
+    List<committee_object_result> get_committee_members(String support_account) throws NetworkStatusException, UnLegalInputException, AccountNotFoundException {
+        Object committee_base_object = get_objects("2.0.0");
+        Gson gson = global_config_object.getInstance().getGsonBuilder().create();
+        vote_object vote_object = gson.fromJson(gson.toJson(committee_base_object), vote_object.class);
+        LogUtils.i("vote_object", vote_object.active_committee_members.get(0).toString());
+        List<String> stringList = IDHelper.getIds(1, 5, 0, 50);
+        LogUtils.i("IDhelpergetIds", stringList.get(2));
+        List<Object> objectList = get_objects(stringList);
+        List<committee_object> committee_objects = gson.fromJson(gson.toJson(objectList), new TypeToken<List<committee_object>>() {
+        }.getType());
+        LogUtils.i("committee_objects", committee_objects.get(0).committee_member_account.toString());
+        account_object support_object = get_account_object(support_account);
+        List<committee_object_result> committee_object_results = new ArrayList<>();
+        for (committee_object committee_object : committee_objects) {
+            if (null == committee_object) {
+                return committee_object_results;
+            }
+            committee_object_result committee_object_result = new committee_object_result();
+            account_object account_object = get_accounts(committee_object.committee_member_account.toString());
+            committee_object_result.account_id = account_object.id.toString();
+            committee_object_result.account_name = account_object.name;
+            committee_object_result.committee_id = committee_object.id.toString();
+            committee_object_result.type = "committee";
+            committee_object_result.url = committee_object.url;
+            committee_object_result.vote_id = committee_object.vote_id;
+            committee_object_result.votes = String.valueOf(committee_object.total_votes / Math.pow(10, 5));
+            committee_object_result.active = false;
+            committee_object_result.supported = false;
+            for (object_id<committee_object> committeeObject : vote_object.active_committee_members) {
+                if (TextUtils.equals(committeeObject.toString(), committee_object.id.toString())) {
+                    committee_object_result.active = true;
+                }
+            }
+            List<committee_object_result.SupportersBean> supportersBeans = new ArrayList<>();
+            for (Map.Entry<object_id<account_object>, asset_fee_object> objectHashMap : committee_object.supporters.entrySet()) {
+                committee_object_result.SupportersBean supportersBean = new committee_object_result.SupportersBean();
+                supportersBean.account_id = objectHashMap.getKey();
+                asset_fee_object asset_fee_object = objectHashMap.getValue();
+                supportersBean.amount_raw = asset_fee_object;
+                asset_object asset_object = lookup_asset_symbols(asset_fee_object.asset_id.toString());
+                supportersBean.amount_text = new BigDecimal(asset_fee_object.amount).divide(new BigDecimal(Math.pow(10, asset_object.precision))) + asset_object.symbol;
+                object_id<account_object> accountObjectobjectId = objectHashMap.getKey();
+                if (TextUtils.equals(support_object.id.toString(), accountObjectobjectId.toString())) {
+                    committee_object_result.supported = true;
+                }
+                supportersBeans.add(supportersBean);
+            }
+            committee_object_result.supporters = supportersBeans;
+            committee_object_results.add(committee_object_result);
+        }
+        return committee_object_results;
+    }
+
+
+    /**
+     * get_witnesses_members
+     *
+     * @return get_witnesses_members
+     */
+    List<witnesses_object_result> get_witnesses_members(String support_account) throws NetworkStatusException, UnLegalInputException, AccountNotFoundException {
+        Object witnesses_base_object = get_objects("2.0.0");
+        Gson gson = global_config_object.getInstance().getGsonBuilder().create();
+        vote_object vote_object = gson.fromJson(gson.toJson(witnesses_base_object), vote_object.class);
+        LogUtils.i("vote_object", vote_object.active_witnesses.get(0).toString());
+        List<String> stringList = IDHelper.getIds(1, 6, 1, 50);
+        LogUtils.i("IDhelpergetIds", stringList.get(2));
+        List<Object> objectList = get_objects(stringList);
+        List<witnesses_object> witnesses_objects = gson.fromJson(gson.toJson(objectList), new TypeToken<List<witnesses_object>>() {
+        }.getType());
+        LogUtils.i("witness_account", witnesses_objects.get(0).witness_account.toString());
+        account_object support_object = get_account_object(support_account);
+        List<witnesses_object_result> witnesses_object_results = new ArrayList<>();
+        for (witnesses_object witnesses_object : witnesses_objects) {
+            if (null == witnesses_object) {
+                return witnesses_object_results;
+            }
+            witnesses_object_result witnesses_object_result = new witnesses_object_result();
+            account_object account_object = get_accounts(witnesses_object.witness_account.toString());
+            witnesses_object_result.account_id = account_object.id.toString();
+            witnesses_object_result.account_name = account_object.name;
+            witnesses_object_result.witness_id = witnesses_object.id.toString();
+            witnesses_object_result.type = "witnesses";
+            witnesses_object_result.url = witnesses_object.url;
+            witnesses_object_result.vote_id = witnesses_object.vote_id;
+            witnesses_object_result.votes = String.valueOf(witnesses_object.total_votes / Math.pow(10, 5));
+            witnesses_object_result.total_missed = witnesses_object.total_missed;
+            witnesses_object_result.last_confirmed_block_num = witnesses_object.last_confirmed_block_num;
+            witnesses_object_result.last_aslot = witnesses_object.last_aslot;
+            witnesses_object_result.active = false;
+            witnesses_object_result.supported = false;
+            for (object_id<witnesses_object> witnessesObject : vote_object.active_witnesses) {
+                if (TextUtils.equals(witnessesObject.toString(), witnesses_object.id.toString())) {
+                    witnesses_object_result.active = true;
+                }
+            }
+            List<witnesses_object_result.SupportersBean> supportersBeans = new ArrayList<>();
+            for (Map.Entry<object_id<account_object>, asset_fee_object> objectHashMap : witnesses_object.supporters.entrySet()) {
+                witnesses_object_result.SupportersBean supportersBean = new witnesses_object_result.SupportersBean();
+                supportersBean.account_id = objectHashMap.getKey();
+                asset_fee_object asset_fee_object = objectHashMap.getValue();
+                supportersBean.amount_raw = asset_fee_object;
+                asset_object asset_object = lookup_asset_symbols(asset_fee_object.asset_id.toString());
+                supportersBean.amount_text = new BigDecimal(asset_fee_object.amount).divide(new BigDecimal(Math.pow(10, asset_object.precision))) + asset_object.symbol;
+                object_id<account_object> accountObjectId = objectHashMap.getKey();
+                if (TextUtils.equals(support_object.id.toString(), accountObjectId.toString())) {
+                    witnesses_object_result.supported = true;
+                }
+                supportersBeans.add(supportersBean);
+            }
+            witnesses_object_result.supporters = supportersBeans;
+            witnesses_object_results.add(witnesses_object_result);
+        }
+        return witnesses_object_results;
     }
 
 

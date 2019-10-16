@@ -1133,6 +1133,25 @@
             style="@style/TvBtn"
             android:text="立即领取" />
 
+        <TextView
+            style="@style/TvTitle"
+            android:text="查询见证人理事会员投票信息数据并投票" />
+
+        <EditText
+            android:id="@+id/et_vote_account"
+            style="@style/EtSingleLine"
+            android:hint="投票账户" />
+
+        <TextView
+            android:id="@+id/tv_get_committee_members"
+            style="@style/TvBtn"
+            android:text="查询理事会" />
+
+        <TextView
+            android:id="@+id/tv_get_witnesses_members"
+            style="@style/TvBtn"
+            android:text="查询见证人" />
+
     </LinearLayout>
 </ScrollView>
 

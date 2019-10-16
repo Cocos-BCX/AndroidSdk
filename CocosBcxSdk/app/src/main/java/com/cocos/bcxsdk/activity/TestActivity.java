@@ -198,6 +198,9 @@ public class TestActivity extends AppCompatActivity {
     private EditText get_vesting_balances_account;
     private EditText get_vesting_balances_account_password;
     private TextView tv_get_block;
+    private TextView tv_get_committee_members;
+    private EditText et_vote_account;
+    private TextView tv_get_witnesses_members;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -410,6 +413,11 @@ public class TestActivity extends AppCompatActivity {
         tv_get_vesting_balances = findViewById(R.id.tv_get_vesting_balances);
         get_vesting_balances_account = findViewById(R.id.get_vesting_balances_account);
         get_vesting_balances_account_password = findViewById(R.id.get_vesting_balances_account_password);
+
+
+        tv_get_committee_members = findViewById(R.id.tv_get_committee_members);
+        tv_get_witnesses_members = findViewById(R.id.tv_get_witnesses_members);
+        et_vote_account = findViewById(R.id.et_vote_account);
 
 
         initListener();
@@ -1312,6 +1320,33 @@ public class TestActivity extends AppCompatActivity {
         });
 
 
+        tv_get_committee_members.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().get_committee_members(et_vote_account.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("get_committee_members", value);
+                            }
+                        });
+            }
+        });
+
+        tv_get_witnesses_members.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().get_witnesses_members(et_vote_account.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("get_witnesses_members", value);
+                            }
+                        });
+            }
+        });
     }
 
 
