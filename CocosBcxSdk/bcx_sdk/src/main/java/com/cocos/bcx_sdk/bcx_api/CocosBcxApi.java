@@ -1872,89 +1872,6 @@ public class CocosBcxApi {
         }
     }
 
-
-    /**
-     * createLimitOrder
-     *
-     * @return
-     */
-    public List<asset_fee_object> create_limit_order_fee(String seller, String transactionPair, int type, int validTime, BigDecimal price, BigDecimal amount, String fee_pay_asset_symbol_or_id) throws NetworkStatusException, AssetNotFoundException, AccountNotFoundException, ParseException, AuthorityException, PasswordVerifyException, KeyInvalideException, UnLegalInputException {
-
-        if (TextUtils.isEmpty(transactionPair)) {
-            throw new UnLegalInputException("transactionPair can not be empty");
-        }
-
-        if (!transactionPair.contains("_")) {
-            throw new UnLegalInputException("transactionPair is not right");
-        }
-
-        // get asset object
-        asset_object feeAssetObject = lookup_asset_symbols(fee_pay_asset_symbol_or_id);
-
-        String[] paris = transactionPair.split("_");
-
-        asset_object firstAssetObject = lookup_asset_symbols(paris[0].trim());
-
-        asset_object secondAssetObject = lookup_asset_symbols(paris[1].trim());
-
-        if (null == firstAssetObject) {
-            throw new AssetNotFoundException(paris[0].trim() + "does not exist");
-        }
-
-        if (null == secondAssetObject) {
-            throw new AssetNotFoundException(paris[1].trim() + "does not exist");
-        }
-
-        account_object sellerObject = get_account_object(seller);
-        if (sellerObject == null) {
-            throw new AccountNotFoundException("Account does not exist");
-        }
-
-        if (validTime > 200000) {
-            throw new InputMismatchException("error: validTime bigger than 200000");
-        }
-
-        operations.create_limit_order_operation create_limit_order_operation = new operations.create_limit_order_operation();
-        create_limit_order_operation.fee = feeAssetObject.amount_from_string("0");
-        create_limit_order_operation.seller = sellerObject.id;
-        if (type == 0) {
-            create_limit_order_operation.amount_to_sell = secondAssetObject.amount_from_string(price.multiply(amount).toString());
-            create_limit_order_operation.min_to_receive = firstAssetObject.amount_from_string(amount.toString());
-        } else if (type == 1) {
-            create_limit_order_operation.amount_to_sell = firstAssetObject.amount_from_string(amount.toString());
-            create_limit_order_operation.min_to_receive = secondAssetObject.amount_from_string(price.multiply(amount).toString());
-        } else {
-            throw new InputMismatchException("type not right");
-        }
-
-        dynamic_global_property_object dynamicGlobalPropertyObject = get_dynamic_global_properties();
-        Date dateObject = dynamicGlobalPropertyObject.time;
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(dateObject);
-        cal.add(Calendar.DATE, validTime);
-        create_limit_order_operation.expiration = cal.getTime();
-
-        create_limit_order_operation.fill_or_kill = false;
-        create_limit_order_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_CREATE_LIMIT_ORDER);
-        operateList.add(create_limit_order_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(feeAssetObject.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-        asset_fee_objects.get(0).amount = String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, feeAssetObject.precision)));
-
-        return asset_fee_objects;
-    }
-
-
     /**
      * createLimitOrder
      *
@@ -1969,9 +1886,6 @@ public class CocosBcxApi {
         if (!transactionPair.contains("_")) {
             throw new UnLegalInputException("transactionPair is not right");
         }
-
-        // get asset object
-        asset_object feeAssetObject = lookup_asset_symbols(fee_pay_asset_symbol_or_id);
 
         String[] paris = transactionPair.split("_");
 
@@ -2002,7 +1916,6 @@ public class CocosBcxApi {
         }
 
         operations.create_limit_order_operation create_limit_order_operation = new operations.create_limit_order_operation();
-        create_limit_order_operation.fee = feeAssetObject.amount_from_string("0");
         create_limit_order_operation.seller = sellerObject.id;
         if (type == 0) {
             create_limit_order_operation.amount_to_sell = firstAssetObject.amount_from_string(amount.toString());
@@ -2020,24 +1933,8 @@ public class CocosBcxApi {
         cal.setTime(dateObject);
         cal.add(Calendar.DATE, validTime);
         create_limit_order_operation.expiration = cal.getTime();
-
         create_limit_order_operation.fill_or_kill = false;
         create_limit_order_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_CREATE_LIMIT_ORDER);
-        operateList.add(create_limit_order_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(feeAssetObject.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        create_limit_order_operation.fee = feeAssetObject.amount_from_string(String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, feeAssetObject.precision))));
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = create_limit_order_operation;
@@ -2048,61 +1945,6 @@ public class CocosBcxApi {
         transactionWithCallback.operations.add(operationType);
         transactionWithCallback.extensions = new HashSet<>();
         return sign_transaction(transactionWithCallback, sellerObject);
-    }
-
-
-    /**
-     * cancel limit order
-     *
-     * @return
-     */
-    public List<asset_fee_object> cancel_limit_order_fee(String fee_paying_account, String limit_order_id, String fee_pay_asset_symbol_or_id) throws NetworkStatusException, AssetNotFoundException, AccountNotFoundException, OrderNotFoundException, NotAssetCreatorException {
-
-        // get asset object
-        asset_object feeAssetObject = lookup_asset_symbols(fee_pay_asset_symbol_or_id);
-
-        account_object fee_paying_account_object = get_account_object(fee_paying_account);
-
-        limit_orders_object limit_order_object = get_limit_order_object(limit_order_id);
-
-        if (limit_order_object == null) {
-            throw new OrderNotFoundException("order does not exist");
-        }
-
-        if (fee_paying_account_object == null) {
-            throw new AccountNotFoundException("Account does not exist");
-        }
-
-        if (feeAssetObject == null) {
-            throw new AssetNotFoundException("Fee pay asset does not exist");
-        }
-
-        if (!TextUtils.equals(limit_order_object.seller.toString(), fee_paying_account_object.id.toString())) {
-            throw new NotAssetCreatorException("You are not the order creator");
-        }
-
-        operations.cancel_limit_order_operation cancel_limit_order_operation = new operations.cancel_limit_order_operation();
-        cancel_limit_order_operation.fee = feeAssetObject.amount_from_string("0");
-        cancel_limit_order_operation.fee_paying_account = fee_paying_account_object.id;
-        cancel_limit_order_operation.order = limit_order_object.id;
-        cancel_limit_order_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_CANCEL_LIMIT_ORDER);
-        operateList.add(cancel_limit_order_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(feeAssetObject.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        asset_fee_objects.get(0).amount = String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, feeAssetObject.precision)));
-
-        return asset_fee_objects;
     }
 
 
@@ -2141,25 +1983,9 @@ public class CocosBcxApi {
         }
 
         operations.cancel_limit_order_operation cancel_limit_order_operation = new operations.cancel_limit_order_operation();
-        cancel_limit_order_operation.fee = feeAssetObject.amount_from_string("0");
         cancel_limit_order_operation.fee_paying_account = fee_paying_account_object.id;
         cancel_limit_order_operation.order = limit_order_object.id;
         cancel_limit_order_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_CANCEL_LIMIT_ORDER);
-        operateList.add(cancel_limit_order_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(feeAssetObject.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        cancel_limit_order_operation.fee = feeAssetObject.amount_from_string(String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, feeAssetObject.precision))));
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = cancel_limit_order_operation;
@@ -2255,67 +2081,6 @@ public class CocosBcxApi {
         return mWebSocketApi.get_market_history(quoteAssetObject.id.toString(), baseAssetObject.id.toString(), seconds, start_time, end_time);
     }
 
-    /**
-     * get market history
-     */
-    public List<asset_fee_object> update_feed_product_fee(String issuer, String asset_symbol_or_id, List<String> products, String fee_asset_symbol) throws NetworkStatusException, AssetNotFoundException, AccountNotFoundException, UnLegalInputException {
-
-        account_object issuerObject = get_account_object(issuer);
-        if (issuerObject == null) {
-            throw new AccountNotFoundException("issuer does not exist");
-        }
-
-        asset_object fee_asset_symbol_object = lookup_asset_symbols(fee_asset_symbol);
-        if (null == fee_asset_symbol_object) {
-            throw new AssetNotFoundException("fee asset does not exist");
-        }
-
-        asset_object asset_to_update_object = lookup_asset_symbols(asset_symbol_or_id);
-
-        if (null == asset_to_update_object) {
-            throw new AssetNotFoundException("issue asset does not exist");
-        }
-
-        if (null == products || products.size() <= 0) {
-            throw new UnLegalInputException("products can not be null");
-        }
-
-        List<object_id<account_object>> productIds = new ArrayList<>();
-
-        for (String product : products) {
-            account_object productObject = get_account_object(product);
-            if (productObject == null) {
-                productIds.clear();
-                throw new AccountNotFoundException(product + "does not exist");
-            }
-            productIds.add(productObject.id);
-        }
-
-        operations.update_feed_product_operation update_feed_product_operation = new operations.update_feed_product_operation();
-        update_feed_product_operation.fee = fee_asset_symbol_object.amount_from_string("0");
-        update_feed_product_operation.issuer = issuerObject.id;
-        update_feed_product_operation.asset_to_update = asset_to_update_object.id;
-        update_feed_product_operation.new_feed_producers = productIds;
-        update_feed_product_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_UPDATE_FEED_PRODUCT);
-        operateList.add(update_feed_product_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(fee_asset_symbol_object.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        asset_fee_objects.get(0).amount = String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, fee_asset_symbol_object.precision)));
-
-        return asset_fee_objects;
-    }
-
 
     /**
      * update feed_object product
@@ -2357,26 +2122,10 @@ public class CocosBcxApi {
         }
 
         operations.update_feed_product_operation update_feed_product_operation = new operations.update_feed_product_operation();
-        update_feed_product_operation.fee = fee_asset_symbol_object.amount_from_string("0");
         update_feed_product_operation.issuer = issuerObject.id;
         update_feed_product_operation.asset_to_update = asset_to_update_object.id;
         update_feed_product_operation.new_feed_producers = productIds;
         update_feed_product_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_UPDATE_FEED_PRODUCT);
-        operateList.add(update_feed_product_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(fee_asset_symbol_object.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        update_feed_product_operation.fee = fee_asset_symbol_object.amount_from_string(String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, fee_asset_symbol_object.precision))));
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = update_feed_product_operation;
@@ -2433,26 +2182,10 @@ public class CocosBcxApi {
         feed_object.settlement_price = settlement_price;
         feed_object.maintenance_collateral_ratio = maintenance_collateral_ratio.multiply(BigDecimal.valueOf(1000));
         feed_object.maximum_short_squeeze_ratio = maximum_short_squeeze_ratio.multiply(BigDecimal.valueOf(1000));
-        publish_feed_operation.fee = fee_asset_symbol_object.amount_from_string("0");
         publish_feed_operation.publisher = publisherObject.id;
         publish_feed_operation.asset_id = base_asset_symbol_object.id;
         publish_feed_operation.feed = feed_object;
         publish_feed_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_PUBLISH_FEED);
-        operateList.add(publish_feed_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(fee_asset_symbol_object.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        publish_feed_operation.fee = fee_asset_symbol_object.amount_from_string(String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, fee_asset_symbol_object.precision))));
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = publish_feed_operation;
@@ -2464,71 +2197,6 @@ public class CocosBcxApi {
         transactionWithCallback.extensions = new HashSet<>();
         return sign_transaction(transactionWithCallback, publisherObject);
     }
-
-
-    /**
-     * publish feed fee
-     */
-    public List<asset_fee_object> publish_feed_fee(String publisher, String base_asset_symbol, String price,
-                                                   BigDecimal maintenance_collateral_ratio, BigDecimal maximum_short_squeeze_ratio,
-                                                   String core_exchange_rate_base, String core_exchange_rate_quote, String core_exchange_quote_symbol, String fee_asset_symbol) throws NetworkStatusException, AssetNotFoundException, AccountNotFoundException {
-
-        account_object publisherObject = get_account_object(publisher);
-        if (publisherObject == null) {
-            throw new AccountNotFoundException("publisher does not exist");
-        }
-
-        asset_object quote_asset_symbol_object = lookup_asset_symbols(core_exchange_quote_symbol);
-        if (null == quote_asset_symbol_object) {
-            throw new AssetNotFoundException("quote asset does not exist");
-        }
-
-        asset_object base_asset_symbol_object = lookup_asset_symbols(base_asset_symbol);
-        if (null == base_asset_symbol_object) {
-            throw new AssetNotFoundException("base asset does not exist");
-        }
-
-        asset_object fee_asset_symbol_object = lookup_asset_symbols(fee_asset_symbol);
-        if (null == fee_asset_symbol_object) {
-            throw new AssetNotFoundException("fee asset does not exist");
-        }
-
-        operations.publish_feed_operation publish_feed_operation = new operations.publish_feed_operation();
-        feed_object feed_object = new feed_object();
-        feed_object.CoreExchangeRateBean core_exchange_rate = new feed_object.CoreExchangeRateBean();
-        feed_object.SettlementPriceBean settlement_price = new feed_object.SettlementPriceBean();
-        core_exchange_rate.base = base_asset_symbol_object.amount_from_string(core_exchange_rate_base);
-        core_exchange_rate.quote = quote_asset_symbol_object.amount_from_string(core_exchange_rate_quote);
-        settlement_price.base = base_asset_symbol_object.amount_from_string(price);
-        settlement_price.quote = quote_asset_symbol_object.amount_from_string(price);
-        feed_object.core_exchange_rate = core_exchange_rate;
-        feed_object.settlement_price = settlement_price;
-        feed_object.maintenance_collateral_ratio = maintenance_collateral_ratio.multiply(BigDecimal.valueOf(1000));
-        feed_object.maximum_short_squeeze_ratio = maximum_short_squeeze_ratio.multiply(BigDecimal.valueOf(1000));
-        publish_feed_operation.fee = fee_asset_symbol_object.amount_from_string("0");
-        publish_feed_operation.publisher = publisherObject.id;
-        publish_feed_operation.asset_id = base_asset_symbol_object.id;
-        publish_feed_operation.feed = feed_object;
-        publish_feed_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_PUBLISH_FEED);
-        operateList.add(publish_feed_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(fee_asset_symbol_object.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        asset_fee_objects.get(0).amount = String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, fee_asset_symbol_object.precision)));
-
-        return asset_fee_objects;
-    }
-
 
     /**
      * asset settle
@@ -2555,25 +2223,9 @@ public class CocosBcxApi {
         }
 
         operations.asset_settle_operation asset_settle_operation = new operations.asset_settle_operation();
-        asset_settle_operation.fee = fee_asset_object.amount_from_string("0");
         asset_settle_operation.account = account_object.id;
         asset_settle_operation.amount = settle_asset_object.amount_from_string(settle_asset_amount);
         asset_settle_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_ASSET_SETTLE);
-        operateList.add(asset_settle_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(fee_asset_object.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        asset_settle_operation.fee = fee_asset_object.amount_from_string(String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, fee_asset_object.precision))));
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = asset_settle_operation;
@@ -2585,52 +2237,6 @@ public class CocosBcxApi {
         transactionWithCallback.extensions = new HashSet<>();
         return sign_transaction(transactionWithCallback, account_object);
     }
-
-
-    /**
-     * asset settle fee
-     */
-    public List<asset_fee_object> asset_settle_fee(String account, String settle_asset_symbol, String settle_asset_amount, String fee_asset_symbol) throws NetworkStatusException, AssetNotFoundException, AccountNotFoundException {
-
-        account_object account_object = get_account_object(account);
-        if (account_object == null) {
-            throw new AccountNotFoundException("Account does not exist");
-        }
-
-        asset_object settle_asset_object = lookup_asset_symbols(settle_asset_symbol);
-        if (null == settle_asset_object) {
-            throw new AssetNotFoundException("settle asset does not exist");
-        }
-
-        asset_object fee_asset_object = lookup_asset_symbols(fee_asset_symbol);
-        if (null == fee_asset_object) {
-            throw new AssetNotFoundException("fee asset does not exist");
-        }
-
-        operations.asset_settle_operation asset_settle_operation = new operations.asset_settle_operation();
-        asset_settle_operation.fee = fee_asset_object.amount_from_string("0");
-        asset_settle_operation.account = account_object.id;
-        asset_settle_operation.amount = settle_asset_object.amount_from_string(settle_asset_amount);
-        asset_settle_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_ASSET_SETTLE);
-        operateList.add(asset_settle_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(fee_asset_object.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        asset_fee_objects.get(0).amount = String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, fee_asset_object.precision)));
-
-        return asset_fee_objects;
-    }
-
 
     /**
      * global asset settle
@@ -2657,7 +2263,6 @@ public class CocosBcxApi {
         }
 
         operations.global_asset_settle_operation global_asset_settle_operation = new operations.global_asset_settle_operation();
-        global_asset_settle_operation.fee = fee_asset_object.amount_from_string("0");
         global_asset_settle_operation.issuer = issuer_object.id;
         global_asset_settle_operation.asset_to_settle = settle_asset_object.id;
         settle_price_object settle_price_object = new settle_price_object();
@@ -2665,21 +2270,6 @@ public class CocosBcxApi {
         settle_price_object.quote = fee_asset_object.amount_from_string(settle_asset_price);
         global_asset_settle_operation.settle_price = settle_price_object;
         global_asset_settle_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_GLOBAL_ASSET_SETTLE);
-        operateList.add(global_asset_settle_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(fee_asset_object.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        global_asset_settle_operation.fee = fee_asset_object.amount_from_string(String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, fee_asset_object.precision))));
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = global_asset_settle_operation;
@@ -2692,54 +2282,6 @@ public class CocosBcxApi {
         return sign_transaction(transactionWithCallback, issuer_object);
     }
 
-
-    /**
-     * asset settle fee
-     */
-    public List<asset_fee_object> global_asset_settle_fee(String issuer, String settle_asset_symbol, String settle_asset_price, String fee_asset_symbol) throws NetworkStatusException, AssetNotFoundException, AccountNotFoundException {
-
-        account_object issuer_object = get_account_object(issuer);
-        if (issuer_object == null) {
-            throw new AccountNotFoundException("Account does not exist");
-        }
-
-        asset_object settle_asset_object = lookup_asset_symbols(settle_asset_symbol);
-        if (null == settle_asset_object) {
-            throw new AssetNotFoundException("settle asset does not exist");
-        }
-
-        asset_object fee_asset_object = lookup_asset_symbols(fee_asset_symbol);
-        if (null == fee_asset_object) {
-            throw new AssetNotFoundException("fee asset does not exist");
-        }
-
-        operations.global_asset_settle_operation global_asset_settle_operation = new operations.global_asset_settle_operation();
-        global_asset_settle_operation.fee = fee_asset_object.amount_from_string("0");
-        global_asset_settle_operation.issuer = issuer_object.id;
-        global_asset_settle_operation.asset_to_settle = settle_asset_object.id;
-        settle_price_object settle_price_object = new settle_price_object();
-        settle_price_object.base = settle_asset_object.amount_from_string("100000000");
-        settle_price_object.quote = fee_asset_object.amount_from_string(settle_asset_price);
-        global_asset_settle_operation.settle_price = settle_price_object;
-        global_asset_settle_operation.extensions = new HashSet<>();
-
-        List<Object> operateList = new ArrayList<>();
-        operateList.add(operations.ID_GLOBAL_ASSET_SETTLE);
-        operateList.add(global_asset_settle_operation);
-
-        List<Object> operateLists = new ArrayList<>();
-        operateLists.add(operateList);
-
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(operateLists);
-        objectList.add(fee_asset_object.id);
-
-        List<asset_fee_object> asset_fee_objects = mWebSocketApi.get_required_fees(objectList);
-
-        asset_fee_objects.get(0).amount = String.valueOf(Double.valueOf(asset_fee_objects.get(0).amount) / (Math.pow(10, fee_asset_object.precision)));
-
-        return asset_fee_objects;
-    }
 
     /**
      * estimation_gas
