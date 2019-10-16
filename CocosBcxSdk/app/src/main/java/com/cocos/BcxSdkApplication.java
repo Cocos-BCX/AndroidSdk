@@ -24,9 +24,9 @@ public class BcxSdkApplication extends Application {
         MultiDex.install(this);
         Utils.init(this);
         //初始化工具类
-        List<String> mListNode = Arrays.asList("ws://192.168.90.46:8049", "ws://192.168.90.46:8049");
+        List<String> mListNode = Arrays.asList("ws://182.92.164.121:8021", "ws://182.92.164.121:8021");
         String faucetUrl = "http://47.93.62.96:8041";
-        String chainId = "7c9a7b0b1b8cbe56aa3b24da08aaaf6b3b19a293e7446c7f94f0768d6790cdab";
+        String chainId = "9aab2f1b44ffd6649985629a18154e713f7036f668e458d7568bbf7c01eed26d";
         String coreAsset = "COCOS";
         boolean isOpenLog = true;
         CocosBcxApiWrapper.getBcxInstance().init(this);
