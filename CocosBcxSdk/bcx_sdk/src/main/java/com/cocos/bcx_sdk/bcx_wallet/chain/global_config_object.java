@@ -32,6 +32,7 @@ public class global_config_object {
         mGsonBuilder.registerTypeAdapter(object_id.class, new object_id.object_id_serializer());
         mGsonBuilder.registerTypeAdapter(ripe_md160_object.class, new ripe_md160_object.ripemd160_object_deserializer());
         mGsonBuilder.registerTypeAdapter(sha256_object.class, new sha256_object.sha256_object_deserializer());
+        mGsonBuilder.registerTypeAdapter(types.vote_id_type.class, new types.vote_id_type_deserializer());
         mGsonBuilder.registerTypeAdapter(UnsignedLong.class, new unsigned_number_deserializer.UnsignedLongDeserialize());
         mGsonBuilder.registerTypeAdapter(Date.class, new gson_common_deserializer.DateDeserializer());
         mGsonBuilder.registerTypeAdapter(ByteBuffer.class, new gson_common_deserializer.ByteBufferDeserializer());

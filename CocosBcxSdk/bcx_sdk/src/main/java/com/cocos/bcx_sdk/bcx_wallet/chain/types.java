@@ -261,7 +261,7 @@ public class types {
         public object_id<account_object> voting_account;
         public Integer num_witness;
         public Integer num_committee;
-        public HashSet<Object> votes;
+        public HashSet<vote_id_type> votes;
         // 未完成
         public HashSet<String> extensions;  // extension type
 
@@ -278,14 +278,41 @@ public class types {
 //
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(votes.size()));
 
-//            for (vote_id_type type : votes) {
-//                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(type.content));
-//            }
+            for (vote_id_type type : votes) {
+                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(type.content));
+            }
             //extensions 未完成
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
 
         }
 
+    }
+
+    public static class vote_id_type {
+        int content;
+
+        public vote_id_type(String strSerial) {
+            int nIndex = strSerial.indexOf(':');
+            if (nIndex == -1) {
+                throw new RuntimeException("vote_id_type invalid serial");
+            }
+            int nType = Integer.valueOf(strSerial.substring(0, nIndex));
+            int nInstance = Integer.valueOf(strSerial.substring(nIndex + 1));
+
+            content = (nInstance << 8) | nType;
+        }
+    }
+
+    public static class vote_id_type_deserializer implements JsonDeserializer<vote_id_type> {
+
+        @Override
+        public vote_id_type deserialize(JsonElement json,
+                                        Type typeOfT,
+                                        JsonDeserializationContext context) throws JsonParseException {
+            String strSerial = json.getAsString();
+
+            return new vote_id_type(strSerial);
+        }
     }
 
     public static class public_key_type_deserializer implements JsonDeserializer<public_key_type> {
