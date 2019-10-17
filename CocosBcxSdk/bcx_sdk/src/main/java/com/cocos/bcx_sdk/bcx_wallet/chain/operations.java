@@ -28,6 +28,8 @@ public class operations {
 
     public static final int ID_TRANSFER_OPERATION = 0;
 
+    public static final int ID_VOTE_MEMBER = 6;
+
     public static final int ID_CALCULATE_INVOKING_CONTRACT_OPERATION = 35;
 
     public static final int ID_REGISTOR_CREATOR_OPERATION = 37;
@@ -93,6 +95,7 @@ public class operations {
             mHashId2Operation.put(ID_REGISTOR_CREATOR_OPERATION, register_creator_operation.class);
             mHashId2Operation.put(ID_CREATE_WORLDVIEW_OPERATION, create_worldview_operation.class);
             mHashId2Operation.put(ID_RECEIVE_VESTING_BALANCES, receive_vesting_balances_operation.class);
+            mHashId2Operation.put(ID_VOTE_MEMBER, vote_members_operation.class);
         }
 
         public Type getOperationObjectById(int nId) {
@@ -594,7 +597,7 @@ public class operations {
     }
 
     /**
-     * update_collateral_for_gas
+     * receive_vesting_balances_operation
      */
     public static class receive_vesting_balances_operation implements base_operation {
 
@@ -608,6 +611,31 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(vesting_balance.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(owner.get_instance()));
             amount.write_to_encoder(baseEncoder);
+        }
+    }
+
+    /**
+     * vote_members_operation
+     */
+    public static class vote_members_operation implements base_operation {
+
+        public asset lock_with_vote;
+        public object_id<account_object> account;
+        public types.public_key_type owner;
+        public types.public_key_type active;
+        public types.vote_options new_options;
+        public Set<types.void_t> extensions;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            lock_with_vote.write_to_encoder(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(0));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(0));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(1));
+            new_options.write_to_encode(baseEncoder);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
     }
 

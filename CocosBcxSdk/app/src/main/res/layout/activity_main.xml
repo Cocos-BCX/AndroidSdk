@@ -1138,9 +1138,9 @@
             android:text="查询见证人理事会员投票信息数据并投票" />
 
         <EditText
-            android:id="@+id/et_vote_account"
+            android:id="@+id/et_support_account"
             style="@style/EtSingleLine"
-            android:hint="投票账户" />
+            android:hint="支持账户（可查看该账户支持的见证人和理事会）" />
 
         <TextView
             android:id="@+id/tv_get_committee_members"
@@ -1152,6 +1152,26 @@
             style="@style/TvBtn"
             android:text="查询见证人" />
 
+        <EditText
+            android:id="@+id/et_vote_account"
+            style="@style/EtSingleLine"
+            android:hint="投票账户" />
+
+        <EditText
+            android:id="@+id/et_vote_password"
+            style="@style/EtSingleLine"
+            android:hint="账户密码" />
+
+
+        <EditText
+            android:id="@+id/et_vote_number"
+            style="@style/EtSingleLine"
+            android:hint="投票数量" />
+
+        <TextView
+            android:id="@+id/tv_vote_members"
+            style="@style/TvBtn"
+            android:text="投票" />
     </LinearLayout>
 </ScrollView>
 

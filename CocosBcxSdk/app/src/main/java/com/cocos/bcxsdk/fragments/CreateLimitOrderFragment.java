@@ -77,7 +77,7 @@ public class CreateLimitOrderFragment extends Fragment {
                         Integer.parseInt(createLimitOrder_valide_time.getText().toString()),
                         new BigDecimal(createLimitOrder_price.getText().toString()),
                         new BigDecimal(createLimitOrder_amount.getText().toString()),
-                        "COCOS", new IBcxCallBack() {
+                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override
                             public void onReceiveValue(String value) {

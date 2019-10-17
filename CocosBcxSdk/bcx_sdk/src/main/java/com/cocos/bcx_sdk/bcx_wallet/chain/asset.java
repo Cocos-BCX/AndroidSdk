@@ -1,9 +1,12 @@
 package com.cocos.bcx_sdk.bcx_wallet.chain;
 
 
+import com.cocos.bcx_sdk.bcx_log.LogUtils;
 import com.cocos.bcx_sdk.bcx_wallet.fc.io.base_encoder;
 import com.cocos.bcx_sdk.bcx_wallet.fc.io.raw_type;
 import com.google.common.primitives.UnsignedInteger;
+
+import java.util.Arrays;
 
 public class asset {
 
@@ -19,9 +22,7 @@ public class asset {
     public void write_to_encoder(base_encoder baseEncoder) {
 
         raw_type rawObject = new raw_type();
-
         baseEncoder.write(rawObject.get_byte_array(this.amount));
-
         rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(this.asset_id.get_instance()));
     }
 }

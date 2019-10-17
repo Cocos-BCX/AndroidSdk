@@ -201,6 +201,10 @@ public class TestActivity extends AppCompatActivity {
     private TextView tv_get_committee_members;
     private EditText et_vote_account;
     private TextView tv_get_witnesses_members;
+    private EditText et_support_account;
+    private EditText et_vote_password;
+    private EditText et_vote_number;
+    private TextView tv_vote_members;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -417,7 +421,11 @@ public class TestActivity extends AppCompatActivity {
 
         tv_get_committee_members = findViewById(R.id.tv_get_committee_members);
         tv_get_witnesses_members = findViewById(R.id.tv_get_witnesses_members);
+        et_support_account = findViewById(R.id.et_support_account);
         et_vote_account = findViewById(R.id.et_vote_account);
+        et_vote_password = findViewById(R.id.et_vote_password);
+        et_vote_number = findViewById(R.id.et_vote_number);
+        tv_vote_members = findViewById(R.id.tv_vote_members);
 
 
         initListener();
@@ -1323,7 +1331,7 @@ public class TestActivity extends AppCompatActivity {
         tv_get_committee_members.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().get_committee_members(et_vote_account.getText().toString(),
+                CocosBcxApiWrapper.getBcxInstance().get_committee_members(et_support_account.getText().toString(),
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override
@@ -1337,12 +1345,32 @@ public class TestActivity extends AppCompatActivity {
         tv_get_witnesses_members.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().get_witnesses_members(et_vote_account.getText().toString(),
+                CocosBcxApiWrapper.getBcxInstance().get_witnesses_members(et_support_account.getText().toString(),
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override
                             public void onReceiveValue(String value) {
                                 Log.i("get_witnesses_members", value);
+                            }
+                        });
+            }
+        });
+
+
+        tv_vote_members.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> vote_ids = new ArrayList<>();
+                vote_ids.add("0:24");
+                CocosBcxApiWrapper.getBcxInstance().vote_members(et_vote_account.getText().toString(),
+                        et_vote_password.getText().toString(),
+                        vote_ids,
+                        et_vote_number.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("tv_vote_members", value);
                             }
                         });
             }

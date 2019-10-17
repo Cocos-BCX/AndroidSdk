@@ -1,10 +1,12 @@
 package com.cocos.bcx_sdk.bcx_wallet.fc.io;
 
+import com.cocos.bcx_sdk.bcx_log.LogUtils;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -22,8 +24,7 @@ public class raw_type {
         byteValue[3] = (byte) ((value >> 24) & 0xff);
         byteValue[2] = (byte) ((value >> 16) & 0xff);
         byteValue[1] = (byte) ((value >> 8) & 0xff);
-        byteValue[0] = (byte) ( value & 0xff);
-
+        byteValue[0] = (byte) (value & 0xff);
         return byteValue;
     }
 
@@ -60,13 +61,13 @@ public class raw_type {
         byteValue[3] = (byte) ((lTime >> 24) & 0xff);
         byteValue[2] = (byte) ((lTime >> 16) & 0xff);
         byteValue[1] = (byte) ((lTime >> 8) & 0xff);
-        byteValue[0] = (byte) ( lTime & 0xff);
+        byteValue[0] = (byte) (lTime & 0xff);
 
         return byteValue;
     }
 
     public int byte_array_to_int(byte[] bytes) {
-        assert(bytes.length == 4);
+        assert (bytes.length == 4);
         int nValue = 0;
         nValue = (bytes[0] & 0xff);
         nValue |= ((bytes[1] & 0xff) << 8);
@@ -76,10 +77,11 @@ public class raw_type {
         return nValue;
     }
 
+
     public void pack(base_encoder encoder, UnsignedInteger value) {
         long lValue = value.longValue();
         do {
-            byte b = (byte)(lValue & 0x7f);
+            byte b = (byte) (lValue & 0x7f);
             lValue >>= 7;
             if (lValue > 0) {
                 b |= (1 << 7);

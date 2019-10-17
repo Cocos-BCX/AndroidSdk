@@ -244,10 +244,9 @@ public class CocosBcxApi {
      * @param isAutoLogin true :   log in， false:just register
      * @param accountDao
      * @param callBack
-     * @throws CreateAccountException
      * @throws NetworkStatusException
      */
-    public void createAccount(String faucetUrl, CreateAccountParamEntity paramEntity, boolean isAutoLogin, AccountDao accountDao, IBcxCallBack callBack) throws NetworkStatusException, CreateAccountException, UnLegalInputException {
+    public void createAccount(String faucetUrl, CreateAccountParamEntity paramEntity, boolean isAutoLogin, AccountDao accountDao, IBcxCallBack callBack) throws NetworkStatusException, UnLegalInputException {
         private_key privateActiveKey = private_key.from_seed(paramEntity.getActiveSeed());
         private_key privateOwnerKey = private_key.from_seed(paramEntity.getOwnerSeed());
         types.public_key_type publicActiveKeyType = new types.public_key_type(privateActiveKey.get_public_key());
@@ -942,7 +941,7 @@ public class CocosBcxApi {
      * @throws AuthorityException
      * @throws PasswordVerifyException
      */
-    public String transfer_nh_asset(String password, String account_from, String account_to, String nh_asset_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException, AssetNotFoundException, NotAssetCreatorException {
+    public String transfer_nh_asset(String password, String account_from, String account_to, String nh_asset_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException, NotAssetCreatorException {
 
         account_object accountObjectFrom = get_account_object(account_from);
         if (accountObjectFrom == null) {
@@ -989,7 +988,7 @@ public class CocosBcxApi {
      * @throws AccountNotFoundException
      * @throws NhAssetNotFoundException
      */
-    public String delete_nh_asset(String fee_paying_account, String password, String nhasset_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AssetNotFoundException, KeyInvalideException, AddressFormatException, PasswordVerifyException, AuthorityException, NotAssetCreatorException {
+    public String delete_nh_asset(String fee_paying_account, String password, String nhasset_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, KeyInvalideException, AddressFormatException, PasswordVerifyException, AuthorityException, NotAssetCreatorException {
 
         account_object feePayaccountObject = get_account_object(fee_paying_account);
         if (feePayaccountObject == null) {
@@ -1032,7 +1031,8 @@ public class CocosBcxApi {
      * @throws NetworkStatusException
      * @throws AccountNotFoundException
      */
-    public String cancel_nh_asset_order(String fee_paying_account, String password, String order_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, KeyInvalideException, AddressFormatException, PasswordVerifyException, AuthorityException, OrderNotFoundException, NotAssetCreatorException {
+    public String cancel_nh_asset_order(String fee_paying_account, String password, String order_id, AccountDao accountDao)
+            throws NetworkStatusException, AccountNotFoundException, KeyInvalideException, AddressFormatException, PasswordVerifyException, AuthorityException, OrderNotFoundException, NotAssetCreatorException {
 
         account_object feePayaccountObject = get_account_object(fee_paying_account);
         if (feePayaccountObject == null) {
@@ -1080,7 +1080,8 @@ public class CocosBcxApi {
      * @throws AccountNotFoundException
      * @throws NhAssetNotFoundException
      */
-    public String buy_nh_asset(String fee_paying_account, String password, String order_Id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, OrderNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
+    public String buy_nh_asset(String fee_paying_account, String password, String order_Id, AccountDao accountDao)
+            throws NetworkStatusException, AccountNotFoundException, OrderNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
 
         account_object feePayAccountObject = get_account_object(fee_paying_account);
         if (feePayAccountObject == null) {
@@ -1129,7 +1130,8 @@ public class CocosBcxApi {
      * @throws NetworkStatusException
      * @throws NhAssetNotFoundException
      */
-    public String create_nh_asset_order(String otcaccount, String seller, String password, AccountDao accountDao, String pending_order_nh_asset, String pending_order_fee, String pending_order_fee_symbol, String pending_order_memo, String pending_order_price, String pending_order_price_symbol, long pending_order_valid_time_millis) throws NetworkStatusException, NhAssetNotFoundException, AssetNotFoundException, AccountNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException, ParseException {
+    public String create_nh_asset_order(String otcaccount, String seller, String password, AccountDao accountDao, String pending_order_nh_asset, String pending_order_fee, String pending_order_fee_symbol, String pending_order_memo, String pending_order_price, String pending_order_price_symbol, long pending_order_valid_time_millis) throws
+            NetworkStatusException, NhAssetNotFoundException, AssetNotFoundException, AccountNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException, ParseException {
 
         account_object feePayAccountObject = get_account_object(seller);
         account_object otcAccount = get_account_object(otcaccount);
@@ -1189,7 +1191,7 @@ public class CocosBcxApi {
      * @throws NetworkStatusException
      * @throws AccountNotFoundException
      */
-    public String upgrade_to_lifetime_member(String upgrade_account_id_or_symbol, String upgrade_account_password, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
+    public String upgrade_to_lifetime_member(String upgrade_account_id_or_symbol, String upgrade_account_password, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
 
         account_object upgrade_account_object = get_account_object(upgrade_account_id_or_symbol);
         if (upgrade_account_object == null) {
@@ -1489,7 +1491,7 @@ public class CocosBcxApi {
      *
      * @throws NetworkStatusException
      */
-    public List<Object> list_nh_asset_by_creator(String account_id, int page, int pageSize) throws NetworkStatusException, AccountNotFoundException, UnLegalInputException {
+    public List<Object> list_nh_asset_by_creator(String account_id, int page, int pageSize) throws NetworkStatusException, AccountNotFoundException {
         account_object account_object = get_account_object(account_id);
         if (account_object == null) {
             throw new AccountNotFoundException("Account does not exist");
@@ -1883,7 +1885,7 @@ public class CocosBcxApi {
      *
      * @return
      */
-    public String create_limit_order(String seller, String password, String transactionPair, int type, int validTime, BigDecimal price, BigDecimal amount, String fee_pay_asset_symbol_or_id, AccountDao accountDao) throws NetworkStatusException, AssetNotFoundException, AccountNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, UnLegalInputException {
+    public String create_limit_order(String seller, String password, String transactionPair, int type, int validTime, BigDecimal price, BigDecimal amount, AccountDao accountDao) throws NetworkStatusException, AssetNotFoundException, AccountNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, UnLegalInputException {
 
         if (TextUtils.isEmpty(transactionPair)) {
             throw new UnLegalInputException("transactionPair can not be empty");
@@ -2150,7 +2152,7 @@ public class CocosBcxApi {
      */
     public String publish_feed(String publisher, String password, String base_asset_symbol, String price,
                                BigDecimal maintenance_collateral_ratio, BigDecimal maximum_short_squeeze_ratio,
-                               String core_exchange_rate_base, String core_exchange_rate_quote, String core_exchange_quote_symbol, String fee_asset_symbol, AccountDao accountDao) throws NetworkStatusException, AssetNotFoundException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, UnLegalInputException, AuthorityException {
+                               String core_exchange_rate_base, String core_exchange_rate_quote, String core_exchange_quote_symbol, String fee_asset_symbol, AccountDao accountDao) throws NetworkStatusException, AssetNotFoundException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException {
 
         account_object publisherObject = get_account_object(publisher);
         if (publisherObject == null) {
@@ -2564,6 +2566,51 @@ public class CocosBcxApi {
             witnesses_object_results.add(witnesses_object_result);
         }
         return witnesses_object_results;
+    }
+
+
+    /**
+     * vote_members
+     *
+     * @param vote_account     "
+     * @param password
+     * @param accountDao
+     * @param vote_count
+     * @return hash
+     * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     * @throws PasswordVerifyException
+     * @throws KeyInvalideException
+     */
+    public String vote_members(String vote_account, String password, List<String> vote_ids, String vote_count, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException {
+        account_object vote_account_object = get_account_object(vote_account);
+        if (vote_account_object == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+
+        if (unlock(vote_account_object.name, password, accountDao) != OPERATE_SUCCESS && verify_password(vote_account_object.name, password).size() <= 0) {
+            throw new PasswordVerifyException("Wrong password");
+        }
+        asset_object assetObject = lookup_asset_symbols(CocosBcxApiWrapper.coreAsset);
+        operations.vote_members_operation vote_members_operation = new operations.vote_members_operation();
+        vote_members_operation.lock_with_vote = assetObject.amount_from_string(vote_count);
+        vote_members_operation.account = vote_account_object.id;
+        types.vote_options new_options = new types.vote_options();
+        new_options.memo_key = vote_account_object.options.memo_key;
+        new_options.votes = vote_ids;
+        new_options.extensions = new HashSet<>();
+        vote_members_operation.new_options = new_options;
+        vote_members_operation.extensions = new HashSet<>();
+
+        operations.operation_type operationType = new operations.operation_type();
+        operationType.operationContent = vote_members_operation;
+        operationType.nOperationType = operations.ID_VOTE_MEMBER;
+
+        signed_operate signed_operate = new signed_operate();
+        signed_operate.operations = new ArrayList<>();
+        signed_operate.operations.add(operationType);
+        signed_operate.extensions = new HashSet<>();
+        return sign_transaction(signed_operate, vote_account_object);
     }
 
 

@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import static com.cocos.bcx_sdk.bcx_wallet.chain.config.GRAPHENE_ADDRESS_PREFIX;
 
@@ -288,6 +289,31 @@ public class types {
 
     }
 
+
+    public static class vote_options {
+        public public_key_type memo_key;
+        public List<String> votes;
+        // 未完成
+        public HashSet<String> extensions;  // extension type
+
+        /**
+         * @param baseEncoder
+         */
+        public void write_to_encode(base_encoder baseEncoder) {
+
+            raw_type rawObject = new raw_type();
+            baseEncoder.write(memo_key.key_data);
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(votes.size()));
+            for (String vote_id : votes) {
+                vote_id_type vote_id_type = new vote_id_type(vote_id);
+                baseEncoder.write(rawObject.get_byte_array(vote_id_type.content));
+            }
+            //extensions 未完成
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
+        }
+
+    }
+
     public static class vote_id_type {
         int content;
 
@@ -298,7 +324,6 @@ public class types {
             }
             int nType = Integer.valueOf(strSerial.substring(0, nIndex));
             int nInstance = Integer.valueOf(strSerial.substring(nIndex + 1));
-
             content = (nInstance << 8) | nType;
         }
     }
