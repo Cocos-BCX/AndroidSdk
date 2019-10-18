@@ -15,7 +15,6 @@ import com.cocos.bcx_sdk.bcx_error.AccountNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.AssetNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.AuthorityException;
 import com.cocos.bcx_sdk.bcx_error.ContractNotFoundException;
-import com.cocos.bcx_sdk.bcx_error.CreateAccountException;
 import com.cocos.bcx_sdk.bcx_error.KeyInvalideException;
 import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
 import com.cocos.bcx_sdk.bcx_error.NhAssetNotFoundException;
@@ -2572,7 +2571,7 @@ public class CocosBcxApi {
     /**
      * vote_members
      *
-     * @param vote_account     "
+     * @param vote_account "
      * @param password
      * @param accountDao
      * @param vote_count
@@ -2600,7 +2599,7 @@ public class CocosBcxApi {
         new_options.votes = vote_ids;
         new_options.extensions = new HashSet<>();
         vote_members_operation.new_options = new_options;
-        vote_members_operation.extensions = new HashSet<>();
+        vote_members_operation.extensions = new HashMap();
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = vote_members_operation;

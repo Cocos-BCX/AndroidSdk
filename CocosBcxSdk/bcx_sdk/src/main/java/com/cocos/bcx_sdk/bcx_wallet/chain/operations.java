@@ -621,20 +621,30 @@ public class operations {
 
         public asset lock_with_vote;
         public object_id<account_object> account;
-        public types.public_key_type owner;
-        public types.public_key_type active;
+        public authority owner;
+        public authority active;
         public types.vote_options new_options;
-        public Set<types.void_t> extensions;
+        public HashMap extensions = new HashMap();
 
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
             lock_with_vote.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(0));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(0));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(1));
-            new_options.write_to_encode(baseEncoder);
+            baseEncoder.write(rawObject.get_byte(owner != null));
+            if (owner != null) {
+                owner.write_to_encode(baseEncoder);
+            }
+
+            baseEncoder.write(rawObject.get_byte(active != null));
+            if (active != null) {
+                active.write_to_encode(baseEncoder);
+            }
+
+            baseEncoder.write(rawObject.get_byte(new_options != null));
+            if (new_options != null) {
+                new_options.write_to_encode(baseEncoder);
+            }
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
     }
