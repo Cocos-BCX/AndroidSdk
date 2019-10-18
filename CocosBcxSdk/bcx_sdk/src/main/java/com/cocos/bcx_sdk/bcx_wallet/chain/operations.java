@@ -623,8 +623,8 @@ public class operations {
         public object_id<account_object> account;
         public authority owner;
         public authority active;
-        public types.vote_options new_options;
-        public HashMap extensions = new HashMap();
+        public types.account_options new_options;
+        public HashMap extensions;
 
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
@@ -635,12 +635,10 @@ public class operations {
             if (owner != null) {
                 owner.write_to_encode(baseEncoder);
             }
-
             baseEncoder.write(rawObject.get_byte(active != null));
             if (active != null) {
                 active.write_to_encode(baseEncoder);
             }
-
             baseEncoder.write(rawObject.get_byte(new_options != null));
             if (new_options != null) {
                 new_options.write_to_encode(baseEncoder);

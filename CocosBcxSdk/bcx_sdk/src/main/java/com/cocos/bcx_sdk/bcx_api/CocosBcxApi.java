@@ -1254,10 +1254,7 @@ public class CocosBcxApi {
         types.account_options options = new types.account_options();
         options.extensions = new HashSet<>();
         options.memo_key = publicActiveKeyType;
-        options.votes = new HashSet<>();
-        options.num_committee = 0;
-        options.num_witness = 0;
-        options.voting_account = new object_id<>(1, 2, 5);
+        options.votes = new ArrayList<>();
         operations.create_child_account_operation create_child_account_operation = new operations.create_child_account_operation();
         create_child_account_operation.registrar = registrar_account_object.id;
         create_child_account_operation.referrer = registrar_account_object.id;
@@ -2594,7 +2591,7 @@ public class CocosBcxApi {
         operations.vote_members_operation vote_members_operation = new operations.vote_members_operation();
         vote_members_operation.lock_with_vote = assetObject.amount_from_string(vote_count);
         vote_members_operation.account = vote_account_object.id;
-        types.vote_options new_options = new types.vote_options();
+        types.account_options new_options = new types.account_options();
         new_options.memo_key = vote_account_object.options.memo_key;
         new_options.votes = vote_ids;
         new_options.extensions = new HashSet<>();

@@ -1361,6 +1361,7 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 List<String> vote_ids = new ArrayList<>();
+                vote_ids.add("1:0");
                 vote_ids.add("0:24");
                 CocosBcxApiWrapper.getBcxInstance().vote_members(et_vote_account.getText().toString(),
                         et_vote_password.getText().toString(),

@@ -1,6 +1,7 @@
 package com.cocos.bcx_sdk.bcx_wallet.chain;
 
 import com.cocos.bcx_sdk.bcx_error.KeyInvalideException;
+import com.cocos.bcx_sdk.bcx_log.LogUtils;
 import com.cocos.bcx_sdk.bcx_wallet.fc.io.base_encoder;
 import com.cocos.bcx_sdk.bcx_wallet.fc.io.raw_type;
 import com.google.common.primitives.UnsignedInteger;
@@ -259,60 +260,29 @@ public class types {
 
     public static class account_options {
         public public_key_type memo_key;
-        public object_id<account_object> voting_account;
-        public Integer num_witness;
-        public Integer num_committee;
-        public HashSet<vote_id_type> votes;
-        // 未完成
-        public HashSet<String> extensions;  // extension type
-
-        public void write_to_encode(base_encoder baseEncoder) {
-            raw_type rawObject = new raw_type();
-
-            baseEncoder.write(memo_key.key_data);
-
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(voting_account.get_instance()));
-
-            baseEncoder.write(rawObject.get_byte_array(num_witness.shortValue()));
-
-            baseEncoder.write(rawObject.get_byte_array(num_committee.shortValue()));
-//
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(votes.size()));
-
-            for (vote_id_type type : votes) {
-                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(type.content));
-            }
-            //extensions 未完成
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
-
-        }
-
-    }
-
-
-    public static class vote_options {
-        public public_key_type memo_key;
         public List<String> votes;
         // 未完成
         public HashSet<String> extensions;  // extension type
 
-        /**
-         * @param baseEncoder
-         */
         public void write_to_encode(base_encoder baseEncoder) {
-
             raw_type rawObject = new raw_type();
+
             baseEncoder.write(memo_key.key_data);
+
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(votes.size()));
-            for (String vote_id : votes) {
-                vote_id_type vote_id_type = new vote_id_type(vote_id);
-                baseEncoder.write(rawObject.get_byte_array(vote_id_type.content));
+            LogUtils.i("get_byte_array====", String.valueOf(votes.size()));
+            for (String type : votes) {
+                baseEncoder.write(rawObject.get_byte_array(new vote_id_type(type).content));
+                LogUtils.i("get_byte_array====", Arrays.toString(rawObject.get_byte_array(new vote_id_type(type).content)));
+                LogUtils.i("get_byte_array====", String.valueOf(new vote_id_type(type).content));
             }
+            LogUtils.i("get_byte_array====", "end");
             //extensions 未完成
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
-        }
 
+        }
     }
+
 
     public static class vote_id_type {
         int content;
