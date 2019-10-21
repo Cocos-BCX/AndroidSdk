@@ -1130,7 +1130,7 @@ public class CocosBcxApi {
      * @throws NhAssetNotFoundException
      */
     public String create_nh_asset_order(String otcaccount, String seller, String password, AccountDao accountDao, String pending_order_nh_asset, String pending_order_fee, String pending_order_fee_symbol, String pending_order_memo, String pending_order_price, String pending_order_price_symbol, long pending_order_valid_time_millis) throws
-            NetworkStatusException, NhAssetNotFoundException, AssetNotFoundException, AccountNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException, ParseException {
+            NetworkStatusException, NhAssetNotFoundException, AssetNotFoundException, AccountNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException, ParseException, UnLegalInputException {
 
         account_object feePayAccountObject = get_account_object(seller);
         account_object otcAccount = get_account_object(otcaccount);
@@ -1138,8 +1138,16 @@ public class CocosBcxApi {
         asset_object pending_order_price_asset_object = lookup_asset_symbols(pending_order_price_symbol);
         asset_object pending_order_fee_asset = lookup_asset_symbols(pending_order_fee_symbol);
 
+        if (TextUtils.equals(seller, otcaccount)) {
+            throw new UnLegalInputException("otcaccount can not be self");
+        }
+
         if (feePayAccountObject == null) {
             throw new AccountNotFoundException("Account does not exist");
+        }
+
+        if (otcAccount == null) {
+            throw new AccountNotFoundException("otcaccount does not exist");
         }
 
         if (unlock(feePayAccountObject.name, password, accountDao) != OPERATE_SUCCESS && verify_password(feePayAccountObject.name, password).size() <= 0) {
