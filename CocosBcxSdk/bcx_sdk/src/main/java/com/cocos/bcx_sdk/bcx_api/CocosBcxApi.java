@@ -931,7 +931,7 @@ public class CocosBcxApi {
      * @param password
      * @param account_from
      * @param account_to
-     * @param nh_asset_id
+     * @param nh_asset_ids
      * @param accountDao
      * @return
      * @throws NetworkStatusException
@@ -940,7 +940,7 @@ public class CocosBcxApi {
      * @throws AuthorityException
      * @throws PasswordVerifyException
      */
-    public String transfer_nh_asset(String password, String account_from, String account_to, String nh_asset_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException, NotAssetCreatorException {
+    public String transfer_nh_asset(String password, String account_from, String account_to, List<String> nh_asset_ids, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, AuthorityException, PasswordVerifyException, KeyInvalideException, AddressFormatException, NotAssetCreatorException {
 
         account_object accountObjectFrom = get_account_object(account_from);
         if (accountObjectFrom == null) {
@@ -950,30 +950,35 @@ public class CocosBcxApi {
         if (accountObjectTo == null) {
             throw new AccountNotFoundException("Receiving account does not exist");
         }
-        nhasset_object nhasset_object = lookup_nh_asset_object(nh_asset_id);
-        if (nhasset_object == null) {
-            throw new NhAssetNotFoundException("NhAsset does not exist");
-        }
-        if (!TextUtils.equals(nhasset_object.nh_asset_owner.toString(), accountObjectFrom.id.toString())) {
-            throw new NotAssetCreatorException("You are not the asset owner");
-        }
+
         // verify tempory password and account model password
         if (unlock(accountObjectFrom.name, password, accountDao) != OPERATE_SUCCESS && verify_password(accountObjectFrom.name, password).size() <= 0) {
             throw new PasswordVerifyException("Wrong password");
         }
 
-        operations.transfer_nhasset_operation transfer_nhasset_operation = new operations.transfer_nhasset_operation();
-        transfer_nhasset_operation.from = accountObjectFrom.id;
-        transfer_nhasset_operation.to = accountObjectTo.id;
-        transfer_nhasset_operation.nh_asset = nhasset_object.id;
-
-        operations.operation_type operationType = new operations.operation_type();
-        operationType.operationContent = transfer_nhasset_operation;
-        operationType.nOperationType = operations.ID_TRANSFER_NH_ASSET_OPERATION;
-
         signed_operate transactionWithCallback = new signed_operate();
         transactionWithCallback.operations = new ArrayList<>();
-        transactionWithCallback.operations.add(operationType);
+
+        for (String nh_asset_id : nh_asset_ids) {
+            nhasset_object nhasset_object = lookup_nh_asset_object(nh_asset_id);
+            if (nhasset_object == null) {
+                throw new NhAssetNotFoundException(nh_asset_id + " does not exist");
+            }
+            if (!TextUtils.equals(nhasset_object.nh_asset_owner.toString(), accountObjectFrom.id.toString())) {
+                throw new NotAssetCreatorException(nh_asset_id + " is not your asset");
+            }
+
+            operations.transfer_nhasset_operation transfer_nhasset_operation = new operations.transfer_nhasset_operation();
+            transfer_nhasset_operation.from = accountObjectFrom.id;
+            transfer_nhasset_operation.to = accountObjectTo.id;
+            transfer_nhasset_operation.nh_asset = nhasset_object.id;
+
+            operations.operation_type operationType = new operations.operation_type();
+            operationType.operationContent = transfer_nhasset_operation;
+            operationType.nOperationType = operations.ID_TRANSFER_NH_ASSET_OPERATION;
+
+            transactionWithCallback.operations.add(operationType);
+        }
         transactionWithCallback.extensions = new HashSet<>();
         return sign_transaction(transactionWithCallback, accountObjectFrom);
     }
@@ -987,37 +992,39 @@ public class CocosBcxApi {
      * @throws AccountNotFoundException
      * @throws NhAssetNotFoundException
      */
-    public String delete_nh_asset(String fee_paying_account, String password, String nhasset_id, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, KeyInvalideException, AddressFormatException, PasswordVerifyException, AuthorityException, NotAssetCreatorException {
+    public String delete_nh_asset(String fee_paying_account, String password, List<String> nhasset_ids, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, NhAssetNotFoundException, KeyInvalideException, AddressFormatException, PasswordVerifyException, AuthorityException, NotAssetCreatorException {
 
         account_object feePayaccountObject = get_account_object(fee_paying_account);
         if (feePayaccountObject == null) {
             throw new AccountNotFoundException("Account does not exist");
         }
 
-        nhasset_object nhasset_object = lookup_nh_asset_object(nhasset_id);
-        if (nhasset_object == null) {
-            throw new NhAssetNotFoundException("NhAsset does not exist");
-        }
-
-        if (!TextUtils.equals(nhasset_object.nh_asset_owner.toString(), feePayaccountObject.id.toString())) {
-            throw new NotAssetCreatorException("You are not the asset owner");
-        }
-
         if (unlock(feePayaccountObject.name, password, accountDao) != OPERATE_SUCCESS && verify_password(feePayaccountObject.name, password).size() <= 0) {
             throw new PasswordVerifyException("Wrong password");
         }
-
-        operations.delete_nhasset_operation delete_nhasset_operation = new operations.delete_nhasset_operation();
-        delete_nhasset_operation.fee_paying_account = feePayaccountObject.id;
-        delete_nhasset_operation.nh_asset = nhasset_object.id;
-
-        operations.operation_type operationType = new operations.operation_type();
-        operationType.operationContent = delete_nhasset_operation;
-        operationType.nOperationType = operations.ID_DELETE_NH_ASSET_OPERATION;
-
         signed_operate transactionWithCallback = new signed_operate();
         transactionWithCallback.operations = new ArrayList<>();
-        transactionWithCallback.operations.add(operationType);
+
+        for (String nhasset_id : nhasset_ids) {
+            nhasset_object nhasset_object = lookup_nh_asset_object(nhasset_id);
+            if (nhasset_object == null) {
+                throw new NhAssetNotFoundException(nhasset_id + " does not exist");
+            }
+
+            if (!TextUtils.equals(nhasset_object.nh_asset_owner.toString(), feePayaccountObject.id.toString())) {
+                throw new NotAssetCreatorException(nhasset_id + " is not your asset");
+            }
+
+            operations.delete_nhasset_operation delete_nhasset_operation = new operations.delete_nhasset_operation();
+            delete_nhasset_operation.fee_paying_account = feePayaccountObject.id;
+            delete_nhasset_operation.nh_asset = nhasset_object.id;
+
+            operations.operation_type operationType = new operations.operation_type();
+            operationType.operationContent = delete_nhasset_operation;
+            operationType.nOperationType = operations.ID_DELETE_NH_ASSET_OPERATION;
+
+            transactionWithCallback.operations.add(operationType);
+        }
         transactionWithCallback.extensions = new HashSet<>();
         return sign_transaction(transactionWithCallback, feePayaccountObject);
     }
@@ -2354,7 +2361,7 @@ public class CocosBcxApi {
 
 
     /**
-     * get_vesting_balances
+     * receive_vesting_balances
      *
      * @param accountNameOrId "
      * @param password

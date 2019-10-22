@@ -832,12 +832,12 @@ public class CocosBcxApiWrapper {
      *
      * @throws NetworkStatusException
      */
-    public void transfer_nh_asset(final String password, final String account_from, final String account_to, final String nh_asset_id, final IBcxCallBack callBack) {
+    public void transfer_nh_asset(final String password, final String account_from, final String account_to, final List<String> nh_asset_ids, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.transfer_nh_asset(password, account_from, account_to, nh_asset_id, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.transfer_nh_asset(password, account_from, account_to, nh_asset_ids, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                     cocosBcxApi.lock();
                 } catch (NetworkStatusException e) {
@@ -878,13 +878,13 @@ public class CocosBcxApiWrapper {
      * @throws AccountNotFoundException
      * @throws NhAssetNotFoundException
      */
-    public void delete_nh_asset(final String fee_paying_account, final String password, final String nhasset_id, final IBcxCallBack callBack) {
+    public void delete_nh_asset(final String fee_paying_account, final String password, final List<String> nhasset_ids, final IBcxCallBack callBack) {
 
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.delete_nh_asset(fee_paying_account, password, nhasset_id, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.delete_nh_asset(fee_paying_account, password, nhasset_ids, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();

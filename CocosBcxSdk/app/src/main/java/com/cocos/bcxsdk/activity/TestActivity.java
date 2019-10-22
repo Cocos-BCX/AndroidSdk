@@ -884,10 +884,13 @@ public class TestActivity extends AppCompatActivity {
         tv_send_nh_asset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                List<String> nhasset_ids = Arrays.asList(et_nh_asset_id.getText().toString().split(","));
+
                 CocosBcxApiWrapper.getBcxInstance().transfer_nh_asset(et_password.getText().toString(),
                         et_nh_asset_transfer_from_account.getText().toString(),
                         et_nh_asset_transfer_to_account.getText().toString(),
-                        et_nh_asset_id.getText().toString(),
+                        nhasset_ids,
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override
@@ -905,9 +908,12 @@ public class TestActivity extends AppCompatActivity {
         tv_delete_nh_asset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                List<String> nhasset_ids = Arrays.asList(et_delete_nh_asset_id.getText().toString().split(","));
+
                 CocosBcxApiWrapper.getBcxInstance().delete_nh_asset(et_delete_nh_asset_account.getText().toString(),
                         et_delete_nh_asset_password.getText().toString(),
-                        et_delete_nh_asset_id.getText().toString(),
+                        nhasset_ids,
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override
