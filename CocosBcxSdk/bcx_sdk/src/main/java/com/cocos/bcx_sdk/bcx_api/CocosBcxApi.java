@@ -2391,7 +2391,7 @@ public class CocosBcxApi {
         operations.receive_vesting_balances_operation receive_vesting_balances = new operations.receive_vesting_balances_operation();
         receive_vesting_balances.vesting_balance = vestingBalancesObject.id;
         receive_vesting_balances.owner = account_object.id;
-        receive_vesting_balances.amount = asset_object.amount_from_string(String.valueOf(vestingBalancesObject.return_cash));
+        receive_vesting_balances.amount = asset_object.amount_from_string(String.valueOf(vestingBalancesObject.available_balance.amount));
         LogUtils.i("amount---test", String.valueOf(vestingBalancesObject.return_cash));
 
         operations.operation_type operationType = new operations.operation_type();
