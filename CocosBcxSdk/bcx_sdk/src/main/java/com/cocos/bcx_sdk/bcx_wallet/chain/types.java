@@ -270,13 +270,9 @@ public class types {
             baseEncoder.write(memo_key.key_data);
 
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(votes.size()));
-            LogUtils.i("get_byte_array====", String.valueOf(votes.size()));
             for (String type : votes) {
                 baseEncoder.write(rawObject.get_byte_array(new vote_id_type(type).content));
-                LogUtils.i("get_byte_array====", Arrays.toString(rawObject.get_byte_array(new vote_id_type(type).content)));
-                LogUtils.i("get_byte_array====", String.valueOf(new vote_id_type(type).content));
             }
-            LogUtils.i("get_byte_array====", "end");
             //extensions 未完成
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
 

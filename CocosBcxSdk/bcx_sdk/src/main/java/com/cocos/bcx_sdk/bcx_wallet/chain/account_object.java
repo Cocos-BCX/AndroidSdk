@@ -22,5 +22,8 @@ public class account_object {
     public List<String> blacklisting_accounts;
     public List<Object> owner_special_authority;
     public List<Object> active_special_authority;
+    public List<Object> witness_status;
+    public List<Object> committee_status;
     public Integer top_n_control_flags;
+
 }

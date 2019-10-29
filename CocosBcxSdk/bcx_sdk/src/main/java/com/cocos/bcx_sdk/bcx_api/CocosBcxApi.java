@@ -20,6 +20,7 @@ import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
 import com.cocos.bcx_sdk.bcx_error.NhAssetNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.NoRewardAvailableException;
 import com.cocos.bcx_sdk.bcx_error.NotAssetCreatorException;
+import com.cocos.bcx_sdk.bcx_error.NotMemberException;
 import com.cocos.bcx_sdk.bcx_error.OrderNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.PasswordVerifyException;
 import com.cocos.bcx_sdk.bcx_error.UnLegalInputException;
@@ -2527,13 +2528,10 @@ public class CocosBcxApi {
         Object witnesses_base_object = get_objects("2.0.0");
         Gson gson = global_config_object.getInstance().getGsonBuilder().create();
         vote_object vote_object = gson.fromJson(gson.toJson(witnesses_base_object), vote_object.class);
-        LogUtils.i("vote_object", vote_object.active_witnesses.get(0).toString());
         List<String> stringList = IDHelper.getIds(1, 6, 1, 50);
-        LogUtils.i("IDhelpergetIds", stringList.get(2));
         List<Object> objectList = get_objects(stringList);
         List<witnesses_object> witnesses_objects = gson.fromJson(gson.toJson(objectList), new TypeToken<List<witnesses_object>>() {
         }.getType());
-        LogUtils.i("witness_account", witnesses_objects.get(0).witness_account.toString());
         account_object support_object = get_account_object(support_account);
         List<witnesses_object_result> witnesses_object_results = new ArrayList<>();
         for (witnesses_object witnesses_object : witnesses_objects) {
@@ -2593,7 +2591,91 @@ public class CocosBcxApi {
      * @throws PasswordVerifyException
      * @throws KeyInvalideException
      */
-    public String vote_members(String vote_account, String password, List<String> vote_ids, String vote_count, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException {
+    public String vote_members(String vote_account, String password, List<String> witnesses_ids, List<String> committee_ids, String vote_count, AccountDao accountDao)
+            throws NetworkStatusException, AccountNotFoundException,
+            PasswordVerifyException, KeyInvalideException, AuthorityException, UnLegalInputException, NotMemberException {
+
+        List<String> vote_ids_list = new ArrayList<>();
+        if (null != witnesses_ids) {
+            HashSet<String> witnessesIds = new HashSet<>(witnesses_ids);
+            for (String witnessesId : witnessesIds) {
+                account_object account_object = get_accounts(witnessesId);
+                if (account_object == null) {
+                    throw new AccountNotFoundException(witnessesId + " does not exist");
+                }
+                if (null != account_object.witness_status) {
+                    String witnessId = (String) account_object.witness_status.get(0);
+                    Object witnesses_base_object = get_objects(witnessId);
+                    Gson gson = global_config_object.getInstance().getGsonBuilder().create();
+                    witnesses_object witnesses_object = gson.fromJson(gson.toJson(witnesses_base_object), witnesses_object.class);
+                    vote_ids_list.add(witnesses_object.vote_id);
+                } else {
+                    throw new NotMemberException(witnessesId + " is not a witness");
+                }
+            }
+        }
+        if (null != committee_ids) {
+            HashSet<String> committeeIds = new HashSet<>(committee_ids);
+            for (String committee_id : committeeIds) {
+                account_object account_object = get_accounts(committee_id);
+                if (account_object == null) {
+                    throw new AccountNotFoundException(committee_id + " does not exist");
+                }
+                if (null != account_object.committee_status) {
+                    String comm_id = (String) account_object.committee_status.get(0);
+                    Object committee_base_object = get_objects(comm_id);
+                    Gson gson = global_config_object.getInstance().getGsonBuilder().create();
+                    committee_object committee_object = gson.fromJson(gson.toJson(committee_base_object), committee_object.class);
+                    vote_ids_list.add(committee_object.vote_id);
+                } else {
+                    throw new NotMemberException(committee_id + " is not a committee");
+                }
+            }
+        }
+
+        String[] strings = new String[vote_ids_list.size()];
+        for (int i = 0; i < vote_ids_list.size(); i++) {
+            String s = vote_ids_list.get(i);
+            strings[i] = s;
+        }
+
+        int length = strings.length;
+        boolean flag;
+        for (int i = 0; i < length - 1; i++) {
+            flag = false;
+            for (int j = 0; j < length - i - 1; j++) {
+                int nIndex = strings[j].indexOf(':');
+                int nIndexs = strings[j + 1].indexOf(':');
+                if (Integer.valueOf(strings[j].substring(nIndex + 1)) > Integer.valueOf(strings[j + 1].substring(nIndexs + 1))) {
+                    String temp = strings[j];
+                    strings[j] = strings[j + 1];
+                    strings[j + 1] = temp;
+                    flag = true;
+                }
+            }
+            if (!flag) {
+                break;
+            }
+        }
+        List<String> list = Arrays.asList(strings);
+        return vote_members(vote_account, password, Arrays.asList(strings), vote_count, accountDao);
+    }
+
+
+    /**
+     * vote_members
+     *
+     * @param vote_account "
+     * @param password
+     * @param accountDao
+     * @param vote_count
+     * @return hash
+     * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     * @throws PasswordVerifyException
+     * @throws KeyInvalideException
+     */
+    private String vote_members(String vote_account, String password, List<String> vote_ids, String vote_count, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException {
         account_object vote_account_object = get_account_object(vote_account);
         if (vote_account_object == null) {
             throw new AccountNotFoundException("Account does not exist");

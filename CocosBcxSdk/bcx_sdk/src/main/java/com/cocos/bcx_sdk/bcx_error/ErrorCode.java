@@ -121,4 +121,9 @@ public class ErrorCode {
      */
     public static final int ERROR_PARAMETER = 1011;
 
+    /**
+     * not a committee or witness
+     */
+    public static final int ERROR_NOT_MEMEBER = 170;
+
 }

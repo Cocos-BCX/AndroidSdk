@@ -21,6 +21,7 @@ import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
 import com.cocos.bcx_sdk.bcx_error.NhAssetNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.NoRewardAvailableException;
 import com.cocos.bcx_sdk.bcx_error.NotAssetCreatorException;
+import com.cocos.bcx_sdk.bcx_error.NotMemberException;
 import com.cocos.bcx_sdk.bcx_error.OrderNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.PasswordVerifyException;
 import com.cocos.bcx_sdk.bcx_error.UnLegalInputException;
@@ -73,6 +74,7 @@ import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_INVALID_PRIVATE_KEY;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_NETWORK_FAIL;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_NHASSET_DO_NOT_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_NOT_ASSET_CREATOR;
+import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_NOT_MEMEBER;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_OBJECT_NOT_FOUND;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_ORDERS_DO_NOT_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_PARAMETER;
@@ -2465,12 +2467,12 @@ public class CocosBcxApiWrapper {
     /**
      * vote_members
      */
-    public void vote_members(final String vote_account, final String password, final List<String> vote_ids, final String vote_count, final IBcxCallBack callBack) {
+    public void vote_members(final String vote_account, final String password, final List<String> witnessesIds, final List<String> committee_ids, final String vote_count, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.vote_members(vote_account, password, vote_ids, vote_count, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.vote_members(vote_account, password, witnessesIds, committee_ids, vote_count, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
@@ -2486,6 +2488,12 @@ public class CocosBcxApiWrapper {
                     callBack.onReceiveValue(rspText);
                 } catch (PasswordVerifyException e) {
                     rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (UnLegalInputException e) {
+                    rspText = new ResponseData(ERROR_PARAMETER, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NotMemberException e) {
+                    rspText = new ResponseData(ERROR_NOT_MEMEBER, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
