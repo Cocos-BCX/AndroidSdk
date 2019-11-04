@@ -26,7 +26,7 @@ public class BcxSdkApplication extends Application {
         //初始化工具类
         List<String> mListNode = Arrays.asList("ws://182.92.164.121:8021", "ws://182.92.164.121:8021");
         String faucetUrl = "http://47.93.62.96:8041";
-        String chainId = "9aab2f1b44ffd6649985629a18154e713f7036f668e458d7568bbf7c01eed26d";
+        String chainId = "0feb05b09945f0e17d022eee831873c867e30cbc2fe9bb040a91caff12713424";
         String coreAsset = "COCOS";
         boolean isOpenLog = true;
         CocosBcxApiWrapper.getBcxInstance().init(this);

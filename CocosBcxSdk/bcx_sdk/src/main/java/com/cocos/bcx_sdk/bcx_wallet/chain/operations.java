@@ -64,9 +64,13 @@ public class operations {
 
     public static final int ID_GLOBAL_ASSET_SETTLE = 17;
 
+    public static final int ID_CREATE_WITNESS = 18;
+
     public static final int ID_UPDATE_COLLATERAL_FOR_GAS = 54;
 
     public static final int ID_RECEIVE_VESTING_BALANCES = 27;
+
+    public static final int ID_CREATE_COMMITTEE_MEMBER = 23;
 
     public static operation_id_map operations_map = new operation_id_map();
 
@@ -96,6 +100,8 @@ public class operations {
             mHashId2Operation.put(ID_CREATE_WORLDVIEW_OPERATION, create_worldview_operation.class);
             mHashId2Operation.put(ID_RECEIVE_VESTING_BALANCES, receive_vesting_balances_operation.class);
             mHashId2Operation.put(ID_VOTE_MEMBER, vote_members_operation.class);
+            mHashId2Operation.put(ID_CREATE_COMMITTEE_MEMBER, create_committee_member_operation.class);
+            mHashId2Operation.put(ID_CREATE_WITNESS, create_witness_operation.class);
         }
 
         public Type getOperationObjectById(int nId) {
@@ -644,6 +650,44 @@ public class operations {
                 new_options.write_to_encode(baseEncoder);
             }
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
+        }
+    }
+
+
+    /**
+     * create_committee_member_operation
+     */
+    public static class create_committee_member_operation implements base_operation {
+
+        public object_id<account_object> committee_member_account;
+        public String url;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(committee_member_account.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(url.getBytes().length));
+            baseEncoder.write(url.getBytes());
+        }
+    }
+
+
+    /**
+     * create_committee_member_operation
+     */
+    public static class create_witness_operation implements base_operation {
+
+        public object_id<account_object> witness_account;
+        public String url;
+        public types.public_key_type block_signing_key;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(witness_account.get_instance()));
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(url.getBytes().length));
+            baseEncoder.write(url.getBytes());
+            baseEncoder.write(block_signing_key.key_data);
         }
     }
 

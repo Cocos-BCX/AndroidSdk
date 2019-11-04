@@ -205,6 +205,14 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_vote_password;
     private EditText et_vote_number;
     private TextView tv_vote_members;
+    private EditText et_create_committee_member_account;
+    private EditText et_create_committee_member_account_password;
+    private EditText et_create_committee_member_url;
+    private TextView tv_create_committee_member;
+    private EditText et_create_witness_account;
+    private EditText et_create_witness_account_password;
+    private EditText et_create_witness_url;
+    private TextView tv_create_witness;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -427,6 +435,16 @@ public class TestActivity extends AppCompatActivity {
         et_vote_number = findViewById(R.id.et_vote_number);
         tv_vote_members = findViewById(R.id.tv_vote_members);
 
+
+        et_create_committee_member_account = findViewById(R.id.et_create_committee_member_account);
+        et_create_committee_member_account_password = findViewById(R.id.et_create_committee_member_account_password);
+        et_create_committee_member_url = findViewById(R.id.et_create_committee_member_url);
+        tv_create_committee_member = findViewById(R.id.tv_create_committee_member);
+
+        et_create_witness_account = findViewById(R.id.et_create_witness_account);
+        et_create_witness_account_password = findViewById(R.id.et_create_witness_account_password);
+        et_create_witness_url = findViewById(R.id.et_create_witness_url);
+        tv_create_witness = findViewById(R.id.tv_create_witness);
 
         initListener();
     }
@@ -1384,6 +1402,38 @@ public class TestActivity extends AppCompatActivity {
                             @Override
                             public void onReceiveValue(String value) {
                                 Log.i("tv_vote_members", value);
+                            }
+                        });
+            }
+        });
+
+        tv_create_committee_member.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().create_committee_member(et_create_committee_member_account.getText().toString(),
+                        et_create_committee_member_account_password.getText().toString(),
+                        et_create_committee_member_url.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("create_committee_member", value);
+                            }
+                        });
+            }
+        });
+
+        tv_create_witness.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().create_witness(et_create_witness_account.getText().toString(),
+                        et_create_witness_account_password.getText().toString(),
+                        et_create_witness_url.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("create_witness", value);
                             }
                         });
             }

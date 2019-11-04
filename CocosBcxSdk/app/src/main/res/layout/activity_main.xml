@@ -1172,6 +1172,55 @@
             android:id="@+id/tv_vote_members"
             style="@style/TvBtn"
             android:text="投票" />
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="申请理事会" />
+
+        <EditText
+            android:id="@+id/et_create_committee_member_account"
+            style="@style/EtSingleLine"
+            android:hint="申请账户" />
+
+        <EditText
+            android:id="@+id/et_create_committee_member_account_password"
+            style="@style/EtSingleLine"
+            android:hint="账户密码" />
+
+        <EditText
+            android:id="@+id/et_create_committee_member_url"
+            style="@style/EtSingleLine"
+            android:hint="url" />
+
+        <TextView
+            android:id="@+id/tv_create_committee_member"
+            style="@style/TvBtn"
+            android:text="申请" />
+
+
+        <TextView
+            style="@style/TvTitle"
+            android:text="申请见证人" />
+
+        <EditText
+            android:id="@+id/et_create_witness_account"
+            style="@style/EtSingleLine"
+            android:hint="申请账户" />
+
+        <EditText
+            android:id="@+id/et_create_witness_account_password"
+            style="@style/EtSingleLine"
+            android:hint="账户密码" />
+
+        <EditText
+            android:id="@+id/et_create_witness_url"
+            style="@style/EtSingleLine"
+            android:hint="url" />
+
+        <TextView
+            android:id="@+id/tv_create_witness"
+            style="@style/TvBtn"
+            android:text="申请" />
     </LinearLayout>
 </ScrollView>
 

@@ -2708,6 +2708,84 @@ public class CocosBcxApi {
 
 
     /**
+     * create_committee_member
+     *
+     * @param owner_account "
+     * @param password
+     * @param url
+     * @param accountDao
+     * @return hash
+     * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     * @throws PasswordVerifyException
+     * @throws KeyInvalideException
+     */
+    public String create_committee_member(String owner_account, String password, String url, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException {
+
+        account_object owner_account_object = get_account_object(owner_account);
+        if (owner_account_object == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+        if (unlock(owner_account_object.name, password, accountDao) != OPERATE_SUCCESS && verify_password(owner_account_object.name, password).size() <= 0) {
+            throw new PasswordVerifyException("Wrong password");
+        }
+        operations.create_committee_member_operation create_committee_member_operation = new operations.create_committee_member_operation();
+        create_committee_member_operation.committee_member_account = owner_account_object.id;
+        create_committee_member_operation.url = url;
+
+        operations.operation_type operationType = new operations.operation_type();
+        operationType.operationContent = create_committee_member_operation;
+        operationType.nOperationType = operations.ID_CREATE_COMMITTEE_MEMBER;
+
+        signed_operate signed_operate = new signed_operate();
+        signed_operate.operations = new ArrayList<>();
+        signed_operate.operations.add(operationType);
+        signed_operate.extensions = new HashSet<>();
+        return sign_transaction(signed_operate, owner_account_object);
+    }
+
+
+    /**
+     * create_witness
+     *
+     * @param owner_account "
+     * @param password
+     * @param url
+     * @param accountDao
+     * @return hash
+     * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     * @throws PasswordVerifyException
+     * @throws KeyInvalideException
+     */
+    public String create_witness(String owner_account, String password, String url, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException {
+
+        account_object owner_account_object = get_account_object(owner_account);
+        if (owner_account_object == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+        if (unlock(owner_account_object.name, password, accountDao) != OPERATE_SUCCESS && verify_password(owner_account_object.name, password).size() <= 0) {
+            throw new PasswordVerifyException("Wrong password");
+        }
+
+        operations.create_witness_operation create_witness_operation = new operations.create_witness_operation();
+        create_witness_operation.witness_account = owner_account_object.id;
+        create_witness_operation.url = url;
+        create_witness_operation.block_signing_key = owner_account_object.options.memo_key;
+
+        operations.operation_type operationType = new operations.operation_type();
+        operationType.operationContent = create_witness_operation;
+        operationType.nOperationType = operations.ID_CREATE_WITNESS;
+
+        signed_operate signed_operate = new signed_operate();
+        signed_operate.operations = new ArrayList<>();
+        signed_operate.operations.add(operationType);
+        signed_operate.extensions = new HashSet<>();
+        return sign_transaction(signed_operate, owner_account_object);
+    }
+
+
+    /**
      * get_dao_account_by_name
      *
      * @param accountName
