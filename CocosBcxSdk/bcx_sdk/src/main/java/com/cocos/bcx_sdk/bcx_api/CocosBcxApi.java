@@ -2419,12 +2419,7 @@ public class CocosBcxApi {
             throw new AccountNotFoundException("Account does not exist");
         }
         List<vesting_balances_object> vesting_balances_objects = mWebSocketApi.get_vesting_balances(account_object.id.toString());
-
-        if (null == vesting_balances_objects) {
-            throw new NetworkStatusException("It doesnt connect to the server.");
-        }
-
-        if (vesting_balances_objects.size() <= 0) {
+        if (null == vesting_balances_objects || vesting_balances_objects.size() <= 0) {
             throw new NoRewardAvailableException("No reward available");
         }
 
