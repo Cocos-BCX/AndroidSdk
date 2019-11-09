@@ -7,7 +7,7 @@ package com.cocos.bcx_sdk.bcx_version;
 public class VersionManager {
 
 
-    private static final String VERSION_NAME = "V-cocos_sdk_1.0.1";
+    private static final String VERSION_NAME = "V-cocos_sdk_2.0.0";
 
     /**
      * 获取sdk版本信息
