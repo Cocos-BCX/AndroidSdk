@@ -695,7 +695,7 @@ public class operations {
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
 
-            baseEncoder.write(rawObject.get_byte_array(1));
+            baseEncoder.write(rawObject.get_byte_array(rawObject.get_byte(lock_with_vote.size() > 0)));
 
             LogUtils.i("lock_with_vote", String.valueOf((Integer) lock_with_vote.get(0)));
 
