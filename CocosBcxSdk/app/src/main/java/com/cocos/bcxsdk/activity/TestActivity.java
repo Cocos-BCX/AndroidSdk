@@ -197,6 +197,7 @@ public class TestActivity extends AppCompatActivity {
     private TextView tv_get_vesting_balances;
     private EditText get_vesting_balances_account;
     private EditText get_vesting_balances_account_password;
+    private EditText get_vesting_balances_reward;
     private TextView tv_get_block;
     private TextView tv_get_committee_members;
     private EditText et_vote_account;
@@ -429,6 +430,7 @@ public class TestActivity extends AppCompatActivity {
         tv_get_vesting_balances = findViewById(R.id.tv_get_vesting_balances);
         get_vesting_balances_account = findViewById(R.id.get_vesting_balances_account);
         get_vesting_balances_account_password = findViewById(R.id.get_vesting_balances_account_password);
+        get_vesting_balances_reward = findViewById(R.id.get_vesting_balances_reward);
 
 
         tv_get_committee_members = findViewById(R.id.tv_get_committee_members);
@@ -1342,6 +1344,7 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CocosBcxApiWrapper.getBcxInstance().receive_vesting_balances(get_vesting_balances_account.getText().toString(),
                         get_vesting_balances_account_password.getText().toString(),
+                        get_vesting_balances_reward.getText().toString(),
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")
                             @Override
@@ -1398,7 +1401,7 @@ public class TestActivity extends AppCompatActivity {
 
                 CocosBcxApiWrapper.getBcxInstance().vote_members(et_vote_account.getText().toString(),
                         et_vote_password.getText().toString(),
-                        Integer.parseInt(et_vote_type.getText().toString()),
+                        et_vote_type.getText().toString(),
                         vote_ids,
                         et_vote_number.getText().toString(),
                         new IBcxCallBack() {

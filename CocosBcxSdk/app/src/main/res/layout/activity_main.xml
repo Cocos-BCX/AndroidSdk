@@ -1133,6 +1133,11 @@
             style="@style/EtSingleLine"
             android:hint="密码" />
 
+        <EditText
+            android:id="@+id/get_vesting_balances_reward"
+            style="@style/EtSingleLine"
+            android:hint="奖励ID" />
+
         <TextView
             android:id="@+id/tv_get_vesting_balances"
             style="@style/TvBtn"

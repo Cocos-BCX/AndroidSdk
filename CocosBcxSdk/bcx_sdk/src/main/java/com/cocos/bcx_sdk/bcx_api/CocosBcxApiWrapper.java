@@ -2381,12 +2381,12 @@ public class CocosBcxApiWrapper {
     /**
      * receive_vesting_balances
      */
-    public void receive_vesting_balances(final String accountNameOrId, final String password, final IBcxCallBack callBack) {
+    public void receive_vesting_balances(final String accountNameOrId, final String password, final String awardId, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.receive_vesting_balances(accountNameOrId, password, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.receive_vesting_balances(accountNameOrId, password, awardId, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
@@ -2467,7 +2467,7 @@ public class CocosBcxApiWrapper {
     /**
      * vote_members
      */
-    public void vote_members(final String vote_account, final String password, final int type, final List<String> vote_ids, final String vote_count, final IBcxCallBack callBack) {
+    public void vote_members(final String vote_account, final String password, final String type, final List<String> vote_ids, final String vote_count, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {

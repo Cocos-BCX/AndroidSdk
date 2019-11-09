@@ -2406,7 +2406,7 @@ public class CocosBcxApi {
      * @throws PasswordVerifyException
      * @throws KeyInvalideException
      */
-    public String receive_vesting_balances(String accountNameOrId, String password, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException, AssetNotFoundException, NoRewardAvailableException {
+    public String receive_vesting_balances(String accountNameOrId, String password, String awardId, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException, AssetNotFoundException, NoRewardAvailableException {
 
         account_object account_object = get_account_object(accountNameOrId);
         if (account_object == null) {
@@ -2417,16 +2417,26 @@ public class CocosBcxApi {
             throw new PasswordVerifyException("Wrong password");
         }
 
-        vesting_balances_result vestingBalancesObject = get_vesting_balances(account_object.name);
-        asset_object asset_object = lookup_asset_symbols(vestingBalancesObject.available_balance.asset_id);
+        Object vesting_balances_result = get_objects(awardId);
+        Gson gson = global_config_object.getInstance().getGsonBuilder().create();
+        vesting_balances_object vesting_balances_object = gson.fromJson(gson.toJson(vesting_balances_result), vesting_balances_object.class);
+
+        asset_object asset_object = lookup_asset_symbols(vesting_balances_object.balance.asset_id.toString());
         if (null == asset_object) {
             throw new AssetNotFoundException("Asset does not exist");
         }
+        JsonElement jsonElement = vesting_balances_object.policy.get(1);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        JsonElement coin_seconds_earned = jsonObject.get("coin_seconds_earned");
+        JsonElement vesting_seconds = jsonObject.get("vesting_seconds");
+        double gas_amount = coin_seconds_earned.getAsDouble() / vesting_seconds.getAsDouble();
+        double available_percent = gas_amount / vesting_balances_object.balance.amount;
+
         operations.receive_vesting_balances_operation receive_vesting_balances = new operations.receive_vesting_balances_operation();
-        receive_vesting_balances.vesting_balance = vestingBalancesObject.id;
+        receive_vesting_balances.vesting_balance = vesting_balances_object.id;
         receive_vesting_balances.owner = account_object.id;
-        receive_vesting_balances.amount = asset_object.amount_from_string(String.valueOf(vestingBalancesObject.available_balance.amount));
-        LogUtils.i("amount---test", String.valueOf(vestingBalancesObject.return_cash));
+        receive_vesting_balances.amount = asset_object.amount_from_string(String.valueOf(vesting_balances_object.balance.amount * available_percent / Math.pow(10, asset_object.precision)))
+        ;
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = receive_vesting_balances;
@@ -2619,12 +2629,12 @@ public class CocosBcxApi {
      * @throws PasswordVerifyException
      * @throws KeyInvalideException
      */
-    public String vote_members(String vote_account, String password, int type, List<String> vote_ids, String vote_count, AccountDao accountDao)
+    public String vote_members(String vote_account, String password, String type, List<String> vote_ids, String vote_count, AccountDao accountDao)
             throws NetworkStatusException, AccountNotFoundException,
             PasswordVerifyException, KeyInvalideException, AuthorityException, UnLegalInputException, NotMemberException {
 
         List<String> vote_ids_list = new ArrayList<>();
-        if (type == 1) {
+        if (TextUtils.equals(type, "1")) {
             HashSet<String> witnessesIds = new HashSet<>(vote_ids);
             for (String witnessesId : witnessesIds) {
                 account_object account_object = get_accounts(witnessesId);
@@ -2641,7 +2651,7 @@ public class CocosBcxApi {
                     throw new NotMemberException(witnessesId + " is not a witness");
                 }
             }
-        } else if (type == 0) {
+        } else if (TextUtils.equals(type, "0")) {
             HashSet<String> committeeIds = new HashSet<>(vote_ids);
             for (String committee_id : committeeIds) {
                 account_object account_object = get_accounts(committee_id);
@@ -2701,7 +2711,7 @@ public class CocosBcxApi {
      * @throws PasswordVerifyException
      * @throws KeyInvalideException
      */
-    private String vote_members_local(String vote_account, String password, int type, List<String> vote_ids, String vote_count, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException {
+    private String vote_members_local(String vote_account, String password, String type, List<String> vote_ids, String vote_count, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException {
         account_object vote_account_object = get_account_object(vote_account);
         if (vote_account_object == null) {
             throw new AccountNotFoundException("Account does not exist");
@@ -2713,7 +2723,8 @@ public class CocosBcxApi {
         asset_object assetObject = lookup_asset_symbols(CocosBcxApiWrapper.coreAsset);
         operations.vote_members_operation vote_members_operation = new operations.vote_members_operation();
         List<Object> lock_with_vote = new ArrayList<>();
-        lock_with_vote.add(type);
+        int types = Integer.parseInt(type);
+        lock_with_vote.add(types);
         lock_with_vote.add(assetObject.amount_from_string(vote_count));
         vote_members_operation.lock_with_vote = lock_with_vote;
         vote_members_operation.account = vote_account_object.id;
