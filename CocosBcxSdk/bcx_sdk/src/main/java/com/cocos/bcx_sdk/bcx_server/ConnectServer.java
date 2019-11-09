@@ -471,7 +471,7 @@ public class ConnectServer extends WebSocketListener {
         ReplyObjectProcess<Reply<List<Object>>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<List<Object>>>() {
         }.getType());
         Reply<List<Object>> reply = sendForReply(callObject, replyObject);
-        return reply.result.get(0);
+        return reply.result.size() > 0 ? reply.result.get(0) : null;
     }
 
 
@@ -713,7 +713,8 @@ public class ConnectServer extends WebSocketListener {
         ReplyObjectProcess<Reply<List<List<Object>>>> replyObject = new ReplyObjectProcess<>(new com.google.gson.reflect.TypeToken<Reply<List<List<Object>>>>() {
         }.getType());
         Reply<List<List<Object>>> reply = sendForReply(callObject, replyObject);
-        return global_config_object.getInstance().getGsonBuilder().create().toJson(reply.result.get(0).get(1));
+
+        return reply.result.size() > 0 ? global_config_object.getInstance().getGsonBuilder().create().toJson(reply.result.get(0).get(1)) : reply.result;
     }
 
     /**
@@ -999,7 +1000,7 @@ public class ConnectServer extends WebSocketListener {
         }.getType());
         Reply<List<nh_asset_order_object>> reply = sendForReply(callObject, replyObject);
 
-        return reply.result.get(0);
+        return reply.result.size() > 0 ? reply.result.get(0) : null;
     }
 
 
@@ -1026,7 +1027,7 @@ public class ConnectServer extends WebSocketListener {
         }.getType());
         Reply<List<limit_orders_object>> reply = sendForReply(callObject, replyObject);
 
-        return reply.result.get(0);
+        return reply.result.size() > 0 ? reply.result.get(0) : null;
     }
 
 
