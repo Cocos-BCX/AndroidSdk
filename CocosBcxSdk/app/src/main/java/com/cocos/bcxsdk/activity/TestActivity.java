@@ -1391,11 +1391,15 @@ public class TestActivity extends AppCompatActivity {
         tv_vote_members.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] vote_ids = et_vote_ids.getText().toString().split(",");
+//                String[] vote_ids = et_vote_ids.getText().toString().split(",");
+
+                List<String> vote_ids = new ArrayList<>();
+                vote_ids.add("1.2.5");
+
                 CocosBcxApiWrapper.getBcxInstance().vote_members(et_vote_account.getText().toString(),
                         et_vote_password.getText().toString(),
                         Integer.parseInt(et_vote_type.getText().toString()),
-                        Arrays.asList(vote_ids),
+                        vote_ids,
                         et_vote_number.getText().toString(),
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")

@@ -694,18 +694,10 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-
-            baseEncoder.write(rawObject.get_byte_array(rawObject.get_byte(lock_with_vote.size() > 0)));
-
-            LogUtils.i("lock_with_vote", String.valueOf((Integer) lock_with_vote.get(0)));
-
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits((Integer) lock_with_vote.get(0)));
-
+            baseEncoder.write(rawObject.get_byte(lock_with_vote.size() > 0));
+            baseEncoder.write(rawObject.get_byte_array((Integer) lock_with_vote.get(0)));
             ((asset) lock_with_vote.get(1)).write_to_encoder(baseEncoder);
-
-            LogUtils.i("lock_with_vote", String.valueOf(((asset) lock_with_vote.get(1)).amount));
             baseEncoder.write(rawObject.get_byte_array(account.get_instance()));
-
 //            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account.get_instance()));
             baseEncoder.write(rawObject.get_byte(owner != null));
             if (owner != null) {
