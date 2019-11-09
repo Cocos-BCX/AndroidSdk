@@ -1167,6 +1167,16 @@
             style="@style/EtSingleLine"
             android:hint="账户密码" />
 
+        <EditText
+            android:id="@+id/et_vote_type"
+            style="@style/EtSingleLine"
+            android:hint="type(0:理事会，1：见证人)" />
+
+
+        <EditText
+            android:id="@+id/et_vote_ids"
+            style="@style/EtSingleLine"
+            android:hint="见证人或理事会ids" />
 
         <EditText
             android:id="@+id/et_vote_number"

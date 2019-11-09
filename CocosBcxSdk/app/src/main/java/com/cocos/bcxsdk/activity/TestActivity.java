@@ -214,6 +214,8 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_create_witness_url;
     private TextView tv_create_witness;
     private EditText et_create_nh_asset_by_creator_world_view;
+    private EditText et_vote_type;
+    private EditText et_vote_ids;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -434,6 +436,8 @@ public class TestActivity extends AppCompatActivity {
         et_support_account = findViewById(R.id.et_support_account);
         et_vote_account = findViewById(R.id.et_vote_account);
         et_vote_password = findViewById(R.id.et_vote_password);
+        et_vote_type = findViewById(R.id.et_vote_type);
+        et_vote_ids = findViewById(R.id.et_vote_ids);
         et_vote_number = findViewById(R.id.et_vote_number);
         tv_vote_members = findViewById(R.id.tv_vote_members);
 
@@ -1387,18 +1391,11 @@ public class TestActivity extends AppCompatActivity {
         tv_vote_members.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> witnesses = new ArrayList<>();
-                List<String> committee = new ArrayList<>();
-                witnesses.add("1.2.5");
-                committee.add("1.2.11");
-                witnesses.add("1.2.6");
-                committee.add("1.2.6");
-                witnesses.add("1.2.6");
-                committee.add("1.2.11");
+                String[] vote_ids = et_vote_ids.getText().toString().split(",");
                 CocosBcxApiWrapper.getBcxInstance().vote_members(et_vote_account.getText().toString(),
                         et_vote_password.getText().toString(),
-                        witnesses,
-                        committee,
+                        Integer.parseInt(et_vote_type.getText().toString()),
+                        Arrays.asList(vote_ids),
                         et_vote_number.getText().toString(),
                         new IBcxCallBack() {
                             @SuppressLint("LongLogTag")

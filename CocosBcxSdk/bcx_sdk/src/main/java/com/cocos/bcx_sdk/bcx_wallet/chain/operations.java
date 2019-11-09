@@ -684,7 +684,7 @@ public class operations {
      */
     public static class vote_members_operation implements base_operation {
 
-        public asset lock_with_vote;
+        public List<Object> lock_with_vote;
         public object_id<account_object> account;
         public authority owner;
         public authority active;
@@ -694,8 +694,16 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            lock_with_vote.write_to_encoder(baseEncoder);
 
+            baseEncoder.write(rawObject.get_byte_array(1));
+
+            LogUtils.i("lock_with_vote", String.valueOf((Integer) lock_with_vote.get(0)));
+
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits((Integer) lock_with_vote.get(0)));
+
+            ((asset) lock_with_vote.get(1)).write_to_encoder(baseEncoder);
+
+            LogUtils.i("lock_with_vote", String.valueOf(((asset) lock_with_vote.get(1)).amount));
             baseEncoder.write(rawObject.get_byte_array(account.get_instance()));
 
 //            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account.get_instance()));
