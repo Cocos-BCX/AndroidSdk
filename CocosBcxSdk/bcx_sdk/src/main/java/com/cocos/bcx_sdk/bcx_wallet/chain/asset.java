@@ -23,7 +23,10 @@ public class asset {
 
         raw_type rawObject = new raw_type();
         baseEncoder.write(rawObject.get_byte_array(this.amount));
-        rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(this.asset_id.get_instance()));
+
+        baseEncoder.write(rawObject.get_byte_array(this.asset_id.get_instance()));
+
+//        rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(this.asset_id.get_instance()));
     }
 }
 

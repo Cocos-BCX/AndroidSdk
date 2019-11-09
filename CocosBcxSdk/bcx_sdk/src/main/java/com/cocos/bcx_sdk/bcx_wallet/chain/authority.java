@@ -36,7 +36,8 @@ public class authority {
         rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account_auths.size()));
 
         for (Map.Entry<object_id<account_object>, Integer> entry : account_auths.entrySet()) {
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(entry.getKey().get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(entry.getKey().get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(entry.getKey().get_instance()));
             Integer weight = (Integer) entry.getValue();
             baseEncoder.write(rawObject.get_byte_array(weight.shortValue()));
         }

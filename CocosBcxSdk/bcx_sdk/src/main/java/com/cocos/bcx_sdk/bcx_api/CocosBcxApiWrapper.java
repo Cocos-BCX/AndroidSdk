@@ -692,12 +692,12 @@ public class CocosBcxApiWrapper {
      *
      * @throws NetworkStatusException
      */
-    public void list_nh_asset_by_creator(final String account_id, final int page, final int pageSize, final IBcxCallBack callBack) {
+    public void list_nh_asset_by_creator(final String account_id, final String worldview, final int page, final int pageSize, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.list_nh_asset_by_creator(account_id, page, pageSize)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.list_nh_asset_by_creator(account_id, worldview, page, pageSize)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();

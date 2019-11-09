@@ -1085,7 +1085,7 @@ public class ConnectServer extends WebSocketListener {
      *
      * @throws NetworkStatusException
      */
-    public List<Object> list_nh_asset_by_creator(String account_id, int page, int pageSize) throws NetworkStatusException {
+    public List<Object> list_nh_asset_by_creator(String account_id, String worldview, int page, int pageSize) throws NetworkStatusException {
         Call callObject = new Call();
         callObject.id = mnCallId.getAndIncrement();
         callObject.method = "call";
@@ -1095,6 +1095,7 @@ public class ConnectServer extends WebSocketListener {
 
         List<Object> nh_order_params = new ArrayList<>();
         nh_order_params.add(account_id);
+        nh_order_params.add(worldview);
         nh_order_params.add(page);
         nh_order_params.add(pageSize);
         callObject.params.add(nh_order_params);

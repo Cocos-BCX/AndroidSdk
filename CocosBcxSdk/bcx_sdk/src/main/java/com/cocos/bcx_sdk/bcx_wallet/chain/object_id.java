@@ -67,7 +67,7 @@ public class object_id<T> {
         instance = nInstance;
     }
 
-    public int get_instance() {
+    public long get_instance() {
         return instance;
     }
 

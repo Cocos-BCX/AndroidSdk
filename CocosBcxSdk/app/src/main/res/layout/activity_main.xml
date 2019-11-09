@@ -880,6 +880,11 @@
             android:hint="查询的账户" />
 
         <EditText
+            android:id="@+id/et_create_nh_asset_by_creator_world_view"
+            style="@style/EtSingleLine"
+            android:hint="worldview" />
+
+        <EditText
             android:id="@+id/et_create_nh_asset_page"
             style="@style/EtSingleLine"
             android:hint="page" />

@@ -213,6 +213,7 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_create_witness_account_password;
     private EditText et_create_witness_url;
     private TextView tv_create_witness;
+    private EditText et_create_nh_asset_by_creator_world_view;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -325,6 +326,7 @@ public class TestActivity extends AppCompatActivity {
         tv_get_nh_creator = findViewById(R.id.tv_get_nh_creator);
 
         et_create_nh_asset_account = findViewById(R.id.et_create_nh_asset_account);
+        et_create_nh_asset_by_creator_world_view = findViewById(R.id.et_create_nh_asset_by_creator_world_view);
         et_create_nh_asset_page = findViewById(R.id.et_create_nh_asset_page);
         et_create_nh_asset_page_size = findViewById(R.id.et_create_nh_asset_page_size);
         tv_list_nh_asset_by_creator = findViewById(R.id.tv_list_nh_asset_by_creator);
@@ -748,7 +750,7 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 List<asset_object> asset_objects = CocosBcxApiWrapper.getBcxInstance().list_assets("A", 100);
-                Log.i("list_assets", String.valueOf(asset_objects));
+                Log.i("list_assets", String.valueOf(asset_objects.get(0).symbol));
             }
         });
 
@@ -783,7 +785,7 @@ public class TestActivity extends AppCompatActivity {
                     accountType = et_import_wallet_type.getText().toString();
                 }
 
-                CocosBcxApiWrapper.getBcxInstance().import_keystore("{\"chain_id\":\"b9e7cee4709ddaf08e3b7cba63b71c211c845e37c9bf2b865a7b2a592c8adb28\",\"cipher_keys\":\"f0383afcab59c113a7979809356e275995b040871d751c594f5f7dfef4788149856b239611985048e60a45f73a25c1cfacc367c377e18a73d21e56e45fe560d673aaa324f26fe5e64e5c82a726745dadd6dc15a6f1d08c8be1d41e348ef6ec9f8249a88853eab80beeb4b4ac9f2f34cbd4e1921bd6154b6e681cb721e7b4f5b2ca34415451a3742dd488ddfd803b86a502f08706bfa43aecd2d6eef9d7f3325e716f3fb4bbe66bfb87027ec3e601bcbab4f4a6c185b1cb0ab11be14fca4354b1f0d859be88e509dc34ba975fa78f428d045adfa3c491e32f12a4ddbbf73d86ca250ea93d58b7f7e6cceaf1d19b9c54cb\",\"extra_keys\":[[\"1.2.135\",[\"COCOS5NSJhzxxwNbxAqw2UPq36Zap8VKvrubxWQWiW1R14EBvhmNffH\",\"COCOS8Kocns5RidEyFsdrZfDVezA6vvnHQP32H4JnWoABsxbswp79Ej\"]]],\"my_accounts\":[{\"active\":{\"account_auths\":{},\"address_auths\":[],\"key_auths\":[[\"COCOS5NSJhzxxwNbxAqw2UPq36Zap8VKvrubxWQWiW1R14EBvhmNffH\",1]],\"weight_threshold\":1},\"id\":\"1.2.135\",\"lifetime_referrer\":\"1.2.15\",\"lifetime_referrer_fee_percentage\":3000,\"membership_expiration_date\":\"1970-01-01T00:00:00\",\"name\":\"gnkhandsome1616\",\"network_fee_percentage\":2000,\"options\":{\"extensions\":[],\"memo_key\":\"COCOS5NSJhzxxwNbxAqw2UPq36Zap8VKvrubxWQWiW1R14EBvhmNffH\",\"num_committee\":0,\"num_witness\":0,\"votes\":[],\"voting_account\":\"1.2.2\"},\"owner\":{\"account_auths\":{},\"address_auths\":[],\"key_auths\":[[\"COCOS8Kocns5RidEyFsdrZfDVezA6vvnHQP32H4JnWoABsxbswp79Ej\",1]],\"weight_threshold\":1},\"referrer\":\"1.2.15\",\"referrer_rewards_percentage\":5000,\"registrar\":\"1.2.15\",\"statistics\":\"2.6.135\"}]}", "123456", accountType,
+                CocosBcxApiWrapper.getBcxInstance().import_keystore(et_import_keystore.getText().toString(), et_import_wallet_type.getText().toString(), accountType,
                         new IBcxCallBack() {
                             @Override
                             public void onReceiveValue(String value) {
@@ -829,6 +831,24 @@ public class TestActivity extends AppCompatActivity {
                                 Log.i("get_contract", value);
                             }
                         });
+            }
+        });
+
+
+        /**
+         * 获取合约详情
+         */
+        tv_get_contract_object.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    contract_object contract_object = CocosBcxApiWrapper.getBcxInstance().get_contract_object("contract.dicegame");
+                    Log.i("get_contract_object", contract_object.contract_ABI.toString());
+                } catch (ContractNotFoundException e) {
+                    Log.i("get_contract_object", e.getMessage());
+                } catch (NetworkStatusException e) {
+                    Log.i("get_contract_object", e.getMessage());
+                }
             }
         });
 
@@ -1091,6 +1111,7 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CocosBcxApiWrapper.getBcxInstance().list_nh_asset_by_creator(et_create_nh_asset_account.getText().toString(),
+                        et_create_nh_asset_by_creator_world_view.getText().toString(),
                         Integer.valueOf(et_create_nh_asset_page.getText().toString()),
                         Integer.valueOf(et_create_nh_asset_page_size.getText().toString()),
                         new IBcxCallBack() {
@@ -1142,24 +1163,6 @@ public class TestActivity extends AppCompatActivity {
                                 Log.i("list_nh_asset_order", value);
                             }
                         });
-            }
-        });
-
-
-        /**
-         * 获取合约详情
-         */
-        tv_get_contract_object.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    contract_object contract_object = CocosBcxApiWrapper.getBcxInstance().get_contract_object("contract.dicegame");
-                    Log.i("get_contract_object", contract_object.contract_ABI.toString());
-                } catch (ContractNotFoundException e) {
-                    Log.i("get_contract_object", e.getMessage());
-                } catch (NetworkStatusException e) {
-                    Log.i("get_contract_object", e.getMessage());
-                }
             }
         });
 

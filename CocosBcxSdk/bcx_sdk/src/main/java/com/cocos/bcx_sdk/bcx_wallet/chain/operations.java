@@ -165,13 +165,13 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            //baseEncoder.write(rawObject.get_byte_array(from.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(from.get_instance()));
-            //baseEncoder.write(rawObject.get_byte_array(to.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(to.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array((long) from.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedLong.fromLongBits(from.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array((long) to.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(to.get_instance()));
             baseEncoder.write(rawObject.get_byte_array(amount.amount));
-            //baseEncoder.write(rawObject.get_byte_array(amount.asset_id.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(amount.asset_id.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array((long) amount.asset_id.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(amount.asset_id.get_instance()));
             baseEncoder.write(rawObject.get_byte(memo != null));
 
             if (memo != null) {
@@ -183,7 +183,7 @@ public class operations {
                 baseEncoder.write(byteMessage);
             }
 
-            //baseEncoder.write(rawObject.get_byte_array(extensions.size()));
+//            baseEncoder.write(rawObject.get_byte_array(extensions.size()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
 
@@ -210,8 +210,12 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(caller.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(contract_id.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(caller.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(contract_id.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(caller.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(contract_id.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(function_name.getBytes().length));
             baseEncoder.write(function_name.getBytes());
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(value_list.size()));
@@ -237,7 +241,8 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(fee_paying_account.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
         }
 
     }
@@ -254,7 +259,9 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(fee_paying_account.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(world_view.getBytes().length));
             baseEncoder.write(world_view.getBytes());
         }
@@ -276,8 +283,13 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(owner.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(fee_paying_account.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(owner.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(owner.get_instance()));
+
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_id.getBytes().length));
             baseEncoder.write(asset_id.getBytes());
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(world_view.getBytes().length));
@@ -300,9 +312,13 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(from.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(to.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(from.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(to.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(nh_asset.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(from.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(to.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
         }
 
     }
@@ -325,13 +341,19 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(order.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(order.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(fee_paying_account.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(seller.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(nh_asset.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(order.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(price_amount.getBytes().length));
             baseEncoder.write(price_amount.getBytes());
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(price_asset_id.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(price_asset_id.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(price_asset_id.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(price_asset_symbol.getBytes().length));
             baseEncoder.write(price_asset_symbol.getBytes());
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
@@ -352,7 +374,10 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account_to_upgrade.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(account_to_upgrade.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account_to_upgrade.get_instance()));
             baseEncoder.write(rawObject.get_byte(upgrade_to_lifetime_member));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
@@ -366,8 +391,6 @@ public class operations {
     public static class create_child_account_operation implements base_operation {
 
         public object_id<account_object> registrar;
-        public object_id<account_object> referrer;
-        public int referrer_percent;
         public String name;
         public authority1 owner;
         public authority1 active;
@@ -377,10 +400,11 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(registrar.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(referrer.get_instance()));
-            Integer reffer = Integer.valueOf(referrer_percent);
-            baseEncoder.write(rawObject.get_byte_array(reffer.shortValue()));
+
+            baseEncoder.write(rawObject.get_byte_array(registrar.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(registrar.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(referrer.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(name.getBytes().length));
             baseEncoder.write(name.getBytes());
             owner.write_to_encode(baseEncoder);
@@ -408,10 +432,13 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(otcaccount.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(seller.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(otcaccount.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(otcaccount.get_instance()));
             pending_orders_fee.write_to_encoder(baseEncoder);
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(nh_asset.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(memo.getBytes().length));
             baseEncoder.write(memo.getBytes());
             LogUtils.i("memoBytes", Arrays.toString(memo.getBytes()));
@@ -431,8 +458,11 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(fee_paying_account.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(nh_asset.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(nh_asset.get_instance()));
         }
 
     }
@@ -450,8 +480,10 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(order.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(order.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(fee_paying_account.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(order.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
     }
@@ -472,7 +504,10 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(seller.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(seller.get_instance()));
             amount_to_sell.write_to_encoder(baseEncoder);
             min_to_receive.write_to_encoder(baseEncoder);
             baseEncoder.write(rawObject.get_byte_array(expiration));
@@ -494,8 +529,10 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(order.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(fee_paying_account.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(order.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(fee_paying_account.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(order.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
     }
@@ -514,11 +551,17 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(issuer.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_to_update.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(issuer.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(asset_to_update.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(issuer.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_to_update.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(new_feed_producers.size()));
             for (object_id<account_object> produceIds : new_feed_producers) {
-                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(produceIds.get_instance()));
+
+                baseEncoder.write(rawObject.get_byte_array(produceIds.get_instance()));
+//                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(produceIds.get_instance()));
             }
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
@@ -538,8 +581,12 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(publisher.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_id.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(publisher.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(asset_id.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(publisher.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_id.get_instance()));
             feed.write_to_encoder(baseEncoder, rawObject);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
@@ -557,7 +604,10 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(account.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account.get_instance()));
             amount.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
@@ -577,8 +627,12 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(issuer.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_to_settle.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(issuer.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(asset_to_settle.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(issuer.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(asset_to_settle.get_instance()));
             settle_price.write_to_encoder(baseEncoder);
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
@@ -596,8 +650,10 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(mortgager.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(beneficiary.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(mortgager.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(beneficiary.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(mortgager.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(beneficiary.get_instance()));
             baseEncoder.write(rawObject.get_byte_array(collateral));
         }
     }
@@ -614,8 +670,11 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(vesting_balance.get_instance()));
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(owner.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(vesting_balance.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(owner.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(vesting_balance.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(owner.get_instance()));
             amount.write_to_encoder(baseEncoder);
         }
     }
@@ -636,7 +695,10 @@ public class operations {
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
             lock_with_vote.write_to_encoder(baseEncoder);
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(account.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account.get_instance()));
             baseEncoder.write(rawObject.get_byte(owner != null));
             if (owner != null) {
                 owner.write_to_encode(baseEncoder);
@@ -665,7 +727,10 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(committee_member_account.get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(committee_member_account.get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(committee_member_account.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(url.getBytes().length));
             baseEncoder.write(url.getBytes());
         }
@@ -684,7 +749,8 @@ public class operations {
         @Override
         public void write_to_encoder(base_encoder baseEncoder) {
             raw_type rawObject = new raw_type();
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(witness_account.get_instance()));
+            baseEncoder.write(rawObject.get_byte_array(witness_account.get_instance()));
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(witness_account.get_instance()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(url.getBytes().length));
             baseEncoder.write(url.getBytes());
             baseEncoder.write(block_signing_key.key_data);

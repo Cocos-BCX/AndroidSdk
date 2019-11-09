@@ -385,6 +385,9 @@ public class CocosBcxApi {
             rspText = new ResponseData(OPERATE_SUCCESS, "success", private_keys).toString();
             callBack.onReceiveValue(rspText);
             account_object account_object = lookup_account_names(mWalletObject.my_accounts.get(0).name);
+            if (null == account_object) {
+                throw new AccountNotFoundException("Account does not exist");
+            }
             save_account(account_object.name, account_object.id.toString(), password, accountType, accountDao);
         } catch (JsonSyntaxException e) {
             rspText = new ResponseData(ERROR_PARAMETER_DATA_TYPE, "Please check parameter type", null).toString();
@@ -400,6 +403,9 @@ public class CocosBcxApi {
             callBack.onReceiveValue(rspText);
         } catch (AddressFormatException e) {
             rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
+            callBack.onReceiveValue(rspText);
+        } catch (AccountNotFoundException e) {
+            rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
             callBack.onReceiveValue(rspText);
         }
 
@@ -1273,8 +1279,6 @@ public class CocosBcxApi {
         options.votes = new ArrayList<>();
         operations.create_child_account_operation create_child_account_operation = new operations.create_child_account_operation();
         create_child_account_operation.registrar = registrar_account_object.id;
-        create_child_account_operation.referrer = registrar_account_object.id;
-        create_child_account_operation.referrer_percent = 0;
         create_child_account_operation.name = paramEntity.getAccountName();
         create_child_account_operation.owner = owner;
         create_child_account_operation.active = active;
@@ -1503,12 +1507,12 @@ public class CocosBcxApi {
      *
      * @throws NetworkStatusException
      */
-    public List<Object> list_nh_asset_by_creator(String account_id, int page, int pageSize) throws NetworkStatusException, AccountNotFoundException {
+    public List<Object> list_nh_asset_by_creator(String account_id, String worldview, int page, int pageSize) throws NetworkStatusException, AccountNotFoundException {
         account_object account_object = get_account_object(account_id);
         if (account_object == null) {
             throw new AccountNotFoundException("Account does not exist");
         }
-        return mWebSocketApi.list_nh_asset_by_creator(account_object.id.toString(), page, pageSize);
+        return mWebSocketApi.list_nh_asset_by_creator(account_object.id.toString(), worldview, page, pageSize);
     }
 
 
@@ -2652,7 +2656,6 @@ public class CocosBcxApi {
                 break;
             }
         }
-        List<String> list = Arrays.asList(strings);
         return vote_members(vote_account, password, Arrays.asList(strings), vote_count, accountDao);
     }
 

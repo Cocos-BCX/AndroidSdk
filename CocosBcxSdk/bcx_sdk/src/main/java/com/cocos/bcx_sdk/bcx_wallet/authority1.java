@@ -191,7 +191,10 @@ public class authority1 {
         rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account_auths.size()));
 
         for (ArrayList key : account_auths) {
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(((object_id<account_object>) key.get(0)).get_instance()));
+
+            baseEncoder.write(rawObject.get_byte_array(((object_id<account_object>) key.get(0)).get_instance()));
+
+//            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(((object_id<account_object>) key.get(0)).get_instance()));
 
             Integer weight = (Integer) key.get(1);
 
