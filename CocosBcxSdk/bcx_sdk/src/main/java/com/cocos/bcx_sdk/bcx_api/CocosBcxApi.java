@@ -2658,8 +2658,10 @@ public class CocosBcxApi {
             throws NetworkStatusException, AccountNotFoundException,
             PasswordVerifyException, KeyInvalideException, AuthorityException, UnLegalInputException, NotMemberException {
 
+        int types = -1;
         List<String> vote_ids_list = new ArrayList<>();
         if (TextUtils.equals(type, "witnesses")) {
+            types = 1;
             HashSet<String> witnessesIds = new HashSet<>(vote_ids);
             for (String witnessesId : witnessesIds) {
                 account_object account_object = get_accounts(witnessesId);
@@ -2677,6 +2679,7 @@ public class CocosBcxApi {
                 }
             }
         } else if (TextUtils.equals(type, "committee")) {
+            types = 0;
             HashSet<String> committeeIds = new HashSet<>(vote_ids);
             for (String committee_id : committeeIds) {
                 account_object account_object = get_accounts(committee_id);
@@ -2719,7 +2722,7 @@ public class CocosBcxApi {
                 break;
             }
         }
-        return vote_members_local(vote_account, password, type, Arrays.asList(strings), vote_count, accountDao);
+        return vote_members_local(vote_account, password, types, Arrays.asList(strings), vote_count, accountDao);
     }
 
 
@@ -2736,7 +2739,7 @@ public class CocosBcxApi {
      * @throws PasswordVerifyException
      * @throws KeyInvalideException
      */
-    private String vote_members_local(String vote_account, String password, String type, List<String> vote_ids, String vote_count, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException {
+    private String vote_members_local(String vote_account, String password, int type, List<String> vote_ids, String vote_count, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException {
         account_object vote_account_object = get_account_object(vote_account);
         if (vote_account_object == null) {
             throw new AccountNotFoundException("Account does not exist");
@@ -2748,8 +2751,7 @@ public class CocosBcxApi {
         asset_object assetObject = lookup_asset_symbols(CocosBcxApiWrapper.coreAsset);
         operations.vote_members_operation vote_members_operation = new operations.vote_members_operation();
         List<Object> lock_with_vote = new ArrayList<>();
-        int types = Integer.parseInt(type);
-        lock_with_vote.add(types);
+        lock_with_vote.add(type);
         lock_with_vote.add(assetObject.amount_from_string(vote_count));
         vote_members_operation.lock_with_vote = lock_with_vote;
         vote_members_operation.account = vote_account_object.id;
