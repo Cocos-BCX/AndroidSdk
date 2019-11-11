@@ -29,7 +29,9 @@ import com.cocos.bcx_sdk.bcx_error.WordViewNotExistException;
 import com.cocos.bcx_sdk.bcx_log.LogUtils;
 import com.cocos.bcx_sdk.bcx_server.ConnectServer;
 import com.cocos.bcx_sdk.bcx_sql.dao.AccountDao;
+import com.cocos.bcx_sdk.bcx_utils.utils.DateUtil;
 import com.cocos.bcx_sdk.bcx_utils.utils.IDHelper;
+import com.cocos.bcx_sdk.bcx_utils.utils.NumberUtil;
 import com.cocos.bcx_sdk.bcx_wallet.authority1;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_related_word_view_object;
@@ -136,6 +138,7 @@ public class CocosBcxApi {
     private sha512_object mCheckSum;
     private String active_key_auths;
     private String owner_key_auths;
+    private Date currentDateObject;
 
 
     private CocosBcxApi() {
@@ -2420,23 +2423,44 @@ public class CocosBcxApi {
         Object vesting_balances_result = get_objects(awardId);
         Gson gson = global_config_object.getInstance().getGsonBuilder().create();
         vesting_balances_object vesting_balances_object = gson.fromJson(gson.toJson(vesting_balances_result), vesting_balances_object.class);
-
+        if (null == vesting_balances_object) {
+            throw new NoRewardAvailableException("No reward available");
+        }
         asset_object asset_object = lookup_asset_symbols(vesting_balances_object.balance.asset_id.toString());
         if (null == asset_object) {
             throw new AssetNotFoundException("Asset does not exist");
         }
         JsonElement jsonElement = vesting_balances_object.policy.get(1);
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonElement coin_seconds_earned = jsonObject.get("coin_seconds_earned");
-        JsonElement vesting_seconds = jsonObject.get("vesting_seconds");
-        double gas_amount = coin_seconds_earned.getAsDouble() / vesting_seconds.getAsDouble();
-        double available_percent = gas_amount / vesting_balances_object.balance.amount;
+        JsonElement coin_seconds_earnedStr = jsonObject.get("coin_seconds_earned");
+        double coin_seconds_earned = coin_seconds_earnedStr.getAsDouble();
+        JsonElement vesting_seconds_str = jsonObject.get("vesting_seconds");
+        double vesting_seconds = vesting_seconds_str.getAsDouble();
 
+        JsonElement coin_seconds_earned_last_update = jsonObject.get("coin_seconds_earned_last_update");
+        String coin_seconds_earned_last_update_str = coin_seconds_earned_last_update.getAsString();
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sDateFormat = new SimpleDateFormat(pattern);
+        Date beforeDate = null;
+        try {
+            Date beforeDateObject = sDateFormat.parse(coin_seconds_earned_last_update_str);
+            beforeDate = DateUtil.formDate(beforeDateObject);
+            String dateString = sDateFormat.format(new Date());
+            currentDateObject = sDateFormat.parse(dateString);
+        } catch (ParseException e) {
+            throw new UnknownError("Date parse error");
+        }
+        long past_seconds = (currentDateObject.getTime() - beforeDate.getTime()) / 1000;
+        double total_earned = NumberUtil.mul1(vesting_seconds, vesting_balances_object.balance.amount);
+        double new_earned = NumberUtil.mul1(NumberUtil.div(past_seconds, vesting_seconds, 5), total_earned);
+        double old_earned = coin_seconds_earned;
+        double earned = NumberUtil.add(old_earned, new_earned);
+        double availablePercent = NumberUtil.div(earned, NumberUtil.mul1(vesting_seconds, vesting_balances_object.balance.amount), 5);
+        double available_balance_amount = NumberUtil.div(NumberUtil.mul1(availablePercent, vesting_balances_object.balance.amount), Math.pow(10, asset_object.precision), 5);
         operations.receive_vesting_balances_operation receive_vesting_balances = new operations.receive_vesting_balances_operation();
         receive_vesting_balances.vesting_balance = vesting_balances_object.id;
         receive_vesting_balances.owner = account_object.id;
-        receive_vesting_balances.amount = asset_object.amount_from_string(String.valueOf(vesting_balances_object.balance.amount * available_percent / Math.pow(10, asset_object.precision)))
-        ;
+        receive_vesting_balances.amount = asset_object.amount_from_string(String.valueOf(available_balance_amount));
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = receive_vesting_balances;
@@ -2446,6 +2470,7 @@ public class CocosBcxApi {
         signed_operate.operations = new ArrayList<>();
         signed_operate.operations.add(operationType);
         signed_operate.extensions = new HashSet<>();
+
         return sign_transaction(signed_operate, account_object);
     }
 

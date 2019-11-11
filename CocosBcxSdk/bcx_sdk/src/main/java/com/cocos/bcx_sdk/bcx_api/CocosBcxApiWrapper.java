@@ -2389,8 +2389,16 @@ public class CocosBcxApiWrapper {
                     rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.receive_vesting_balances(accountNameOrId, password, awardId, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
+                    if (e.getMessage().contains("is_withdraw_allowed")) {
+                        rspText = new ResponseData(NO_REWARD_AVAILABLE, "No reward available", null).toString();
+                        callBack.onReceiveValue(rspText);
+                    } else if (e.getMessage().contains("vbo.owner")) {
+                        rspText = new ResponseData(ERROR_NETWORK_FAIL, "Not reward owner", null).toString();
+                        callBack.onReceiveValue(rspText);
+                    } else {
+                        rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                        callBack.onReceiveValue(rspText);
+                    }
                 } catch (AccountNotFoundException e) {
                     rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
@@ -2408,6 +2416,9 @@ public class CocosBcxApiWrapper {
                     callBack.onReceiveValue(rspText);
                 } catch (NoRewardAvailableException e) {
                     rspText = new ResponseData(NO_REWARD_AVAILABLE, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (UnknownError e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
