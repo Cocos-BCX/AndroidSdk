@@ -2659,7 +2659,7 @@ public class CocosBcxApi {
             PasswordVerifyException, KeyInvalideException, AuthorityException, UnLegalInputException, NotMemberException {
 
         List<String> vote_ids_list = new ArrayList<>();
-        if (TextUtils.equals(type, "1")) {
+        if (TextUtils.equals(type, "witnesses")) {
             HashSet<String> witnessesIds = new HashSet<>(vote_ids);
             for (String witnessesId : witnessesIds) {
                 account_object account_object = get_accounts(witnessesId);
@@ -2676,7 +2676,7 @@ public class CocosBcxApi {
                     throw new NotMemberException(witnessesId + " is not a witness");
                 }
             }
-        } else if (TextUtils.equals(type, "0")) {
+        } else if (TextUtils.equals(type, "committee")) {
             HashSet<String> committeeIds = new HashSet<>(vote_ids);
             for (String committee_id : committeeIds) {
                 account_object account_object = get_accounts(committee_id);
