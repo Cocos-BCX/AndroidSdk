@@ -5,17 +5,9 @@ package com.cocos.bcx_sdk.bcx_wallet.chain;
  */
 public class create_account_object {
 
-    private String code;
-    private DataBean data;
-    private String msg;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
+    public int code;
+    public DataBean data;
+    public String msg;
 
     public DataBean getData() {
         return data;

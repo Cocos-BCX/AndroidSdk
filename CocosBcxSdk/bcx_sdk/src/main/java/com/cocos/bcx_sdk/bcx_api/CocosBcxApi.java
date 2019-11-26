@@ -280,6 +280,11 @@ public class CocosBcxApi {
             if (response.isSuccessful()) {
                 // parse create account data model
                 create_account_object createAccountObject = global_config_object.getInstance().getGsonBuilder().create().fromJson(strResponse, create_account_object.class);
+                if (createAccountObject.code != 200) {
+                    rspText = new ResponseData(createAccountObject.code, createAccountObject.getMsg(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                    return;
+                }
                 long startTime = System.currentTimeMillis();
                 long endTime;
                 do {
