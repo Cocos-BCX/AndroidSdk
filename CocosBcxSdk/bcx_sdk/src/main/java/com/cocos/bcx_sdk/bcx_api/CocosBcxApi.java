@@ -527,15 +527,24 @@ public class CocosBcxApi {
     /**
      * transfer
      *
+     * @param password
      * @param strFrom
      * @param strTo
      * @param strAmount
      * @param strAssetSymbolOrId
      * @param strMemo
+     * @param is_encrypt_memo
+     * @param accountDao
      * @return
      * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     * @throws PasswordVerifyException
+     * @throws AuthorityException
+     * @throws AssetNotFoundException
+     * @throws KeyInvalideException
+     * @throws AddressFormatException
      */
-    public String transfer(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strMemo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, AuthorityException, AssetNotFoundException, KeyInvalideException, AddressFormatException {
+    public String transfer(String password, String strFrom, String strTo, String strAmount, String strAssetSymbolOrId, String strMemo, boolean is_encrypt_memo, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, AuthorityException, AssetNotFoundException, KeyInvalideException, AddressFormatException {
         // get asset object
         asset_object assetObject = lookup_asset_symbols(strAssetSymbolOrId);
 
@@ -558,7 +567,6 @@ public class CocosBcxApi {
         if (unlock(accountObjectFrom.name, password, accountDao) != OPERATE_SUCCESS && verify_password(accountObjectFrom.name, password).size() <= 0) {
             throw new PasswordVerifyException("Wrong password");
         }
-
         operations.transfer_operation transferOperation = new operations.transfer_operation();
         transferOperation.from = accountObjectFrom.id;
         transferOperation.to = accountObjectTo.id;
@@ -567,27 +575,33 @@ public class CocosBcxApi {
 
         //sign  memo
         if (!TextUtils.isEmpty(strMemo)) {
-            transferOperation.memo = new memo_data();
-            transferOperation.memo.from = accountObjectFrom.options.memo_key;
-            transferOperation.memo.to = accountObjectTo.options.memo_key;
-
-            types.private_key_type privateKeyType = mHashMapPub2Private.get(accountObjectFrom.options.memo_key);
-
-            if (privateKeyType == null) {
-                // Must have active permission to transfer  please confirm that you imported the activePrivateKey
-                throw new AuthorityException("Transfer requires the private key of activity mode, make sure that the private key of the activity mode is imported");
+            List<Object> memo = new ArrayList<>();
+            if (is_encrypt_memo) {
+                memo_data memo_data = new memo_data();
+                memo_data.from = accountObjectFrom.options.memo_key;
+                memo_data.to = accountObjectTo.options.memo_key;
+                types.private_key_type privateKeyType = mHashMapPub2Private.get(accountObjectFrom.options.memo_key);
+                if (privateKeyType == null) {
+                    // Must have active permission to transfer  please confirm that you imported the activePrivateKey
+                    throw new AuthorityException("Transfer requires the private key of activity mode, make sure that the private key of the activity mode is imported");
+                }
+                memo_data.set_message(
+                        privateKeyType.getPrivateKey(),
+                        accountObjectTo.options.memo_key.getPublicKey(),
+                        strMemo,
+                        0
+                );
+                memo_data.get_message(
+                        privateKeyType.getPrivateKey(),
+                        accountObjectTo.options.memo_key.getPublicKey()
+                );
+                memo.add(1);
+                memo.add(memo_data);
+            } else {
+                memo.add(0);
+                memo.add(strMemo);
             }
-
-            transferOperation.memo.set_message(
-                    privateKeyType.getPrivateKey(),
-                    accountObjectTo.options.memo_key.getPublicKey(),
-                    strMemo,
-                    0
-            );
-            transferOperation.memo.get_message(
-                    privateKeyType.getPrivateKey(),
-                    accountObjectTo.options.memo_key.getPublicKey()
-            );
+            transferOperation.memo = memo;
         }
 
         // prepare to sign transfer

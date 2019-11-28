@@ -322,6 +322,12 @@
             style="@style/EtSingleLine"
             android:hint="备注消息" />
 
+        <CheckBox
+            android:id="@+id/cb_is_encrypt_memo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false" />
+
         <TextView
             android:id="@+id/tv_transfer_asset"
             style="@style/TvBtn"

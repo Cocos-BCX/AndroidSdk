@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -217,6 +218,7 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_create_nh_asset_by_creator_world_view;
     private EditText et_vote_type;
     private EditText et_vote_ids;
+    private CheckBox cb_is_encrypt_memo;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -268,6 +270,7 @@ public class TestActivity extends AppCompatActivity {
         et_transfer_asset_amount = findViewById(R.id.et_transfer_asset_amount);
         et_transfer_asset_asset_type = findViewById(R.id.et_transfer_asset_asset_type);
         et_transfer_asset_memo = findViewById(R.id.et_transfer_asset_memo);
+        cb_is_encrypt_memo = findViewById(R.id.cb_is_encrypt_memo);
         tv_transfer_asset = findViewById(R.id.tv_transfer_asset);
         tv_get_dao_accounts = findViewById(R.id.tv_get_dao_accounts);
 
@@ -593,6 +596,31 @@ public class TestActivity extends AppCompatActivity {
                 });
             }
         });
+//
+//        /**
+//         * 转账
+//         */
+//        tv_transfer_asset.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                CocosBcxApiWrapper.getBcxInstance().transfer(et_transfer_asset_password.getText().toString()
+//                        , et_transfer_asset_from_account.getText().toString(),
+//                        et_transfer_asset_to_account.getText().toString(),
+//                        et_transfer_asset_amount.getText().toString(),
+//                        et_transfer_asset_asset_type.getText().toString(),
+//                        et_transfer_asset_memo.getText().toString(),
+//                        cb_is_encrypt_memo.isChecked(),
+//                        new IBcxCallBack() {
+//                            @Override
+//                            public void onReceiveValue(String value) {
+//                                Log.i("transfer", String.valueOf(cb_is_encrypt_memo.isChecked()));
+//                                Log.i("transfer", value);
+//                            }
+//                        });
+//            }
+//        });
+
 
         /**
          * 转账
@@ -606,9 +634,12 @@ public class TestActivity extends AppCompatActivity {
                         et_transfer_asset_to_account.getText().toString(),
                         et_transfer_asset_amount.getText().toString(),
                         et_transfer_asset_asset_type.getText().toString(),
-                        et_transfer_asset_memo.getText().toString(), new IBcxCallBack() {
+                        et_transfer_asset_memo.getText().toString(),
+                        cb_is_encrypt_memo.isChecked(),
+                        new IBcxCallBack() {
                             @Override
                             public void onReceiveValue(String value) {
+                                Log.i("transfer", String.valueOf(cb_is_encrypt_memo.isChecked()));
                                 Log.i("transfer", value);
                             }
                         });

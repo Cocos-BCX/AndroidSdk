@@ -1658,12 +1658,12 @@ public class CocosBcxApiWrapper {
      * @return
      * @throws NetworkStatusException
      */
-    public void transfer(final String password, final String strFrom, final String strTo, final String strAmount, final String strAssetSymbol, final String strMemo, final IBcxCallBack callBack) {
+    public void transfer(final String password, final String strFrom, final String strTo, final String strAmount, final String strAssetSymbol, final String strMemo, final boolean is_encrypt_memo, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String hash = cocosBcxApi.transfer(password, strFrom, strTo, strAmount, strAssetSymbol, strMemo, accountDao);
+                    String hash = cocosBcxApi.transfer(password, strFrom, strTo, strAmount, strAssetSymbol, strMemo, is_encrypt_memo, accountDao);
                     rspText = new ResponseData(OPERATE_SUCCESS, "success", hash).toString();
                     callBack.onReceiveValue(rspText);
                     cocosBcxApi.lock();

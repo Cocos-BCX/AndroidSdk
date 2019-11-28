@@ -159,7 +159,7 @@ public class operations {
         public object_id<account_object> from;
         public object_id<account_object> to;
         public asset amount;
-        public memo_data memo;
+        public List<Object> memo;
         public Set<types.void_t> extensions;
 
         @Override
@@ -175,14 +175,23 @@ public class operations {
             baseEncoder.write(rawObject.get_byte(memo != null));
 
             if (memo != null) {
-                baseEncoder.write(memo.from.key_data);
-                baseEncoder.write(memo.to.key_data);
-                baseEncoder.write(rawObject.get_byte_array(memo.nonce));
-                byte[] byteMessage = memo.message.array();
-                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(byteMessage.length));
-                baseEncoder.write(byteMessage);
+//                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(memo.size()));
+                Integer isCrapt = (Integer) memo.get(0);
+                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(isCrapt));
+                if (isCrapt == 1) {
+                    memo_data memo_data = (memo_data) memo.get(1);
+                    baseEncoder.write(memo_data.from.key_data);
+                    baseEncoder.write(memo_data.to.key_data);
+                    baseEncoder.write(rawObject.get_byte_array(memo_data.nonce));
+                    byte[] byteMessage = memo_data.message.array();
+                    rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(byteMessage.length));
+                    baseEncoder.write(byteMessage);
+                } else {
+                    String memo_data = (String) memo.get(1);
+                    rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(memo_data.getBytes().length));
+                    baseEncoder.write(memo_data.getBytes());
+                }
             }
-
 //            baseEncoder.write(rawObject.get_byte_array(extensions.size()));
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
