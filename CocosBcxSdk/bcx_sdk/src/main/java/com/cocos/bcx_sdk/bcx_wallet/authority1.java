@@ -1,5 +1,6 @@
 package com.cocos.bcx_sdk.bcx_wallet;
 
+import com.cocos.bcx_sdk.bcx_log.LogUtils;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.object_id;
 import com.cocos.bcx_sdk.bcx_wallet.chain.types;
@@ -15,6 +16,7 @@ import com.google.gson.JsonObject;
 import java.lang.reflect.Type;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -187,21 +189,23 @@ public class authority1 {
         raw_type rawObject = new raw_type();
 
         baseEncoder.write(rawObject.get_byte_array(weight_threshold));
-
+        LogUtils.i("modify_password---weight_threshold", Arrays.toString(rawObject.get_byte_array(weight_threshold)));
         rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(account_auths.size()));
 
         for (ArrayList key : account_auths) {
 
             baseEncoder.write(rawObject.get_byte_array(((object_id<account_object>) key.get(0)).get_instance()));
-
+            LogUtils.i("modify_password---account_auths", Arrays.toString(rawObject.get_byte_array(((object_id<account_object>) key.get(0)).get_instance())));
 //            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(((object_id<account_object>) key.get(0)).get_instance()));
 
             Integer weight = (Integer) key.get(1);
 
             baseEncoder.write(rawObject.get_byte_array(weight.shortValue()));
+            LogUtils.i("modify_password---weight", Arrays.toString(rawObject.get_byte_array(weight.shortValue())));
         }
 
         rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(key_auths.size()));
+
         for (ArrayList key : key_auths) {
             //通过Gson 未定义转换方式,所以调用时需先判断类型
             if (key.get(0).getClass() != types.public_key_type.class) {
@@ -224,9 +228,11 @@ public class authority1 {
 //            byte[] data = pub.key_data;
 
             baseEncoder.write(pub.key_data);
+            LogUtils.i("modify_password---key_data", Arrays.toString(pub.key_data));
 //            rawObject.pack(baseEncoder,UnsignedInteger.fromIntBits((int)key.get(1)));
 
             baseEncoder.write(rawObject.get_byte_array(weight.shortValue()));
+            LogUtils.i("modify_password---weight", Arrays.toString(rawObject.get_byte_array(weight.shortValue())));
         }
 
         System.out.println("authority1 address_auths");

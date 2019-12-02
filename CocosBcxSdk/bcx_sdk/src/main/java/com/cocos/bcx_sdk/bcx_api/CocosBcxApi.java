@@ -677,6 +677,46 @@ public class CocosBcxApi {
 
 
     /**
+     * sign transaction with owner private_key
+     *
+     * @param tx
+     * @return
+     * @throws NetworkStatusException
+     */
+    private String sign_transaction_both(signed_operate tx, account_object account_object) throws NetworkStatusException, AuthorityException {
+        dynamic_global_property_object dynamicGlobalPropertyObject = get_dynamic_global_properties();
+        tx.set_reference_block(dynamicGlobalPropertyObject.head_block_id);
+        Date dateObject = dynamicGlobalPropertyObject.time;
+        Calendar calender = Calendar.getInstance();
+        calender.setTime(dateObject);
+        calender.add(Calendar.SECOND, 30);
+        dateObject = calender.getTime();
+        tx.set_expiration(dateObject);
+        HashMap<types.public_key_type, Integer> activity_key_auths = account_object.active.key_auths;
+        for (Map.Entry<types.public_key_type, Integer> entry : activity_key_auths.entrySet()) {
+            types.private_key_type privateKey = mHashMapPub2Private.get(entry.getKey());
+            if (privateKey != null) {
+                tx.sign(privateKey, mWebSocketApi.get_chain_id());
+            } else {
+                throw new AuthorityException("Author failed! make sure you logged and have active permission");
+            }
+        }
+
+        HashMap<types.public_key_type, Integer> key_auths = account_object.owner.key_auths;
+        for (Map.Entry<types.public_key_type, Integer> entry : key_auths.entrySet()) {
+            types.private_key_type privateKey = mHashMapPub2Private.get(entry.getKey());
+            if (privateKey != null) {
+                tx.sign(privateKey, mWebSocketApi.get_chain_id());
+            } else {
+                throw new AuthorityException("Author failed! make sure you logged and have active permission");
+            }
+        }
+        LogUtils.i("sign_transaction", global_config_object.getInstance().getGsonBuilder().create().toJson(tx));
+        return mWebSocketApi.broadcast_transaction(tx);
+    }
+
+
+    /**
      * sign transaction
      *
      * @param tx
@@ -2880,6 +2920,57 @@ public class CocosBcxApi {
         signed_operate.operations.add(operationType);
         signed_operate.extensions = new HashSet<>();
         return sign_transaction(signed_operate, owner_account_object);
+    }
+
+
+    /**
+     * create_witness
+     *
+     * @param accountDao
+     * @return hash
+     * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     * @throws PasswordVerifyException
+     * @throws KeyInvalideException
+     */
+    public String modify_password(String accountName, String originPwd, String newPwd, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException, UnLegalInputException {
+
+        private_key privateActiveKey = private_key.from_seed(accountName + "active" + newPwd);
+        private_key privateOwnerKey = private_key.from_seed(accountName + "owner" + newPwd);
+        types.public_key_type publicActiveKeyType = new types.public_key_type(privateActiveKey.get_public_key());
+        types.public_key_type publicOwnerKeyType = new types.public_key_type(privateOwnerKey.get_public_key());
+
+        account_object account_object = get_account_object(accountName);
+        if (account_object == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+
+        if (verify_password(account_object.name, originPwd).size() <= 0) {
+            throw new PasswordVerifyException("Wrong password");
+        }
+
+        authority1 owner = new authority1(1, publicOwnerKeyType, 1);
+        authority1 active = new authority1(1, publicActiveKeyType, 1);
+        types.account_options options = new types.account_options();
+        options.memo_key = publicActiveKeyType;
+        options.votes = account_object.options.votes;
+        options.extensions = new HashSet<>();
+        operations.modify_password_operation modify_password_operation = new operations.modify_password_operation();
+        modify_password_operation.account = account_object.id;
+        modify_password_operation.owner = owner;
+        modify_password_operation.active = active;
+        modify_password_operation.new_options = options;
+        modify_password_operation.extensions = new HashSet<>();
+
+        operations.operation_type operationType = new operations.operation_type();
+        operationType.operationContent = modify_password_operation;
+        operationType.nOperationType = operations.ID_VOTE_MEMBER;
+
+        signed_operate signed_operate = new signed_operate();
+        signed_operate.operations = new ArrayList<>();
+        signed_operate.operations.add(operationType);
+        signed_operate.extensions = new HashSet<>();
+        return sign_transaction_owner(signed_operate, account_object);
     }
 
 

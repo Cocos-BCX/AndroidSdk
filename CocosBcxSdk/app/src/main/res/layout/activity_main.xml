@@ -158,39 +158,29 @@
             style="@style/TvBtn"
             android:text="退出登录" />
 
-        <!-- ********************* -->
+        <TextView
+            style="@style/TvTitle"
+            android:text="修改密码" />
 
-        <!-- ********************* -->
-        <!--   <TextView
-               style="@style/TvTitle"
-               android:text="修改密码" />
+        <EditText
+            android:id="@+id/et_modify_account_name"
+            style="@style/EtSingleLine"
+            android:hint="账户名" />
 
-           <include layout="@layout/include_line" />
+        <EditText
+            android:id="@+id/et_modify_origin_pwd"
+            style="@style/EtSingleLine"
+            android:hint="原始密码/临时密码" />
 
-           <TextView
-               style="@style/TvEdTips"
-               android:text="如果账户模式已经登录，该操作会创建子账户，创建该子账户需要操作账户为终身会员账户" />
+        <EditText
+            android:id="@+id/et_modify_new_pwd"
+            style="@style/EtSingleLine"
+            android:hint="新密码" />
 
-
-           <EditText
-               android:id="@+id/et_change_password_old"
-               style="@style/EtSingleLine"
-               android:hint="原始密码/临时钱包密码" />
-
-           <EditText
-               android:id="@+id/et_change_password_new"
-               style="@style/EtSingleLine"
-               android:hint="新密码" />
-
-           <TextView
-               android:id="@+id/tv_change_password"
-               style="@style/TvBtn"
-               android:text="确认修改" />-->
-
-        <!-- ********************* -->
-
-        <!--************************* -->
-
+        <TextView
+            android:id="@+id/tv_modify_password"
+            style="@style/TvBtn"
+            android:text="确认修改" />
         <TextView
             style="@style/TvTitle"
             android:text="获取账户信息" />
@@ -1247,6 +1237,7 @@
             android:id="@+id/tv_create_witness"
             style="@style/TvBtn"
             android:text="申请" />
+
     </LinearLayout>
 </ScrollView>
 

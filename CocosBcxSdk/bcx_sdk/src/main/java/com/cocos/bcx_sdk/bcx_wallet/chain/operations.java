@@ -17,6 +17,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -102,6 +103,7 @@ public class operations {
             mHashId2Operation.put(ID_VOTE_MEMBER, vote_members_operation.class);
             mHashId2Operation.put(ID_CREATE_COMMITTEE_MEMBER, create_committee_member_operation.class);
             mHashId2Operation.put(ID_CREATE_WITNESS, create_witness_operation.class);
+            mHashId2Operation.put(ID_VOTE_MEMBER, modify_password_operation.class);
         }
 
         public Type getOperationObjectById(int nId) {
@@ -763,6 +765,38 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(url.getBytes().length));
             baseEncoder.write(url.getBytes());
             baseEncoder.write(block_signing_key.key_data);
+        }
+    }
+
+
+    /**
+     * modify_password_operation
+     */
+    public static class modify_password_operation implements base_operation {
+        public object_id<account_object> account;
+        public authority1 owner;
+        public authority1 active;
+        public types.account_options new_options;
+        public HashSet extensions;
+
+        @Override
+        public void write_to_encoder(base_encoder baseEncoder) {
+            raw_type rawObject = new raw_type();
+            baseEncoder.write(rawObject.get_byte(false));
+            baseEncoder.write(rawObject.get_byte_array((long) account.get_instance()));
+            LogUtils.i("modify_password---account", Arrays.toString(rawObject.get_byte_array((long) account.get_instance())));
+            LogUtils.i("modify_password---owner", String.valueOf(rawObject.get_byte(owner != null)));
+            baseEncoder.write(rawObject.get_byte(owner != null));
+            owner.write_to_encode(baseEncoder);
+            LogUtils.i("modify_password---active", String.valueOf(rawObject.get_byte(owner != null)));
+            baseEncoder.write(rawObject.get_byte(active != null));
+            active.write_to_encode(baseEncoder);
+            baseEncoder.write(rawObject.get_byte(new_options != null));
+            LogUtils.i("modify_password---new_options", String.valueOf(rawObject.get_byte(new_options != null)));
+            if (new_options != null) {
+                new_options.write_to_encode(baseEncoder);
+            }
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
     }
 

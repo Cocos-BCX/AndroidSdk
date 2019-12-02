@@ -2575,6 +2575,40 @@ public class CocosBcxApiWrapper {
 
 
     /**
+     * modify_password
+     */
+    public void modify_password(final String accountName, final String originPwd, final String newPwd, final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.modify_password(accountName, originPwd, newPwd, accountDao)).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (KeyInvalideException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AuthorityException e) {
+                    rspText = new ResponseData(AUTHORITY_EXCEPTION, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (PasswordVerifyException e) {
+                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (UnLegalInputException e) {
+                    rspText = new ResponseData(ERROR_PARAMETER, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
+
+    /**
      * generate Payment QrCode json string
      * use this json to generate Payment Two-Dimensional Code
      *

@@ -219,6 +219,10 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_vote_type;
     private EditText et_vote_ids;
     private CheckBox cb_is_encrypt_memo;
+    private EditText et_modify_account_name;
+    private EditText et_modify_origin_pwd;
+    private EditText et_modify_new_pwd;
+    private TextView tv_modify_password;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -456,6 +460,11 @@ public class TestActivity extends AppCompatActivity {
         et_create_witness_account_password = findViewById(R.id.et_create_witness_account_password);
         et_create_witness_url = findViewById(R.id.et_create_witness_url);
         tv_create_witness = findViewById(R.id.tv_create_witness);
+
+        et_modify_account_name = findViewById(R.id.et_modify_account_name);
+        et_modify_origin_pwd = findViewById(R.id.et_modify_origin_pwd);
+        et_modify_new_pwd = findViewById(R.id.et_modify_new_pwd);
+        tv_modify_password = findViewById(R.id.tv_modify_password);
 
         initListener();
     }
@@ -1472,6 +1481,22 @@ public class TestActivity extends AppCompatActivity {
                             @Override
                             public void onReceiveValue(String value) {
                                 Log.i("create_witness", value);
+                            }
+                        });
+            }
+        });
+
+        tv_modify_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().modify_password(et_modify_account_name.getText().toString(),
+                        et_modify_origin_pwd.getText().toString(),
+                        et_modify_new_pwd.getText().toString(),
+                        new IBcxCallBack() {
+                            @SuppressLint("LongLogTag")
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.i("modify_password", value);
                             }
                         });
             }
