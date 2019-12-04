@@ -77,7 +77,7 @@ public class operations {
 
     public static class operation_id_map {
 
-        private HashMap<Integer, Type> mHashId2Operation = new HashMap<>();
+        public static HashMap<Integer, Type> mHashId2Operation = new HashMap<>();
 
         public operation_id_map() {
             mHashId2Operation.put(ID_TRANSFER_OPERATION, transfer_operation.class);
@@ -100,11 +100,19 @@ public class operations {
             mHashId2Operation.put(ID_REGISTOR_CREATOR_OPERATION, register_creator_operation.class);
             mHashId2Operation.put(ID_CREATE_WORLDVIEW_OPERATION, create_worldview_operation.class);
             mHashId2Operation.put(ID_RECEIVE_VESTING_BALANCES, receive_vesting_balances_operation.class);
-            mHashId2Operation.put(ID_VOTE_MEMBER, vote_members_operation.class);
             mHashId2Operation.put(ID_CREATE_COMMITTEE_MEMBER, create_committee_member_operation.class);
             mHashId2Operation.put(ID_CREATE_WITNESS, create_witness_operation.class);
-            mHashId2Operation.put(ID_VOTE_MEMBER, modify_password_operation.class);
+
         }
+
+        public static void add_operate(int type) {
+            if (type == 1) {
+                mHashId2Operation.put(ID_VOTE_MEMBER, vote_members_operation.class);
+            } else {
+                mHashId2Operation.put(ID_VOTE_MEMBER, modify_password_operation.class);
+            }
+        }
+
 
         public Type getOperationObjectById(int nId) {
             return mHashId2Operation.get(nId);

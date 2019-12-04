@@ -668,7 +668,7 @@ public class CocosBcxApi {
             if (privateKey != null) {
                 tx.sign(privateKey, mWebSocketApi.get_chain_id());
             } else {
-                throw new AuthorityException("Author failed! make sure you logged and have active permission");
+                throw new AuthorityException("Author failed! make sure you logged and have owner permission");
             }
         }
         LogUtils.i("sign_transaction", global_config_object.getInstance().getGsonBuilder().create().toJson(tx));
@@ -2819,6 +2819,7 @@ public class CocosBcxApi {
         if (unlock(vote_account_object.name, password, accountDao) != OPERATE_SUCCESS && verify_password(vote_account_object.name, password).size() <= 0) {
             throw new PasswordVerifyException("Wrong password");
         }
+        operations.operation_id_map.add_operate(1);
         asset_object assetObject = lookup_asset_symbols(CocosBcxApiWrapper.coreAsset);
         operations.vote_members_operation vote_members_operation = new operations.vote_members_operation();
         List<Object> lock_with_vote = new ArrayList<>();
@@ -2948,7 +2949,7 @@ public class CocosBcxApi {
         if (verify_password(account_object.name, originPwd).size() <= 0) {
             throw new PasswordVerifyException("Wrong password");
         }
-
+        operations.operation_id_map.add_operate(0);
         authority1 owner = new authority1(1, publicOwnerKeyType, 1);
         authority1 active = new authority1(1, publicActiveKeyType, 1);
         types.account_options options = new types.account_options();

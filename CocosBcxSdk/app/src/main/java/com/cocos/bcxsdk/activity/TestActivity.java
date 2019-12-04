@@ -1441,7 +1441,7 @@ public class TestActivity extends AppCompatActivity {
 
                 CocosBcxApiWrapper.getBcxInstance().vote_members(et_vote_account.getText().toString(),
                         et_vote_password.getText().toString(),
-                        et_vote_type.getText().toString(),
+                      "witnesses",
                         vote_ids,
                         et_vote_number.getText().toString(),
                         new IBcxCallBack() {

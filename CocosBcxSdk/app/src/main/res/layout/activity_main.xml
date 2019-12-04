@@ -29,7 +29,6 @@
             style="@style/TvEdTips"
             android:text="如果钱包模式已经存在账户，该操作会创建子账户，创建该子账户需要操作账户为终身会员账户" />
 
-
         <TextView
             style="@style/TvEdTips"
             android:text="用户名(规则/^[a-z][a-z0-9\.-]{4,63}$//)" />
@@ -181,6 +180,7 @@
             android:id="@+id/tv_modify_password"
             style="@style/TvBtn"
             android:text="确认修改" />
+
         <TextView
             style="@style/TvTitle"
             android:text="获取账户信息" />
@@ -1171,8 +1171,7 @@
         <EditText
             android:id="@+id/et_vote_type"
             style="@style/EtSingleLine"
-            android:hint="type(0:理事会，1：见证人)" />
-
+            android:hint="type(committee:理事会，witnesses：见证人)" />
 
         <EditText
             android:id="@+id/et_vote_ids"
