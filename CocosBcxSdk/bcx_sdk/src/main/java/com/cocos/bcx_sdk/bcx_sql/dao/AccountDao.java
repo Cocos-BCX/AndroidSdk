@@ -9,6 +9,7 @@ import com.cocos.bcx_sdk.bcx_api.CocosBcxApiWrapper;
 import com.cocos.bcx_sdk.bcx_entity.AccountEntity;
 import com.cocos.bcx_sdk.bcx_sql.contract.AccountEntry;
 import com.cocos.bcx_sdk.bcx_sql.helper.DataHelper;
+import com.cocos.bcx_sdk.bcx_utils.ThreadManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,22 +40,27 @@ public class AccountDao {
      * @param accountType
      * @param chainId
      */
-    public void insertAccount(String accountName, String userId, String keyStore, String accountType, String chainId) {
-        Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, new String[]{AccountEntry.COLUMN_ACCOUNT_NAME, AccountEntry.COLUMN_CHAINID}, AccountEntry.COLUMN_ACCOUNT_NAME + " = ? and " + AccountEntry.COLUMN_CHAINID + " = ?", new String[]{accountName, chainId}, null, null, null);
-        if (cursor.getCount() == 0) {
-            ContentValues values = new ContentValues();
-            values.put(AccountEntry.COLUMN_ACCOUNT_NAME, accountName);
-            values.put(AccountEntry.COLUMN_ACCOUNT_ID, userId);
-            values.put(AccountEntry.COLUMN_KEY_STORE, keyStore);
-            values.put(AccountEntry.COLUMN_ACCOUNT_TYPE, accountType);
-            values.put(AccountEntry.COLUMN_CHAINID, chainId);
-            mDatabase.insert(AccountEntry.TABLE_NAME, null, values);
-        } else {      // already saved , to update.
-            updateAccount(accountName, keyStore, accountType);
-        }
-        if (!cursor.isClosed()) {
-            cursor.close();
-        }
+    public void insertAccount(final String accountName, final String userId, final String keyStore, final String accountType, final String chainId) {
+        ThreadManager.getThreadPollProxy().execute(new Runnable() {
+            @Override
+            public void run() {
+                Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, new String[]{AccountEntry.COLUMN_ACCOUNT_NAME, AccountEntry.COLUMN_CHAINID}, AccountEntry.COLUMN_ACCOUNT_NAME + " = ? and " + AccountEntry.COLUMN_CHAINID + " = ?", new String[]{accountName, chainId}, null, null, null);
+                if (cursor.getCount() == 0) {
+                    ContentValues values = new ContentValues();
+                    values.put(AccountEntry.COLUMN_ACCOUNT_NAME, accountName);
+                    values.put(AccountEntry.COLUMN_ACCOUNT_ID, userId);
+                    values.put(AccountEntry.COLUMN_KEY_STORE, keyStore);
+                    values.put(AccountEntry.COLUMN_ACCOUNT_TYPE, accountType);
+                    values.put(AccountEntry.COLUMN_CHAINID, chainId);
+                    mDatabase.insert(AccountEntry.TABLE_NAME, null, values);
+                } else {      // already saved , to update.
+                    updateAccount(accountName, keyStore, accountType);
+                }
+                if (!cursor.isClosed()) {
+                    cursor.close();
+                }
+            }
+        });
     }
 
     /**
@@ -69,62 +75,95 @@ public class AccountDao {
         values.put(AccountEntry.COLUMN_KEY_STORE, keyStore);
         values.put(AccountEntry.COLUMN_ACCOUNT_TYPE, accountType);
         mDatabase.update(AccountEntry.TABLE_NAME, values, AccountEntry.COLUMN_ACCOUNT_NAME + " = ?", new String[]{accountName});
+    }
 
+
+    /**
+     * query_account_names
+     *
+     * @return
+     */
+    public List<String> queryAccountNamesByChainId() {
+        try {
+            Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_CHAINID + " = ?", new String[]{CocosBcxApiWrapper.chainId}, null, null, null, null);
+            List<String> list = new ArrayList<>();
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    String accountName = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_NAME));
+                    list.add(accountName);
+                    cursor.moveToNext();
+                }
+            }
+            if (!cursor.isClosed()) {
+                cursor.close();
+            }
+            return list;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
      * query all account in same chain
      */
     public List<AccountEntity.AccountBean> queryAllAccountByChainId() {
-        Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_CHAINID + " = ?", new String[]{CocosBcxApiWrapper.chainId}, null, null, null, null);
-        List<AccountEntity.AccountBean> list = new ArrayList<>();
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            for (int i = 0; i < cursor.getCount(); i++) {
-                String accountName = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_NAME));
-                String accountId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_ID));
-                String keyStore = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_KEY_STORE));
-                String accountType = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_TYPE));
-                AccountEntity.AccountBean model = new AccountEntity.AccountBean();
-                model.setName(accountName);
-                model.setId(accountId);
-                model.setKeystore(keyStore);
-                model.setAccount_type(accountType);
-                list.add(model);
-                cursor.moveToNext();
+        try {
+            Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_CHAINID + " = ?", new String[]{CocosBcxApiWrapper.chainId}, null, null, null, null);
+            List<AccountEntity.AccountBean> list = new ArrayList<>();
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    String accountName = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_NAME));
+                    String accountId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_ID));
+                    String keyStore = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_KEY_STORE));
+                    String accountType = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_TYPE));
+                    AccountEntity.AccountBean model = new AccountEntity.AccountBean();
+                    model.setName(accountName);
+                    model.setId(accountId);
+                    model.setKeystore(keyStore);
+                    model.setAccount_type(accountType);
+                    list.add(model);
+                    cursor.moveToNext();
+                }
             }
+            if (!cursor.isClosed()) {
+                cursor.close();
+            }
+            return list;
+        } catch (Exception e) {
         }
-        if (!cursor.isClosed()) {
-            cursor.close();
-        }
-        return list;
+        return null;
     }
 
 
     /**
-     * query  account by name
+     * query account by name
      */
     public AccountEntity.AccountBean queryAccountByName(String accountName) {
-        Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_ACCOUNT_NAME + " = ?", new String[]{accountName}, null, null, null, null);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            for (int i = 0; i < cursor.getCount(); i++) {
-                String accountId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_ID));
-                String keyStore = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_KEY_STORE));
-                String accountType = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_TYPE));
-                String chainId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_CHAINID));
-                AccountEntity.AccountBean model = new AccountEntity.AccountBean();
-                model.setName(accountName);
-                model.setId(accountId);
-                model.setKeystore(keyStore);
-                model.setAccount_type(accountType);
-                model.setChainId(chainId);
-                cursor.moveToNext();
-                return model;
+        try {
+            Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_ACCOUNT_NAME + " = ?", new String[]{accountName}, null, null, null, null);
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    String accountId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_ID));
+                    String keyStore = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_KEY_STORE));
+                    String accountType = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_TYPE));
+                    String chainId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_CHAINID));
+                    AccountEntity.AccountBean model = new AccountEntity.AccountBean();
+                    model.setName(accountName);
+                    model.setId(accountId);
+                    model.setKeystore(keyStore);
+                    model.setAccount_type(accountType);
+                    model.setChainId(chainId);
+                    cursor.moveToNext();
+                    return model;
+                }
             }
-        }
-        if (!cursor.isClosed()) {
-            cursor.close();
+            if (!cursor.isClosed()) {
+                cursor.close();
+            }
+        } catch (Exception e) {
         }
         return null;
     }
@@ -149,25 +188,4 @@ public class AccountDao {
     }
 
 
-    /**
-     * query_account_names
-     *
-     * @return
-     */
-    public List<String> queryAccountNamesByChainId() {
-        Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_CHAINID + " = ?", new String[]{CocosBcxApiWrapper.chainId}, null, null, null, null);
-        List<String> list = new ArrayList<>();
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            for (int i = 0; i < cursor.getCount(); i++) {
-                String accountName = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_NAME));
-                list.add(accountName);
-                cursor.moveToNext();
-            }
-        }
-        if (!cursor.isClosed()) {
-            cursor.close();
-        }
-        return list;
-    }
 }

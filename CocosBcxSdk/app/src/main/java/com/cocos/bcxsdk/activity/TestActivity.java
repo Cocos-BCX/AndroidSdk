@@ -14,7 +14,6 @@ import com.cocos.bcx_sdk.bcx_api.CocosBcxApiWrapper;
 import com.cocos.bcx_sdk.bcx_callback.IBcxCallBack;
 import com.cocos.bcx_sdk.bcx_error.ContractNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
-import com.cocos.bcx_sdk.bcx_wallet.chain.asset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 import com.cocos.bcxsdk.R;
 import com.cocos.bcxsdk.utils.MainHandler;
@@ -380,15 +379,12 @@ public class TestActivity extends AppCompatActivity {
         et_upgrade_lifetime_password = findViewById(R.id.et_upgrade_lifetime_password);
         tv_upgrade_lifetime_member = findViewById(R.id.tv_upgrade_lifetime_member);
 
-
         et_create_child_account_name = findViewById(R.id.et_create_child_account_name);
         et_create_child_account_password = findViewById(R.id.et_create_child_account_password);
         et_create_child_registrar = findViewById(R.id.et_create_child_registrar);
         et_create_child_registrar_password = findViewById(R.id.et_create_child_registrar_password);
         tv_create_child_account = findViewById(R.id.tv_create_child_account);
-
         tv_switch_node_url = findViewById(R.id.tv_switch_node_url);
-
         et_get_transaction_in_block_info = findViewById(R.id.et_get_transaction_in_block_info);
         tv_get_transaction_in_block_info = findViewById(R.id.tv_get_transaction_in_block_info);
         get_transaction_by_id = findViewById(R.id.get_transaction_by_id);
@@ -438,7 +434,6 @@ public class TestActivity extends AppCompatActivity {
         get_vesting_balances_account = findViewById(R.id.get_vesting_balances_account);
         get_vesting_balances_account_password = findViewById(R.id.get_vesting_balances_account_password);
         get_vesting_balances_reward = findViewById(R.id.get_vesting_balances_reward);
-
 
         tv_get_committee_members = findViewById(R.id.tv_get_committee_members);
         tv_get_witnesses_members = findViewById(R.id.tv_get_witnesses_members);
@@ -671,12 +666,12 @@ public class TestActivity extends AppCompatActivity {
         tv_get_account_names.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> strings = CocosBcxApiWrapper.getBcxInstance().get_dao_account_names();
-                StringBuffer sb = new StringBuffer();
-                for (String name : strings) {
-                    sb.append(name + " ;");
-                }
-                Log.i("get_dao_account_names", sb.toString());
+                CocosBcxApiWrapper.getBcxInstance().queryAccountNamesByChainId(new IBcxCallBack() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i("get_dao_account_names", value);
+                    }
+                });
             }
         });
 
@@ -795,8 +790,12 @@ public class TestActivity extends AppCompatActivity {
         tv_list_assets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<asset_object> asset_objects = CocosBcxApiWrapper.getBcxInstance().list_assets("A", 100);
-                Log.i("list_assets", String.valueOf(asset_objects.get(0).symbol));
+                CocosBcxApiWrapper.getBcxInstance().list_assets("A", 100, new IBcxCallBack() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i("list_assets", value);
+                    }
+                });
             }
         });
 
@@ -1441,7 +1440,7 @@ public class TestActivity extends AppCompatActivity {
 
                 CocosBcxApiWrapper.getBcxInstance().vote_members(et_vote_account.getText().toString(),
                         et_vote_password.getText().toString(),
-                      "witnesses",
+                        "witnesses",
                         vote_ids,
                         et_vote_number.getText().toString(),
                         new IBcxCallBack() {
