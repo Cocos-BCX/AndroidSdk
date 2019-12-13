@@ -2745,6 +2745,7 @@ public class CocosBcxApiWrapper {
                 try {
                     rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.modify_password(accountName, originPwd, newPwd, accountDao)).toString();
                     callBack.onReceiveValue(rspText);
+                    cocosBcxApi.save_account(accountName, get_account_id_by_name_sync(accountName), newPwd, AccountType.ACCOUNT.name(), accountDao);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);

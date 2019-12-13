@@ -1848,7 +1848,7 @@ public class CocosBcxApi {
      *
      * @return
      */
-    private void save_account(String name, String accountId, String password, String accountType, AccountDao accountDao) {
+    public void save_account(String name, String accountId, String password, String accountType, AccountDao accountDao) {
         // encrypt and save account
         encrypt_keys(name, accountId, password, accountType, accountDao);
         // clear data in memory
