@@ -887,7 +887,7 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    contract_object contract_object = CocosBcxApiWrapper.getBcxInstance().get_contract_object("contract.dicegame");
+                    contract_object contract_object = CocosBcxApiWrapper.getBcxInstance().get_contract_sync("contract.dicegame");
                     Log.i("get_contract_object", contract_object.contract_ABI.toString());
                 } catch (ContractNotFoundException e) {
                     Log.i("get_contract_object", e.getMessage());

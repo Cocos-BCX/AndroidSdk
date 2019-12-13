@@ -859,8 +859,12 @@ public class CocosBcxApi {
      * @param contractNameOrId
      * @return
      */
-    public contract_object get_contract(String contractNameOrId) throws NetworkStatusException {
-        return mWebSocketApi.get_contract(contractNameOrId);
+    public contract_object get_contract(String contractNameOrId) throws NetworkStatusException, ContractNotFoundException {
+        contract_object contract_object = mWebSocketApi.get_contract(contractNameOrId);
+        if (null == contract_object) {
+            throw new ContractNotFoundException("contract does not exist!");
+        }
+        return contract_object;
     }
 
     /**
@@ -1800,9 +1804,11 @@ public class CocosBcxApi {
             rspText = new ResponseData(ERROR_PARAMETER_DATA_TYPE, "Please check parameter type", null).toString();
             callBack.onReceiveValue(rspText);
         } catch (KeyInvalideException e) {
-            e.printStackTrace();
+            rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
+            callBack.onReceiveValue(rspText);
         } catch (AddressFormatException e) {
-            e.printStackTrace();
+            rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, "Please enter the correct private key", null).toString();
+            callBack.onReceiveValue(rspText);
         }
     }
 

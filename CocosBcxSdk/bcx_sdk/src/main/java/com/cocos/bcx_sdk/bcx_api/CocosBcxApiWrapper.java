@@ -449,14 +449,8 @@ public class CocosBcxApiWrapper {
      *
      * @return account info
      */
-    public account_object get_account_object_sync(final String strAccountNameOrId) {
-        try {
-            return cocosBcxApi.get_account_object(strAccountNameOrId);
-        } catch (NetworkStatusException e) {
-            return null;
-        } catch (AccountNotFoundException e) {
-            return null;
-        }
+    public account_object get_account_object_sync(final String strAccountNameOrId) throws NetworkStatusException, AccountNotFoundException {
+        return cocosBcxApi.get_account_object(strAccountNameOrId);
     }
 
     /**
@@ -489,14 +483,8 @@ public class CocosBcxApiWrapper {
      * @param accountName
      * @return
      */
-    public String get_account_id_by_name_sync(final String accountName) {
-        try {
-            return cocosBcxApi.get_account_object(accountName).id.toString();
-        } catch (NetworkStatusException e) {
-            return null;
-        } catch (AccountNotFoundException e) {
-            return null;
-        }
+    public String get_account_id_by_name_sync(final String accountName) throws NetworkStatusException, AccountNotFoundException {
+        return cocosBcxApi.get_account_object(accountName).id.toString();
     }
 
 
@@ -531,14 +519,8 @@ public class CocosBcxApiWrapper {
      * @param accountId
      * @return
      */
-    public String get_account_name_by_id_sync(final String accountId) {
-        try {
-            return cocosBcxApi.get_account_object(accountId).name;
-        } catch (NetworkStatusException e) {
-            return null;
-        } catch (AccountNotFoundException e) {
-            return null;
-        }
+    public String get_account_name_by_id_sync(final String accountId) throws NetworkStatusException, AccountNotFoundException {
+        return cocosBcxApi.get_account_object(accountId).name;
     }
 
 
@@ -678,12 +660,8 @@ public class CocosBcxApiWrapper {
      *
      * @throws NetworkStatusException
      */
-    public List<asset_object> list_assets_sync(final String strLowerBound, final int nLimit) {
-        try {
-            return cocosBcxApi.list_assets(strLowerBound, nLimit);
-        } catch (NetworkStatusException e) {
-            return new ArrayList<>();
-        }
+    public List<asset_object> list_assets_sync(final String strLowerBound, final int nLimit) throws NetworkStatusException {
+        return cocosBcxApi.list_assets(strLowerBound, nLimit);
     }
 
     /**
@@ -1376,16 +1354,13 @@ public class CocosBcxApiWrapper {
             @Override
             public void run() {
                 try {
-                    contract_object contract_object = cocosBcxApi.get_contract(contractNameOrId);
-                    if (null == contract_object) {
-                        rspText = new ResponseData(ERROR_CONTRACT_NOT_FOUND, "Contract does not exist", null).toString();
-                        callBack.onReceiveValue(rspText);
-                        return;
-                    }
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", contract_object).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.get_contract(contractNameOrId)).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (ContractNotFoundException e) {
+                    rspText = new ResponseData(ERROR_CONTRACT_NOT_FOUND, "Contract does not exist", null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
@@ -1596,12 +1571,8 @@ public class CocosBcxApiWrapper {
      * @return asset object
      * @throws NetworkStatusException
      */
-    public asset_object get_asset_object(final String assetsSymbolOrId) {
-        try {
-            return cocosBcxApi.lookup_asset_symbols(assetsSymbolOrId);
-        } catch (NetworkStatusException e) {
-            return null;
-        }
+    public asset_object get_asset_object(final String assetsSymbolOrId) throws NetworkStatusException {
+        return cocosBcxApi.lookup_asset_symbols(assetsSymbolOrId);
     }
 
 
@@ -1804,6 +1775,9 @@ public class CocosBcxApiWrapper {
                 } catch (NetworkStatusException e) {
                     rspText = new ResponseData(OPERATE_FAILED, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
                 }
             }
         });
@@ -1985,13 +1959,9 @@ public class CocosBcxApiWrapper {
      * @throws ContractNotFoundException
      * @throws NetworkStatusException
      */
-    public contract_object get_contract_object(String contractNameOrId) throws
-            ContractNotFoundException, NetworkStatusException {
-        contract_object contract_object = cocosBcxApi.get_contract(contractNameOrId);
-        if (null == contract_object) {
-            throw new ContractNotFoundException("contract does not exist!");
-        }
-        return contract_object;
+    public contract_object get_contract_sync(String contractNameOrId) throws
+            NetworkStatusException, ContractNotFoundException {
+        return cocosBcxApi.get_contract(contractNameOrId);
     }
 
 
@@ -2065,12 +2035,8 @@ public class CocosBcxApiWrapper {
      * @return
      * @throws NetworkStatusException
      */
-    public global_property_object get_global_properties() {
-        try {
-            return cocosBcxApi.get_global_properties();
-        } catch (NetworkStatusException e) {
-            return null;
-        }
+    public global_property_object get_global_properties() throws NetworkStatusException {
+        return cocosBcxApi.get_global_properties();
     }
 
 
