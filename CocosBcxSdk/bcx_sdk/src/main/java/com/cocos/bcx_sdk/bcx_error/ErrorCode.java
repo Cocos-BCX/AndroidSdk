@@ -126,4 +126,10 @@ public class ErrorCode {
      */
     public static final int ERROR_NOT_MEMEBER = 170;
 
+    /**
+     * database query error
+     */
+    public static final int ERROR_DB_ERROR = 177;
+
+
 }

@@ -84,24 +84,20 @@ public class AccountDao {
      * @return
      */
     public List<String> queryAccountNamesByChainId() {
-        try {
-            Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_CHAINID + " = ?", new String[]{CocosBcxApiWrapper.chainId}, null, null, null, null);
-            List<String> list = new ArrayList<>();
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    String accountName = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_NAME));
-                    list.add(accountName);
-                    cursor.moveToNext();
-                }
+        Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_CHAINID + " = ?", new String[]{CocosBcxApiWrapper.chainId}, null, null, null, null);
+        List<String> list = new ArrayList<>();
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getCount(); i++) {
+                String accountName = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_NAME));
+                list.add(accountName);
+                cursor.moveToNext();
             }
-            if (!cursor.isClosed()) {
-                cursor.close();
-            }
-            return list;
-        } catch (Exception e) {
-            return null;
         }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
     }
 
     /**
@@ -141,29 +137,26 @@ public class AccountDao {
      * query account by name
      */
     public AccountEntity.AccountBean queryAccountByName(String accountName) {
-        try {
-            Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_ACCOUNT_NAME + " = ?", new String[]{accountName}, null, null, null, null);
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    String accountId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_ID));
-                    String keyStore = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_KEY_STORE));
-                    String accountType = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_TYPE));
-                    String chainId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_CHAINID));
-                    AccountEntity.AccountBean model = new AccountEntity.AccountBean();
-                    model.setName(accountName);
-                    model.setId(accountId);
-                    model.setKeystore(keyStore);
-                    model.setAccount_type(accountType);
-                    model.setChainId(chainId);
-                    cursor.moveToNext();
-                    return model;
-                }
+        Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_ACCOUNT_NAME + " = ?", new String[]{accountName}, null, null, null, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getCount(); i++) {
+                String accountId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_ID));
+                String keyStore = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_KEY_STORE));
+                String accountType = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_TYPE));
+                String chainId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_CHAINID));
+                AccountEntity.AccountBean model = new AccountEntity.AccountBean();
+                model.setName(accountName);
+                model.setId(accountId);
+                model.setKeystore(keyStore);
+                model.setAccount_type(accountType);
+                model.setChainId(chainId);
+                cursor.moveToNext();
+                return model;
             }
-            if (!cursor.isClosed()) {
-                cursor.close();
-            }
-        } catch (Exception e) {
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
         }
         return null;
     }

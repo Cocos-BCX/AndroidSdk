@@ -68,6 +68,7 @@ import static com.cocos.bcx_sdk.bcx_error.ErrorCode.AUTHORITY_EXCEPTION;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.CHAIN_ID_NOT_MATCH;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_ACCOUNT_OBJECT_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_CONTRACT_NOT_FOUND;
+import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_DB_ERROR;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_INVALID_PRIVATE_KEY;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_NETWORK_FAIL;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_NHASSET_DO_NOT_EXIST;
@@ -310,17 +311,22 @@ public class CocosBcxApiWrapper {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
-                List<String> names = accountDao.queryAccountNamesByChainId();
-                StringBuilder stringBuilder = new StringBuilder();
-                if (null != names && names.size() > 0) {
-                    for (String name : names) {
-                        stringBuilder.append(name);
-                        stringBuilder.append(",");
+                try {
+                    List<String> names = accountDao.queryAccountNamesByChainId();
+                    StringBuilder stringBuilder = new StringBuilder();
+                    if (null != names && names.size() > 0) {
+                        for (String name : names) {
+                            stringBuilder.append(name);
+                            stringBuilder.append(",");
+                        }
+                        rspText = new ResponseData(OPERATE_SUCCESS, "success", stringBuilder.toString()).toString();
+                        callBack.onReceiveValue(rspText);
+                    } else {
+                        rspText = new ResponseData(OPERATE_FAILED, "no account on this chain", null).toString();
+                        callBack.onReceiveValue(rspText);
                     }
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", stringBuilder.toString()).toString();
-                    callBack.onReceiveValue(rspText);
-                } else {
-                    rspText = new ResponseData(OPERATE_FAILED, "no account on this chain", null).toString();
+                } catch (Exception e) {
+                    rspText = new ResponseData(ERROR_DB_ERROR, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
@@ -470,7 +476,7 @@ public class CocosBcxApiWrapper {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (AccountNotFoundException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
@@ -511,7 +517,7 @@ public class CocosBcxApiWrapper {
                     rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 } catch (AccountNotFoundException e) {
-                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }
@@ -664,6 +670,20 @@ public class CocosBcxApiWrapper {
                 }
             }
         });
+    }
+
+
+    /**
+     * get nh asset order object
+     *
+     * @throws NetworkStatusException
+     */
+    public List<asset_object> list_assets_sync(final String strLowerBound, final int nLimit) {
+        try {
+            return cocosBcxApi.list_assets(strLowerBound, nLimit);
+        } catch (NetworkStatusException e) {
+            return new ArrayList<>();
+        }
     }
 
     /**
