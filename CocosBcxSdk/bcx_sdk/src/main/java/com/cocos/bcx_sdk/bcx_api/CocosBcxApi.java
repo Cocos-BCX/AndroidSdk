@@ -358,7 +358,6 @@ public class CocosBcxApi {
             return;
         }
 
-
         //prepare data to store keystore
         List<types.public_key_type> listPublicKeyType = new ArrayList<>();
         listPublicKeyType.add(publicActiveKeyType);
@@ -371,6 +370,25 @@ public class CocosBcxApi {
         rspText = new ResponseData(OPERATE_SUCCESS, "success", accountObject).toString();
         callBack.onReceiveValue(rspText);
 
+        // save_account account
+        save_account(accountObject.name, accountObject.id.toString(), strPassword, AccountType.ACCOUNT.name(), accountDao);
+    }
+
+    public void updateKeyStore(String strAccountName, String strPassword, AccountDao accountDao) throws NetworkStatusException, UnLegalInputException {
+        // get public key
+        private_key privateActiveKey = private_key.from_seed(strAccountName + "active" + strPassword);
+        private_key privateOwnerKey = private_key.from_seed(strAccountName + "owner" + strPassword);
+        types.public_key_type publicActiveKeyType = new types.public_key_type(privateActiveKey.get_public_key());
+        types.public_key_type publicOwnerKeyType = new types.public_key_type(privateOwnerKey.get_public_key());
+        //prepare data to store keystore
+        account_object accountObject = lookup_account_names(strAccountName);
+        //prepare data to store keystore
+        List<types.public_key_type> listPublicKeyType = new ArrayList<>();
+        listPublicKeyType.add(publicActiveKeyType);
+        listPublicKeyType.add(publicOwnerKeyType);
+        mWalletObject.update_account(accountObject, accountObject.id, listPublicKeyType);
+        mHashMapPub2Private.put(publicActiveKeyType, new types.private_key_type(privateActiveKey));
+        mHashMapPub2Private.put(publicOwnerKeyType, new types.private_key_type(privateOwnerKey));
         // save_account account
         save_account(accountObject.name, accountObject.id.toString(), strPassword, AccountType.ACCOUNT.name(), accountDao);
     }
