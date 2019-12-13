@@ -104,32 +104,28 @@ public class AccountDao {
      * query all account in same chain
      */
     public List<AccountEntity.AccountBean> queryAllAccountByChainId() {
-        try {
-            Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_CHAINID + " = ?", new String[]{CocosBcxApiWrapper.chainId}, null, null, null, null);
-            List<AccountEntity.AccountBean> list = new ArrayList<>();
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    String accountName = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_NAME));
-                    String accountId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_ID));
-                    String keyStore = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_KEY_STORE));
-                    String accountType = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_TYPE));
-                    AccountEntity.AccountBean model = new AccountEntity.AccountBean();
-                    model.setName(accountName);
-                    model.setId(accountId);
-                    model.setKeystore(keyStore);
-                    model.setAccount_type(accountType);
-                    list.add(model);
-                    cursor.moveToNext();
-                }
+        Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_CHAINID + " = ?", new String[]{CocosBcxApiWrapper.chainId}, null, null, null, null);
+        List<AccountEntity.AccountBean> list = new ArrayList<>();
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getCount(); i++) {
+                String accountName = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_NAME));
+                String accountId = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_ID));
+                String keyStore = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_KEY_STORE));
+                String accountType = cursor.getString(cursor.getColumnIndex(AccountEntry.COLUMN_ACCOUNT_TYPE));
+                AccountEntity.AccountBean model = new AccountEntity.AccountBean();
+                model.setName(accountName);
+                model.setId(accountId);
+                model.setKeystore(keyStore);
+                model.setAccount_type(accountType);
+                list.add(model);
+                cursor.moveToNext();
             }
-            if (!cursor.isClosed()) {
-                cursor.close();
-            }
-            return list;
-        } catch (Exception e) {
         }
-        return null;
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
     }
 
 

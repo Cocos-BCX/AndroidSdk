@@ -22,7 +22,7 @@ public class AccountEntity implements Serializable {
         this.account = account;
     }
 
-    public static class AccountBean {
+    public static class AccountBean implements Serializable {
 
         private String id;
         private String name;
