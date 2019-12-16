@@ -501,7 +501,7 @@ public class CocosBcxApi {
      * @param wifKey   private key
      * @param password to encrypt your private key,
      */
-    public List<String> import_wif_key(String wifKey, String password, String accountType, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
+    public List<String> import_wif_key(String wifKey, String password, String accountType, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, KeyInvalideException, AddressFormatException {
         // get public key
         types.private_key_type privateKeyType = new types.private_key_type(wifKey);
         public_key publicKey = privateKeyType.getPrivateKey().get_public_key();
@@ -514,7 +514,7 @@ public class CocosBcxApi {
 
         // if id[]  null ,you need know the callback  about this rpc:get_key_references
         if (objects == null || objects.size() <= 0 || objects.get(0).size() <= 0) {
-            throw new PasswordVerifyException("Wrong password");
+            throw new AccountNotFoundException("The private key has no account information");
         }
         List<String> account_names = new ArrayList<>();
         for (List<String> account_ids : objects) {

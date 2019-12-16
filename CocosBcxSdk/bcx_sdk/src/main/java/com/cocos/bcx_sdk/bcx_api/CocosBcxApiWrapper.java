@@ -1508,9 +1508,6 @@ public class CocosBcxApiWrapper {
                 } catch (AccountNotFoundException e) {
                     rspText = new ResponseData(NO_ACCOUNT_INFORMATION, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
-                } catch (PasswordVerifyException e) {
-                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
-                    callBack.onReceiveValue(rspText);
                 } catch (KeyInvalideException e) {
                     rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
