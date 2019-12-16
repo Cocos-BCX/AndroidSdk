@@ -99,7 +99,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.InputMismatchException;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -374,7 +373,17 @@ public class CocosBcxApi {
         save_account(accountObject.name, accountObject.id.toString(), strPassword, AccountType.ACCOUNT.name(), accountDao);
     }
 
-    public void updateKeyStore(String strAccountName, String strPassword, AccountDao accountDao) throws NetworkStatusException, UnLegalInputException {
+
+    /**
+     * update KeyStore
+     *
+     * @param strAccountName
+     * @param strPassword
+     * @param accountDao
+     * @throws NetworkStatusException
+     * @throws UnLegalInputException
+     */
+    void updateKeyStore(String strAccountName, String strPassword, AccountDao accountDao) throws NetworkStatusException, UnLegalInputException {
         // get public key
         private_key privateActiveKey = private_key.from_seed(strAccountName + "active" + strPassword);
         private_key privateOwnerKey = private_key.from_seed(strAccountName + "owner" + strPassword);
@@ -507,33 +516,28 @@ public class CocosBcxApi {
         if (objects == null || objects.size() <= 0 || objects.get(0).size() <= 0) {
             throw new PasswordVerifyException("Wrong password");
         }
-
-        LinkedHashSet<String> account_ids_set = new LinkedHashSet<>();
+        List<String> account_names = new ArrayList<>();
         for (List<String> account_ids : objects) {
             for (String id : account_ids) {
-                account_ids_set.add(id);
-            }
-        }
-        List<String> account_names = new ArrayList<>();
-        for (String id : account_ids_set) {
-            // get account object
-            account_object account_object = get_account_object(id);
-            //account object null
-            if (account_object == null) {
-                throw new AccountNotFoundException("The private key has no account information");
-            }
-            //prepare data to store keystore
-            List<types.public_key_type> listPublicKeyType = new ArrayList<>();
-            listPublicKeyType.add(publicKeyType);
-            mWalletObject.update_account(account_object, account_object.id, listPublicKeyType);
-            mHashMapPub2Private.put(publicKeyType, privateKeyType);
-            account_names.add(account_object.name);
-            // save_account account
-            if (TextUtils.equals(AccountType.ACCOUNT.name(), accountType) && account_names.size() == 1) {
+                // get account object
+                account_object account_object = get_account_object(id);
+                //account object null
+                if (account_object == null) {
+                    throw new AccountNotFoundException("The private key has no account information");
+                }
+                //prepare data to store keystore
+                List<types.public_key_type> listPublicKeyType = new ArrayList<>();
+                listPublicKeyType.add(publicKeyType);
+                mWalletObject.update_account(account_object, account_object.id, listPublicKeyType);
+                mHashMapPub2Private.put(publicKeyType, privateKeyType);
+                account_names.add(account_object.name);
+                // save_account account
+                if (TextUtils.equals(AccountType.ACCOUNT.name(), accountType) && account_names.size() == 1) {
+                    save_account(account_object.name, account_object.id.toString(), password, accountType, accountDao);
+                    return account_names;
+                }
                 save_account(account_object.name, account_object.id.toString(), password, accountType, accountDao);
-                return account_names;
             }
-            save_account(account_object.name, account_object.id.toString(), password, accountType, accountDao);
         }
         if (TextUtils.equals(AccountType.WALLET.name(), accountType)) {
             return account_names;
