@@ -54,7 +54,7 @@ public class AccountDao {
                     values.put(AccountEntry.COLUMN_CHAINID, chainId);
                     mDatabase.insert(AccountEntry.TABLE_NAME, null, values);
                 } else {      // already saved , to update.
-                    updateAccount(accountName, keyStore, accountType);
+                    updateAccount(accountName, keyStore, accountType, chainId);
                 }
                 if (!cursor.isClosed()) {
                     cursor.close();
@@ -69,12 +69,13 @@ public class AccountDao {
      * @param accountName
      * @param keyStore
      * @param accountType
+     * @param chainId
      */
-    private void updateAccount(String accountName, String keyStore, String accountType) {
+    private void updateAccount(String accountName, String keyStore, String accountType, String chainId) {
         ContentValues values = new ContentValues();
         values.put(AccountEntry.COLUMN_KEY_STORE, keyStore);
         values.put(AccountEntry.COLUMN_ACCOUNT_TYPE, accountType);
-        mDatabase.update(AccountEntry.TABLE_NAME, values, AccountEntry.COLUMN_ACCOUNT_NAME + " = ?", new String[]{accountName});
+        mDatabase.update(AccountEntry.TABLE_NAME, values, AccountEntry.COLUMN_ACCOUNT_NAME + " = ? and " + AccountEntry.COLUMN_CHAINID + " = ?", new String[]{accountName, chainId});
     }
 
 
