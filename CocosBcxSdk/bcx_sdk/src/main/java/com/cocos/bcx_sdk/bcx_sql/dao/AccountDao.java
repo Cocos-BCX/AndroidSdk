@@ -132,8 +132,8 @@ public class AccountDao {
     /**
      * query account by name
      */
-    public AccountEntity.AccountBean queryAccountByName(String accountName) {
-        Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_ACCOUNT_NAME + " = ?", new String[]{accountName}, null, null, null, null);
+    public AccountEntity.AccountBean queryChainAccountByName(String accountName) {
+        Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_ACCOUNT_NAME + " = ? and " + AccountEntry.COLUMN_CHAINID + " = ?", new String[]{accountName, CocosBcxApiWrapper.chainId}, null, null, null, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             for (int i = 0; i < cursor.getCount(); i++) {

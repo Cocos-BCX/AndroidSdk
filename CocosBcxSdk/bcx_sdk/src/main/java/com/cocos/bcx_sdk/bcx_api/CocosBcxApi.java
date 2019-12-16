@@ -3007,7 +3007,7 @@ public class CocosBcxApi {
      * @return get_dao_account_by_name
      */
     private AccountEntity.AccountBean get_dao_account_by_name(String accountName, AccountDao accountDao) {
-        return accountDao.queryAccountByName(accountName);
+        return accountDao.queryChainAccountByName(accountName);
     }
 
 

@@ -1420,7 +1420,7 @@ public class CocosBcxApiWrapper {
         proxy.execute(new Runnable() {
             @Override
             public void run() {
-                rspText = new ResponseData(OPERATE_SUCCESS, "success", accountDao.queryAccountByName(account_name)).toString();
+                rspText = new ResponseData(OPERATE_SUCCESS, "success", accountDao.queryChainAccountByName(account_name)).toString();
                 callBack.onReceiveValue(rspText);
             }
         });
