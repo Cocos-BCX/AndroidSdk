@@ -1519,6 +1519,32 @@ public class CocosBcxApiWrapper {
         });
     }
 
+    /**
+     * get accountName by privateKey
+     *
+     * @param wifKey privateKey
+     * @return
+     */
+    public void get_account_name_by_private_key(final String wifKey, final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.get_account_by_private_key(wifKey)).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(NO_ACCOUNT_INFORMATION, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (KeyInvalideException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
 
     /**
      * export private key

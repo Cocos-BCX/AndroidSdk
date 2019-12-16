@@ -496,6 +496,41 @@ public class CocosBcxApi {
 
 
     /**
+     * get_account_name_by_private_key
+     *
+     * @param wifKey private key
+     */
+    public List<account_object> get_account_by_private_key(String wifKey) throws NetworkStatusException, AccountNotFoundException, KeyInvalideException, AddressFormatException {
+        // get public key
+        types.private_key_type privateKeyType = new types.private_key_type(wifKey);
+        public_key publicKey = privateKeyType.getPrivateKey().get_public_key();
+        types.public_key_type publicKeyType = new types.public_key_type(publicKey);
+        List<String> publicKeyTypes = new ArrayList<>();
+        publicKeyTypes.add(publicKeyType.toString());
+        // request to get accoount id
+        List<List<String>> objects = mWebSocketApi.get_key_references(publicKeyTypes);
+        // if id[]  null ,you need know the response about this rpc:get_key_references
+        if (objects == null || objects.size() <= 0 || objects.get(0).size() <= 0) {
+            throw new AccountNotFoundException("The private key has no account information");
+        }
+        List<account_object> account_names = new ArrayList<>();
+        String addedid = null;
+        for (List<String> account_ids : objects) {
+            for (String id : account_ids) {
+                if (TextUtils.equals(id, addedid)) {
+                    continue;
+                }
+                // get account object
+                account_object account_object = get_account_object(id);
+                account_names.add(account_object);
+                addedid = id;
+            }
+        }
+        return account_names;
+    }
+
+
+    /**
      * import private key
      *
      * @param wifKey   private key
@@ -521,10 +556,6 @@ public class CocosBcxApi {
             for (String id : account_ids) {
                 // get account object
                 account_object account_object = get_account_object(id);
-                //account object null
-                if (account_object == null) {
-                    throw new AccountNotFoundException("The private key has no account information");
-                }
                 //prepare data to store keystore
                 List<types.public_key_type> listPublicKeyType = new ArrayList<>();
                 listPublicKeyType.add(publicKeyType);
