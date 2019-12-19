@@ -2577,16 +2577,19 @@ public class CocosBcxApi {
             double earned = NumberUtil.add(old_earned, new_earned);
             LogUtils.i("earned", String.valueOf(earned));
             double availablePercent = NumberUtil.div(earned, NumberUtil.mul1(vesting_seconds, vesting_balances_object.balance.amount), 5);
-            if (availablePercent > 1) {
+            double available_balance_amount = NumberUtil.div(NumberUtil.mul1(availablePercent, vesting_balances_object.balance.amount), Math.pow(10, asset_object.precision), 5);
+            double available_balance_amounts;
+            if (availablePercent >= 1) {
                 availablePercent = 1;
+                available_balance_amounts = available_balance_amount;
             }
             LogUtils.i("availablePercent", String.valueOf(availablePercent));
-            double available_balance_amount = NumberUtil.div(NumberUtil.mul1(availablePercent, vesting_balances_object.balance.amount), Math.pow(10, asset_object.precision), 5);
-            LogUtils.i("available_balance_amount", String.valueOf(available_balance_amount));
+            available_balance_amounts = available_balance_amount - (available_balance_amount * 0.02);
+            LogUtils.i("available_balance_amount", String.valueOf(available_balance_amounts));
             operations.receive_vesting_balances_operation receive_vesting_balances = new operations.receive_vesting_balances_operation();
             receive_vesting_balances.vesting_balance = vesting_balances_object.id;
             receive_vesting_balances.owner = account_object.id;
-            receive_vesting_balances.amount = asset_object.amount_from_string(String.valueOf(available_balance_amount));
+            receive_vesting_balances.amount = asset_object.amount_from_string(String.valueOf(available_balance_amounts));
 
             operations.operation_type operationType = new operations.operation_type();
             operationType.operationContent = receive_vesting_balances;

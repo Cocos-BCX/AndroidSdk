@@ -80,6 +80,7 @@ import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_PARAMETER;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_WORLDVIEW_AREADY_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_WORLDVIEW_DO_NOT_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_WRONG_PASSWORD;
+import static com.cocos.bcx_sdk.bcx_error.ErrorCode.NOT_REWARD_OWNER;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.NO_ACCOUNT_INFORMATION;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.NO_REWARD_AVAILABLE;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.OPERATE_FAILED;
@@ -2554,6 +2555,58 @@ public class CocosBcxApiWrapper {
         });
     }
 
+
+    /**
+     * receive_vesting_balances
+     */
+    public void receive_vesting_balances(final String accountNameOrId, final String password,
+                                         final List<String> awardIds, final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    for (String awardId : awardIds) {
+                        cocosBcxApi.receive_vesting_balances(accountNameOrId, password, awardId, accountDao);
+                        rspText = new ResponseData(OPERATE_SUCCESS, "success", awardId).toString();
+                        callBack.onReceiveValue(rspText);
+                    }
+                } catch (NetworkStatusException e) {
+                    if (e.getMessage().contains("is_withdraw_allowed")) {
+                        rspText = new ResponseData(NO_REWARD_AVAILABLE, "No reward available", null).toString();
+                        callBack.onReceiveValue(rspText);
+                    } else if (e.getMessage().contains("vbo.owner")) {
+                        rspText = new ResponseData(NOT_REWARD_OWNER, "Not reward owner", null).toString();
+                        callBack.onReceiveValue(rspText);
+                    } else {
+                        rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                        callBack.onReceiveValue(rspText);
+                    }
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (KeyInvalideException e) {
+                    rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (PasswordVerifyException e) {
+                    rspText = new ResponseData(ERROR_WRONG_PASSWORD, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AuthorityException e) {
+                    rspText = new ResponseData(AUTHORITY_EXCEPTION, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AssetNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NoRewardAvailableException e) {
+                    rspText = new ResponseData(NO_REWARD_AVAILABLE, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (UnknownError e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
     /**
      * receive_vesting_balances
      */
@@ -2570,7 +2623,7 @@ public class CocosBcxApiWrapper {
                         rspText = new ResponseData(NO_REWARD_AVAILABLE, "No reward available", null).toString();
                         callBack.onReceiveValue(rspText);
                     } else if (e.getMessage().contains("vbo.owner")) {
-                        rspText = new ResponseData(ERROR_NETWORK_FAIL, "Not reward owner", null).toString();
+                        rspText = new ResponseData(NOT_REWARD_OWNER, "Not reward owner", null).toString();
                         callBack.onReceiveValue(rspText);
                     } else {
                         rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();

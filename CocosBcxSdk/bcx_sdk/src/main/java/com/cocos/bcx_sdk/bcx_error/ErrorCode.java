@@ -71,6 +71,11 @@ public class ErrorCode {
     public static final int AUTHORITY_EXCEPTION = 112;
 
     /**
+     * not reward owner
+     */
+    public static final int NOT_REWARD_OWNER = 115;
+
+    /**
      * No reward available
      */
     public static final int NO_REWARD_AVAILABLE = 127;
