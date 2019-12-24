@@ -2565,29 +2565,22 @@ public class CocosBcxApi {
             beforeDate = DateUtil.formDate(beforeDateObject);
             String dateString = sDateFormat.format(new Date());
             currentDateObject = sDateFormat.parse(dateString);
-            LogUtils.i("beforeDate", String.valueOf(beforeDate.getTime()));
             long past_seconds = (currentDateObject.getTime() - beforeDate.getTime()) / 1000;
-            LogUtils.i("past_seconds", String.valueOf(past_seconds));
             double total_earned = NumberUtil.mul1(vesting_seconds, vesting_balances_object.balance.amount);
-            LogUtils.i("total_earned", String.valueOf(total_earned));
             double new_earned = NumberUtil.mul1(NumberUtil.div(past_seconds, vesting_seconds, 5), total_earned);
-            LogUtils.i("new_earned", String.valueOf(new_earned));
             double old_earned = coin_seconds_earned;
-            LogUtils.i("old_earned", String.valueOf(old_earned));
             double earned = NumberUtil.add(old_earned, new_earned);
-            LogUtils.i("earned", String.valueOf(earned));
             double availablePercent = NumberUtil.div(earned, NumberUtil.mul1(vesting_seconds, vesting_balances_object.balance.amount), 5);
-            double available_balance_amount = NumberUtil.div(NumberUtil.mul1(availablePercent, vesting_balances_object.balance.amount), Math.pow(10, asset_object.precision), 5);
-            double available_balance_amounts;
             if (availablePercent >= 1) {
                 availablePercent = 1;
+            }
+            double available_balance_amounts;
+            double available_balance_amount = NumberUtil.div(NumberUtil.mul1(availablePercent, vesting_balances_object.balance.amount), Math.pow(10, asset_object.precision), 5);
+            if (availablePercent >= 1) {
                 available_balance_amounts = available_balance_amount;
             } else {
                 available_balance_amounts = available_balance_amount - (available_balance_amount * 0.02);
             }
-            LogUtils.i("availablePercent", String.valueOf(availablePercent));
-            LogUtils.i("available_balance_amount", String.valueOf(available_balance_amounts));
-            LogUtils.i("available_balance_amount", String.valueOf(available_balance_amount));
             operations.receive_vesting_balances_operation receive_vesting_balances = new operations.receive_vesting_balances_operation();
             receive_vesting_balances.vesting_balance = vesting_balances_object.id;
             receive_vesting_balances.owner = account_object.id;
