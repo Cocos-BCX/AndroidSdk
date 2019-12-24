@@ -2582,10 +2582,12 @@ public class CocosBcxApi {
             if (availablePercent >= 1) {
                 availablePercent = 1;
                 available_balance_amounts = available_balance_amount;
+            } else {
+                available_balance_amounts = available_balance_amount - (available_balance_amount * 0.02);
             }
             LogUtils.i("availablePercent", String.valueOf(availablePercent));
-            available_balance_amounts = available_balance_amount - (available_balance_amount * 0.02);
             LogUtils.i("available_balance_amount", String.valueOf(available_balance_amounts));
+            LogUtils.i("available_balance_amount", String.valueOf(available_balance_amount));
             operations.receive_vesting_balances_operation receive_vesting_balances = new operations.receive_vesting_balances_operation();
             receive_vesting_balances.vesting_balance = vesting_balances_object.id;
             receive_vesting_balances.owner = account_object.id;
