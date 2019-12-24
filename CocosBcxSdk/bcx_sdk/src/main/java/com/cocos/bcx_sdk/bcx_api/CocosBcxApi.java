@@ -881,18 +881,20 @@ public class CocosBcxApi {
         invokingContractOperation.contract_id = contractObject.id;
         invokingContractOperation.function_name = functionName;
         invokingContractOperation.extensions = new HashSet<>();
-        String[] paramsArray = params.split(",");
-        List<String> paramList = Arrays.asList(paramsArray);
         invokingContractOperation.value_list = new ArrayList<>();
-        for (String param : paramList) {
-            List<Object> base_encoder = new ArrayList<>();
-            operations.invoking_contract_operation.v baseValues = new operations.invoking_contract_operation.v();
-            baseValues.v = param;
-            base_encoder.add(2);
-            base_encoder.add(baseValues);
-            invokingContractOperation.value_list.add(base_encoder);
+        if (!TextUtils.isEmpty(params)){
+            String[] paramsArray = params.split(",");
+            LogUtils.i("params",params);
+            List<String> paramList = Arrays.asList(paramsArray);
+            for (String param : paramList) {
+                List<Object> base_encoder = new ArrayList<>();
+                operations.invoking_contract_operation.v baseValues = new operations.invoking_contract_operation.v();
+                baseValues.v = param;
+                base_encoder.add(2);
+                base_encoder.add(baseValues);
+                invokingContractOperation.value_list.add(base_encoder);
+            }
         }
-
         operations.operation_type operationType = new operations.operation_type();
         operationType.operationContent = invokingContractOperation;
         operationType.nOperationType = operations.ID_CALCULATE_INVOKING_CONTRACT_OPERATION;
