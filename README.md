@@ -34,15 +34,54 @@ This will not compile third-party dependencies into aar files, you need to add t
 ###### Note: 
 
 ```
-1.Avoid creating a database of the same name:cocos_bcx_android_sdk.db;  
+NOTE1:.Avoid creating a database of the same name:cocos_bcx_android_sdk.db;  
 
-2.ERROR: INSTALL_FAILED_NO_MATCHING_ABIS
+NOTE2:.ERROR: INSTALL_FAILED_NO_MATCHING_ABIS
 Solution: Add the following code to the app module's build.gradle android:  
  packagingOptions {  
         exclude 'lib/x86_64/darwin/libscrypt.dylib'  
         exclude 'lib/x86_64/freebsd/libscrypt.so'  
         exclude 'lib/x86_64/linux/libscrypt.so'  
     }
+
+NOTE3: When compiling on Android, you may got a similar error in `Error: Cannot fit requested classes in a single dex file (# methods: 149346 > 65536). This is because Android has a limit on the number of methods in a single jar.
+
+you can fix it with the solution below:
+
+build.gradle
+
+...
+dependencies {
+    ...
+
+    implementation 'com.android.support:multidex:1.0.3' //add
+}
+...
+android {
+
+	defaultConfig {
+        ...
+
+		multiDexEnabled true //add
+	}
+}
+...
+ref url: https://stackoverflow.com/questions/48249633/errorcannot-fit-requested-classes-in-a-single-dex-file-try-supplying-a-main-dex .
+
+NOTE4: if your application is target Android 9 (API level 28) or higher, you might got "RPC Connect failed", when connect to BCX blockchain. one possible reason is "CLEARTEXT communication is not permitted". you can modify AndroidManifest.xml like below:
+
+AndroidManifest.xml :
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest ...>
+    <application
+        ...
+        android:usesCleartextTraffic="true" //add
+        ...>
+        ...
+    </application>
+</manifest>
+ref url: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
 ```
 
 ## 1.2 SDK initialization (items must be initialized before calling other interfaces, otherwise a null pointer error will be reported)  
