@@ -692,7 +692,7 @@ public class CocosBcxApi {
             if (privateKey != null) {
                 tx.sign(privateKey, mWebSocketApi.get_chain_id());
             } else {
-                throw new AuthorityException("Author failed! make sure you logged and have active permission");
+                throw new AuthorityException("Author failed! make sure you logined and have active permission");
             }
         }
         LogUtils.i("sign_transaction", global_config_object.getInstance().getGsonBuilder().create().toJson(tx));
@@ -721,7 +721,7 @@ public class CocosBcxApi {
             if (privateKey != null) {
                 tx.sign(privateKey, mWebSocketApi.get_chain_id());
             } else {
-                throw new AuthorityException("Author failed! make sure you logged and have owner permission");
+                throw new AuthorityException("Author failed! make sure you logined and have owner permission");
             }
         }
         LogUtils.i("sign_transaction", global_config_object.getInstance().getGsonBuilder().create().toJson(tx));
@@ -751,7 +751,7 @@ public class CocosBcxApi {
             if (privateKey != null) {
                 tx.sign(privateKey, mWebSocketApi.get_chain_id());
             } else {
-                throw new AuthorityException("Author failed! make sure you logged and have active permission");
+                throw new AuthorityException("Author failed! make sure you logined and have active permission");
             }
         }
 
@@ -761,7 +761,7 @@ public class CocosBcxApi {
             if (privateKey != null) {
                 tx.sign(privateKey, mWebSocketApi.get_chain_id());
             } else {
-                throw new AuthorityException("Author failed! make sure you logged and have active permission");
+                throw new AuthorityException("Author failed! make sure you logined and have owner permission");
             }
         }
         LogUtils.i("sign_transaction", global_config_object.getInstance().getGsonBuilder().create().toJson(tx));
@@ -791,7 +791,7 @@ public class CocosBcxApi {
             if (privateKey != null) {
                 tx.sign(privateKey, mWebSocketApi.get_chain_id());
             } else {
-                throw new AuthorityException("Author failed! make sure you logged and have active permission");
+                throw new AuthorityException("Author failed! make sure you logined and have active permission");
             }
         }
         LogUtils.i("sign_transaction", global_config_object.getInstance().getGsonBuilder().create().toJson(tx));
