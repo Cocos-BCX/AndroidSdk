@@ -847,11 +847,12 @@ public class TestActivity extends AppCompatActivity {
         tv_invoking_contract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                List<String> array = Arrays.asList(et_calculate_invoking_contract_params.getText().toString().split(","));
                 CocosBcxApiWrapper.getBcxInstance().invoking_contract(et_calculate_invoking_contract_strAccount.getText().toString(),
                         et_calculate_invoking_contract_pwd.getText().toString(),
                         et_calculate_invoking_contract_contractId.getText().toString(),
                         et_calculate_invoking_contract_functionName.getText().toString(),
-                        et_calculate_invoking_contract_params.getText().toString(),
+                        array,
                         new IBcxCallBack() {
                             @Override
                             public void onReceiveValue(String value) {
