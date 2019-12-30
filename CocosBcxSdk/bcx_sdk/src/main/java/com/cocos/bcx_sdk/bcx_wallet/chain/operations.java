@@ -216,7 +216,7 @@ public class operations {
 
 
         public static class v {
-            public String v;
+            public Object v;
         }
 
         public object_id<account_object> caller;
@@ -240,13 +240,42 @@ public class operations {
             rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(value_list.size()));
             for (List<Object> value : value_list) {
                 rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits((Integer) value.get(0)));
-                v baseValues = (v) value.get(1);
-                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(baseValues.v.length()));
-                baseEncoder.write(baseValues.v.getBytes());
+                v paramValue = (invoking_contract_operation.v) value.get(1);
+                String type = paramValue.v.getClass().toString();
+                switch (type) {
+                    case "class java.lang.Integer":
+                        Integer integerValue = (Integer) paramValue.v;
+                        Long longValue1 = integerValue.longValue();
+                        baseEncoder.write(rawObject.get_byte_array(longValue1));
+                        break;
+                    case "class java.lang.Double":
+                        Double doubleValue1 = (Double) paramValue.v;
+                        baseEncoder.write(rawObject.get_byte_array(doubleValue1));
+                        break;
+                    case "class java.lang.Float":
+                        Float floatValue = (Float) paramValue.v;
+                        Double doubleValue2 = floatValue.doubleValue();
+                        baseEncoder.write(rawObject.get_byte_array(doubleValue2));
+                        break;
+                    case "class java.lang.Boolean":
+                        Boolean booleanValues = (Boolean) paramValue.v;
+                        baseEncoder.write(rawObject.get_byte(booleanValues));
+                        break;
+                    case "class java.lang.String":
+                        String stringValues = (String) paramValue.v;
+                        rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(stringValues.length()));
+                        baseEncoder.write(stringValues.getBytes());
+                        break;
+                    case "class java.lang.Long":
+                        Long longValue2 = (Long) paramValue.v;
+                        baseEncoder.write(rawObject.get_byte_array(longValue2));
+                        break;
+                    default:
+                        break;
+                }
+                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
             }
-            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
-
     }
 
 

@@ -1,12 +1,10 @@
 package com.cocos.bcx_sdk.bcx_wallet.fc.io;
 
-import com.cocos.bcx_sdk.bcx_log.LogUtils;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Date;
 
 
@@ -35,6 +33,15 @@ public class raw_type {
         }
 
         return byteValue;
+    }
+
+    public byte[] get_byte_array(double d) {
+        long value = Double.doubleToRawLongBits(d);
+        byte[] byteRet = new byte[8];
+        for (int i = 0; i < 8; i++) {
+            byteRet[i] = (byte) ((value >> 8 * i) & 0xff);
+        }
+        return byteRet;
     }
 
     public byte[] get_byte_array(long value) {

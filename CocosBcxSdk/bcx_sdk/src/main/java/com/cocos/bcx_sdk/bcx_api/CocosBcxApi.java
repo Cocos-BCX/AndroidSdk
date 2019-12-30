@@ -848,7 +848,6 @@ public class CocosBcxApi {
      * @param password
      * @param contractNameOrId
      * @param functionName
-     * @param params
      * @param accountDao
      * @return
      * @throws NetworkStatusException
@@ -857,7 +856,7 @@ public class CocosBcxApi {
      * @throws PasswordVerifyException
      * @throws ContractNotFoundException
      */
-    public String invoking_contract(String strAccount, String password, String contractNameOrId, String functionName, String params, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AuthorityException, ContractNotFoundException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
+    public String invoking_contract(String strAccount, String password, String contractNameOrId, String functionName, List value_list, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, AuthorityException, ContractNotFoundException, PasswordVerifyException, KeyInvalideException, AddressFormatException {
 
         //search contract
         contract_object contractObject = mWebSocketApi.get_contract(contractNameOrId);
@@ -882,15 +881,33 @@ public class CocosBcxApi {
         invokingContractOperation.function_name = functionName;
         invokingContractOperation.extensions = new HashSet<>();
         invokingContractOperation.value_list = new ArrayList<>();
-        if (!TextUtils.isEmpty(params)){
-            String[] paramsArray = params.split(",");
-            LogUtils.i("params",params);
-            List<String> paramList = Arrays.asList(paramsArray);
-            for (String param : paramList) {
+        if (null != value_list && value_list.size() > 0) {
+            int typeId;
+            for (Object param : value_list) {
+                String type = param.getClass().toString();
+                switch (type) {
+                    case "class java.lang.Long":
+                    case "class java.lang.Integer":
+                        typeId = 0;
+                        break;
+                    case "class java.lang.Double":
+                    case "class java.lang.Float":
+                        typeId = 1;
+                        break;
+                    case "class java.lang.Boolean":
+                        typeId = 3;
+                        break;
+                    case "class java.lang.String":
+                        typeId = 2;
+                        break;
+                    default:
+                        typeId = 4;
+                        break;
+                }
                 List<Object> base_encoder = new ArrayList<>();
                 operations.invoking_contract_operation.v baseValues = new operations.invoking_contract_operation.v();
                 baseValues.v = param;
-                base_encoder.add(2);
+                base_encoder.add(typeId);
                 base_encoder.add(baseValues);
                 invokingContractOperation.value_list.add(base_encoder);
             }
