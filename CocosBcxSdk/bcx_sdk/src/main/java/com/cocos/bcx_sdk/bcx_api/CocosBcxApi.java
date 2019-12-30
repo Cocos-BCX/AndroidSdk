@@ -886,19 +886,19 @@ public class CocosBcxApi {
             for (Object param : value_list) {
                 String type = param.getClass().toString();
                 switch (type) {
+                    case "class java.lang.String":
+                        typeId = 2;
+                        break;
                     case "class java.lang.Long":
                     case "class java.lang.Integer":
                         typeId = 0;
                         break;
-                    case "class java.lang.Double":
-                    case "class java.lang.Float":
-                        typeId = 1;
-                        break;
                     case "class java.lang.Boolean":
                         typeId = 3;
                         break;
-                    case "class java.lang.String":
-                        typeId = 2;
+                    case "class java.lang.Double":
+                    case "class java.lang.Float":
+                        typeId = 1;
                         break;
                     default:
                         typeId = 4;

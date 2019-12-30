@@ -273,8 +273,8 @@ public class operations {
                     default:
                         break;
                 }
-                rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
             }
+            rawObject.pack(baseEncoder, UnsignedInteger.fromIntBits(extensions.size()));
         }
     }
 
