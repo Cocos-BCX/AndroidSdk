@@ -143,7 +143,7 @@ public class MyLimitOrderFragment extends Fragment {
 
         //绑定数据
         @Override
-        public void onBindViewHolder(@NonNull MyTradeLimitOrderAdapter.MyViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull MyTradeLimitOrderAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
             limit_orders_object limit_orders_object = datas.get(position);
             try {
                 account_object account_object = CocosBcxApi.getBcxInstance().get_accounts(limit_orders_object.seller.toString());
