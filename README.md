@@ -14,7 +14,7 @@ AndroidManifest.xml :
 
 <manifest ...> <application ... android:usesCleartextTraffic="true" //add ...>  	
 	
-...ref url: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
+ref url: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
  
 ## 1.1 Class Library Reference
 
