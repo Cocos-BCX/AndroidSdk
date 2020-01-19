@@ -13,7 +13,7 @@ AndroidManifest.xml :
 
 <manifest ...> <application ... android:usesCleartextTraffic="true" //add ...>  	
 	
-...ref url: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
+参考链接: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
 ## 1.1 类库引用说明
 
 1. 将bcx_sdk.aar复制到项目目录下，在Project Structure里选择New Moudule(注意不是添加Module dependency), 选择Import JAR/arr Package，点击Next,选择arr文件所在的路径, 点击Finish,选择Module dependency里将bcx_sdkMoudle添加到项目里即可：
