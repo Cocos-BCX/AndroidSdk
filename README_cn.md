@@ -14,28 +14,26 @@ AndroidManifest.xml :
 <manifest ...> <application ... android:usesCleartextTraffic="true" //add ...>  	
 	
 参考链接: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
-## 1.1 类库引用说明
 
-1. 将bcx_sdk.aar复制到项目目录下，在Project Structure里选择New Moudule(注意不是添加Module dependency), 选择Import JAR/arr Package，点击Next,选择arr文件所在的路径, 点击Finish,选择Module dependency里将bcx_sdkMoudle添加到项目里即可：
-这种方式不会将第三方依赖编译进aar文件，需要添加以下依赖：
+## 1.1 类库引用
+
+1. 项目build.gradle添加：  maven { url 'https://dl.bintray.com/cocos-bcx/maven' }
 
 ```Java
-    // implenment websocket
-    implementation 'com.neovisionaries:nv-websocket-client:1.30'
-    // implenment bitcoinj
-    implementation 'org.bitcoinj:bitcoinj-core:0.14.7'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
-    implementation group: "org.tukaani", name: "xz", version: "1.6"
-    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
-    // spongycastle
-    implementation 'com.madgag.spongycastle:core:1.58.0.0'
-    implementation 'com.madgag.spongycastle:prov:1.58.0.0'
-    implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
-    implementation 'com.madgag.spongycastle:pg:1.54.0.0'
-    // fasterxml
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
+   allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://dl.bintray.com/cocos-bcx/maven' }
+    }
+}
 ```
-
+2. app/base模块build.gradle引用添加：   
+```
+implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.0.0'
+```
 ###### 注意：
 
 ```
