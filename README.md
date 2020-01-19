@@ -16,27 +16,24 @@ AndroidManifest.xml :
 	
 ref url: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
  
-## 1.1 Class Library Reference
+## 1.1 Library Reference
 
-1. Copy bcx_sdk.aar to the project directory, select New Moudule in Project Structure (note that it is not to add module dependency), select Import JAR/arr Package, click Next, select the path where the arr file is located, click Finish, and add the bcx_sdkMoudle to the project by selecting Module dependency.  
-This will not compile third-party dependencies into aar files, you need to add the following dependencies:
-
+1. project root build.gradle add：  maven { url 'https://dl.bintray.com/cocos-bcx/maven' }
 
 ```Java
-    // implenment websocket
-    implementation 'com.neovisionaries:nv-websocket-client:1.30'
-    // implenment bitcoinj
-    implementation 'org.bitcoinj:bitcoinj-core:0.14.7'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
-    implementation group: "org.tukaani", name: "xz", version: "1.6"
-    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
-    // spongycastle
-    implementation 'com.madgag.spongycastle:core:1.58.0.0'
-    implementation 'com.madgag.spongycastle:prov:1.58.0.0'
-    implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
-    implementation 'com.madgag.spongycastle:pg:1.54.0.0'
-    // fasterxml
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
+   allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://dl.bintray.com/cocos-bcx/maven' }
+    }
+}
+```
+2. app/base moudle build.gradle add：   
+```
+implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.0.0'
 ```
 
 ###### Note: 
