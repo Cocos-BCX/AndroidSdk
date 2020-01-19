@@ -7,7 +7,15 @@ This document is for Android COCOS wallet development.
 The SDK is applicable for Android 4.0 (API Level 14) or later, and the SDK currently chooses version 27 for beta compilation.  
 Note:
 Android P (version 27) limits the http network requests. However, http request is used in the SDK.
+if your application is target Android 9 (API level 28) or higher, 
+you can modify AndroidManifest.xml like below:
 
+AndroidManifest.xml :
+
+<manifest ...> <application ... android:usesCleartextTraffic="true" //add ...>  	
+	
+...ref url: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
+ 
 ## 1.1 Class Library Reference
 
 1. Copy bcx_sdk.aar to the project directory, select New Moudule in Project Structure (note that it is not to add module dependency), select Import JAR/arr Package, click Next, select the path where the arr file is located, click Finish, and add the bcx_sdkMoudle to the project by selecting Module dependency.  
