@@ -6,7 +6,14 @@
 该文档适用于Android cocos 钱包开发.
 SDK适用于Android4.0 (API Level 14)及以上版本，SDK目前测试版编译版本选择27.
 注意：Android P(版本27以上) 对网络请求http限制，SDK中有使用http请求；
+如果项目的 compileSdkVersion是 28 及以上, 
+修改 AndroidManifest.xml 如下:
 
+AndroidManifest.xml :
+
+<manifest ...> <application ... android:usesCleartextTraffic="true" //add ...>  	
+	
+...ref url: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
 ## 1.1 类库引用说明
 
 1. 将bcx_sdk.aar复制到项目目录下，在Project Structure里选择New Moudule(注意不是添加Module dependency), 选择Import JAR/arr Package，点击Next,选择arr文件所在的路径, 点击Finish,选择Module dependency里将bcx_sdkMoudle添加到项目里即可：
