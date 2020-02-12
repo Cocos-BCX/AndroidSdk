@@ -730,7 +730,7 @@ public class CocosBcxApi {
 
 
     /**
-     * sign transaction with owner private_key
+     * sign transaction with owner & active private_key
      *
      * @param tx
      * @return
@@ -764,6 +764,81 @@ public class CocosBcxApi {
                 throw new AuthorityException("Author failed! make sure you logined and have owner permission");
             }
         }
+        LogUtils.i("sign_transaction", global_config_object.getInstance().getGsonBuilder().create().toJson(tx));
+        return mWebSocketApi.broadcast_transaction(tx);
+    }
+
+    /**
+     * sign transaction with active & other_private_key
+     *
+     * @param tx
+     * @return
+     * @throws NetworkStatusException
+     */
+    private String sign_transaction_active_double(signed_operate tx, account_object account_object, String other_private_key) throws NetworkStatusException, AuthorityException {
+        dynamic_global_property_object dynamicGlobalPropertyObject = get_dynamic_global_properties();
+        tx.set_reference_block(dynamicGlobalPropertyObject.head_block_id);
+        Date dateObject = dynamicGlobalPropertyObject.time;
+        Calendar calender = Calendar.getInstance();
+        calender.setTime(dateObject);
+        calender.add(Calendar.SECOND, 30);
+        dateObject = calender.getTime();
+        tx.set_expiration(dateObject);
+        HashMap<types.public_key_type, Integer> activity_key_auths = account_object.active.key_auths;
+        for (Map.Entry<types.public_key_type, Integer> entry : activity_key_auths.entrySet()) {
+            types.private_key_type privateKey = mHashMapPub2Private.get(entry.getKey());
+            if (privateKey != null) {
+                tx.sign(privateKey, mWebSocketApi.get_chain_id());
+            } else {
+                throw new AuthorityException("Author failed! make sure you logined and have active permission");
+            }
+        }
+
+        types.private_key_type privateKey = mHashMapPub2Private.get(other_private_key);
+        if (privateKey != null) {
+            tx.sign(privateKey, mWebSocketApi.get_chain_id());
+        } else {
+            throw new AuthorityException("Author failed! make sure other_private_key right");
+        }
+
+        LogUtils.i("sign_transaction", global_config_object.getInstance().getGsonBuilder().create().toJson(tx));
+        return mWebSocketApi.broadcast_transaction(tx);
+    }
+
+
+    /**
+     * sign transaction with owner & other_private_key
+     *
+     * @param tx
+     * @return
+     * @throws NetworkStatusException
+     */
+    private String sign_transaction_owner_double(signed_operate tx, account_object account_object, String other_private_key) throws NetworkStatusException, AuthorityException {
+        dynamic_global_property_object dynamicGlobalPropertyObject = get_dynamic_global_properties();
+        tx.set_reference_block(dynamicGlobalPropertyObject.head_block_id);
+        Date dateObject = dynamicGlobalPropertyObject.time;
+        Calendar calender = Calendar.getInstance();
+        calender.setTime(dateObject);
+        calender.add(Calendar.SECOND, 30);
+        dateObject = calender.getTime();
+        tx.set_expiration(dateObject);
+        HashMap<types.public_key_type, Integer> activity_key_auths = account_object.owner.key_auths;
+        for (Map.Entry<types.public_key_type, Integer> entry : activity_key_auths.entrySet()) {
+            types.private_key_type privateKey = mHashMapPub2Private.get(entry.getKey());
+            if (privateKey != null) {
+                tx.sign(privateKey, mWebSocketApi.get_chain_id());
+            } else {
+                throw new AuthorityException("Author failed! make sure you logined and have owner permission");
+            }
+        }
+
+        types.private_key_type privateKey = mHashMapPub2Private.get(other_private_key);
+        if (privateKey != null) {
+            tx.sign(privateKey, mWebSocketApi.get_chain_id());
+        } else {
+            throw new AuthorityException("Author failed! make sure other_private_key right");
+        }
+
         LogUtils.i("sign_transaction", global_config_object.getInstance().getGsonBuilder().create().toJson(tx));
         return mWebSocketApi.broadcast_transaction(tx);
     }
