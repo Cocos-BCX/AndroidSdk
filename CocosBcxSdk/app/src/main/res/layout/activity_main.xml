@@ -14,6 +14,32 @@
             android:text="注意： isLogin为false 是只注册账号不登入" />
 
         <TextView
+            android:id="@+id/sign_message"
+            style="@style/TvBtn"
+            android:layout_marginTop="30dp"
+            android:text="签名字符串" />
+
+        <EditText
+            android:id="@+id/sign_message_wifkey"
+            style="@style/EtSingleLine"
+            android:hint="私钥" />
+
+        <EditText
+            android:id="@+id/sign_message_content"
+            style="@style/EtSingleLine"
+            android:hint="签名内容" />
+
+        <EditText
+            android:id="@+id/edt_sign_result"
+            style="@style/EtMultipleLine"
+            android:hint="签名结果" />
+
+        <EditText
+            android:id="@+id/edt_recover_sign_result"
+            style="@style/EtMultipleLine"
+            android:hint="解签结果" />
+
+        <TextView
             style="@style/TvEdTips1"
             android:text="钱包管理模式" />
 

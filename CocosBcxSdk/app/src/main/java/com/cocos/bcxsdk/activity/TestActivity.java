@@ -14,6 +14,7 @@ import com.cocos.bcx_sdk.bcx_api.CocosBcxApiWrapper;
 import com.cocos.bcx_sdk.bcx_callback.IBcxCallBack;
 import com.cocos.bcx_sdk.bcx_error.ContractNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
+import com.cocos.bcx_sdk.bcx_wallet.chain.compact_signature;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 import com.cocos.bcxsdk.R;
 import com.cocos.bcxsdk.utils.MainHandler;
@@ -222,6 +223,11 @@ public class TestActivity extends AppCompatActivity {
     private EditText et_modify_origin_pwd;
     private EditText et_modify_new_pwd;
     private TextView tv_modify_password;
+    private TextView sign_message;
+    private EditText sign_message_wifkey;
+    private EditText sign_message_content;
+    private EditText edt_sign_result;
+    private EditText edt_recover_sign_result;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -229,6 +235,12 @@ public class TestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sign_message = findViewById(R.id.sign_message);
+        sign_message_wifkey = findViewById(R.id.sign_message_wifkey);
+        sign_message_content = findViewById(R.id.sign_message_content);
+        edt_sign_result = findViewById(R.id.edt_sign_result);
+        edt_recover_sign_result = findViewById(R.id.edt_recover_sign_result);
+
         walletAccountName = findViewById(R.id.et_wallet_signup_username);
         walletAccountPwd = findViewById(R.id.et_wallet_signup_pwd);
         walletCreateAccount = findViewById(R.id.tv_wallet_signup);
@@ -465,6 +477,18 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void initListener() {
+
+        // 签名和解签
+        sign_message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String compact_signature = CocosBcxApiWrapper.getBcxInstance().signMessage("5JFtD1ciuPmyABdeUuC8bSE72joXj9ttz42uDdLHnR67AafFbWA", sign_message_content.getText().toString());
+                edt_sign_result.setText(compact_signature);
+                boolean isright = CocosBcxApiWrapper.getBcxInstance().recoverMessage(sign_message_content.getText().toString(), compact_signature, "COCOS5GZayVQ2xX5zE3mZy8UUYJGDc7ot2Q8221DtmzV3Ck3R4k2NbM");
+                edt_recover_sign_result.setText(String.valueOf(isright));
+            }
+        });
+
         // 创建钱包模式账户
         walletCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -693,7 +717,12 @@ public class TestActivity extends AppCompatActivity {
         tv_get_memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CocosBcxApiWrapper.getBcxInstance().decrypt_memo_message("gnkhandsome1", "123456", "{\"from\":\"COCOS6G55VgR94GZmELS4UHEf2eVggmhPRnWLTWgGiEmzuBKdvEwoAB\",\"message\":\"1d89375e875d8f2da68a4f7e6c786892\",\"nonce\":11240986227921810428,\"to\":\"COCOS61qJmvPif4seDKUjEkoL9qUP9cSvwBvgme5djcK8thuUS6o4Mg\"}", new IBcxCallBack() {
+                CocosBcxApiWrapper.getBcxInstance().decrypt_memo_message("gnkhandsome4", "1111qqqq", "{\n" +
+                        "                                    \"from\":\"COCOS7fsjNtaLGWC2udDVTmzwvnrhxLyBFFkQzg54DpmaqCodWjqJJK\",\n" +
+                        "                                    \"to\":\"COCOS841Dtz7wR71TmBce8dmPE2goa8DJHEwEy2THHdUGyhFGhQ1BM6\",\n" +
+                        "                                    \"nonce\":845948,\n" +
+                        "                                    \"message\":\"35de4158a9bbf35119ded03dad532911\"\n" +
+                        "                                }", new IBcxCallBack() {
                     @Override
                     public void onReceiveValue(String value) {
                         Log.i("decrypt_memo_message", value);

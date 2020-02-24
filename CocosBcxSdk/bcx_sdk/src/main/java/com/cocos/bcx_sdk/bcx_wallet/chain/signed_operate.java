@@ -15,4 +15,11 @@ public class signed_operate extends transaction {
         sha256_object digest = sig_digest(chain_id);
         signatures.add(privateKeyType.getPrivateKey().sign_compact(digest));
     }
+
+    public static compact_signature signMessage(types.private_key_type privateKeyType, sha256_object sha256Object) {
+        sha256_object.encoder enc = new sha256_object.encoder();
+        enc.write(sha256Object.hash, 0, sha256Object.hash.length);
+        return privateKeyType.getPrivateKey().sign_compact(enc.result());
+    }
+
 }

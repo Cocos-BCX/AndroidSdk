@@ -30,11 +30,23 @@ import com.cocos.bcx_sdk.bcx_error.WordViewNotExistException;
 import com.cocos.bcx_sdk.bcx_log.LogUtils;
 import com.cocos.bcx_sdk.bcx_sql.dao.AccountDao;
 import com.cocos.bcx_sdk.bcx_utils.ThreadManager;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.PublicKey;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.HmacPRNG;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.InMemoryPrivateKey;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.RandomSource;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.Signature;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.Signatures;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.SignedMessage;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.ec.Parameters;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.ec.Point;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.util.ByteReader;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.util.Sha256Hash;
 import com.cocos.bcx_sdk.bcx_version.VersionManager;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_fee_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.block_info;
+import com.cocos.bcx_sdk.bcx_wallet.chain.compact_signature;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_callback;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_operations;
@@ -47,8 +59,12 @@ import com.cocos.bcx_sdk.bcx_wallet.chain.object_id;
 import com.cocos.bcx_sdk.bcx_wallet.chain.operation_history_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.operation_results_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.operations;
+import com.cocos.bcx_sdk.bcx_wallet.chain.public_key;
+import com.cocos.bcx_sdk.bcx_wallet.chain.signed_operate;
 import com.cocos.bcx_sdk.bcx_wallet.chain.transaction_in_block_info;
 import com.cocos.bcx_sdk.bcx_wallet.chain.transactions_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.types;
+import com.cocos.bcx_sdk.bcx_wallet.fc.crypto.sha256_object;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -56,6 +72,7 @@ import org.bitcoinj.core.AddressFormatException;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 
 import java.math.BigDecimal;
+import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -103,6 +120,7 @@ public class CocosBcxApiWrapper {
     private AccountDao accountDao;
     private String rspText = "";
     private ThreadManager.ThreadPollProxy proxy;
+    private Point _Q;
 
 
     private CocosBcxApiWrapper() {
@@ -2856,6 +2874,50 @@ public class CocosBcxApiWrapper {
         String message = "{\"address\":\"%s\",\"amount\":\"%s\",\"symbol\":\"%s\"}";
         return String.format(message, accountName, amount, assetSymbol);
     }
+
+
+    /**
+     * 签名message
+     *
+     * @param privateKey
+     * @param message
+     * @return
+     */
+    public String signMessage(String privateKey, String message) {
+        try {
+            types.private_key_type privateKeyType = new types.private_key_type(privateKey);
+            sha256_object sha256Object = sha256_object.create_from_string(message);
+            return global_config_object.getInstance().getGsonBuilder().create().toJson(signed_operate.signMessage(privateKeyType, sha256Object));
+        } catch (KeyInvalideException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 验签message
+     *
+     * @param srcMessage
+     * @param signature
+     * @param publicKay
+     * @return
+     */
+//    public boolean recoverMessage(String srcMessage, String signature, String publicKay) {
+//        sha256_object sha256Object = sha256_object.create_from_string(srcMessage);
+//        ByteReader reader = new ByteReader(signature.getBytes());
+//        Signature params = Signatures.decodeSignatureParameters(reader);
+//        if (params == null) {
+//            LogUtils.i("params", "params is null");
+//            return false;
+//        }
+//        return Signatures.verifySignature(sha256Object.hash, params, getQ(publicKay.getBytes()));
+//    }
+//
+//    private Point getQ(byte[] _pubKeyBytes) {
+//        if (_Q == null) {
+//            _Q = Parameters.curve.decodePoint(_pubKeyBytes);
+//        }
+//        return _Q;
+//    }
 
 
     /**
