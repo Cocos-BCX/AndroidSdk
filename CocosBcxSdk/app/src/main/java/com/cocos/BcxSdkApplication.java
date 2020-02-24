@@ -24,7 +24,7 @@ public class BcxSdkApplication extends Application {
         MultiDex.install(this);
         Utils.init(this);
         //初始化工具类
-        List<String> mListNode = Arrays.asList("ws://test.cocosbcx.net", "ws://test.cocosbcx.net");
+        List<String> mListNode = Arrays.asList("wss://test.cocosbcx.net", "wss://test.cocosbcx.net");
         String faucetUrl = "http://test-faucet.cocosbcx.net";
         String chainId = "1ae3653a3105800f5722c5bda2b55530d0e9e8654314e2f3dc6d2b010da641c5";
         String coreAsset = "COCOS";
