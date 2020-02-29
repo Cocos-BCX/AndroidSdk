@@ -1733,13 +1733,21 @@ public class CocosBcxApiWrapper {
                                     resultBean.affected_account = accountName;
                                     if (type == 0) {
                                         LinkedTreeMap affected_asset = (LinkedTreeMap) linkedTreeMap.get("affected_asset");
-                                        Double amount = (Double) affected_asset.get("amount");
+                                        Double amount;
+                                        String amountStr;
                                         String asset_id = (String) affected_asset.get("asset_id");
-                                        affectedAssetBean.amount = amount;
                                         affectedAssetBean.asset_id = asset_id;
-                                        rawDataBean.affected_asset = affectedAssetBean;
                                         asset_object asset_object = get_asset_object(asset_id);
-                                        resultBean.aseet_amount = (amount > 0 ? "+" : "") + amount / (Math.pow(10, asset_object.precision)) + asset_object.symbol;
+                                        try {
+                                            amount = (Double) affected_asset.get("amount");
+                                            affectedAssetBean.amount = amount;
+                                            resultBean.aseet_amount = (amount > 0 ? "+" : "") + amount / (Math.pow(10, asset_object.precision)) + asset_object.symbol;
+                                        } catch (ClassCastException ea) {
+                                            amountStr = (String) affected_asset.get("amount");
+                                            affectedAssetBean.amount = Double.valueOf(amountStr);
+                                            resultBean.aseet_amount = (Double.valueOf(amountStr) > 0 ? "+" : "") + Double.valueOf(amountStr) / (Math.pow(10, asset_object.precision)) + asset_object.symbol;
+                                        }
+                                        rawDataBean.affected_asset = affectedAssetBean;
                                         contractAffectedsBean.raw_data = rawDataBean;
                                         contractAffectedsBean.result = resultBean;
                                         contractAffectedsBean.result_text = accountName + " " + resultBean.aseet_amount;
