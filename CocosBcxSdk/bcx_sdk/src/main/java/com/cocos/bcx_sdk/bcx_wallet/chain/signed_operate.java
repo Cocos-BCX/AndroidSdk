@@ -12,6 +12,7 @@ import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.PublicKey;
 import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.SignedMessage;
 import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.WrongSignatureException;
 import com.cocos.bcx_sdk.bcx_utils.bitlib.lambdaworks.crypto.Base64;
+import com.cocos.bcx_sdk.bcx_utils.bitlib.util.Sha256Hash;
 import com.cocos.bcx_sdk.bcx_wallet.fc.crypto.sha256_object;
 import com.cocos.bcx_sdk.bcx_wallet.fc.io.raw_type;
 import com.google.common.io.BaseEncoding;
@@ -44,10 +45,7 @@ public class signed_operate extends transaction {
         try {
             privateKeyType = new types.private_key_type(privateKey);
             sha256_object digest = generaDigest(message);
-            InMemoryPrivateKey inMemoryPrivateKey = new InMemoryPrivateKey(privateKeyType.getPrivateKey().get_secret());
-            SignedMessage signedMessage = inMemoryPrivateKey.signMessage(digest.toString());
-            byte[] byteCompact = signedMessage.bitcoinEncodingOfSignature();
-            return global_config_object.getInstance().getGsonBuilder().create().toJson(new compact_signature(byteCompact));
+            return global_config_object.getInstance().getGsonBuilder().create().toJson(privateKeyType.getPrivateKey().sign_compact(digest));
         } catch (Exception e) {
             return "";
         }
@@ -69,12 +67,11 @@ public class signed_operate extends transaction {
             String signatureBaseByte = Base64.encodeToString(signatureByte, false);
             types.public_key_type public_key_type = new types.public_key_type(public_key);
             public_key public_key1 = public_key_type.getPublicKey();
-            PublicKey publicKey = SignedMessage.recoverFromSignature(digest.toString(), signatureBaseByte);
+            PublicKey publicKey = SignedMessage.recoverFromSignature(digest, signatureBaseByte);
             public_key publicKey1 = new public_key(publicKey.getPublicKeyBytes());
 
             System.arraycopy(publicKey1.getKeyByte(), 1, key_data, 0, key_data.length);
             System.arraycopy(public_key1.getKeyByte(), 1, key_data1, 0, key_data1.length);
-
 
             if (!TextUtils.equals(Arrays.toString(key_data), Arrays.toString(key_data1))) {
                 throw new AccountNotFoundException("This key has no account information");
@@ -94,6 +91,7 @@ public class signed_operate extends transaction {
                     if (TextUtils.equals(id, account_id)) {
                         continue;
                     }
+                    account_id = id;
                     // get account object
                     account_object account_object = CocosBcxApi.getBcxInstance().get_account_object(id);
                     verify_result verify_result = new verify_result();
