@@ -29,6 +29,17 @@
             style="@style/EtSingleLine"
             android:hint="签名内容" />
 
+
+<!--        <TextView-->
+<!--            android:id="@+id/recover_message"-->
+<!--            style="@style/TvBtn"-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:text="验签字符串" />-->
+        <EditText
+            android:id="@+id/edt_recover_sign_public_key"
+            style="@style/EtSingleLine"
+            android:hint="验签公钥" />
+
         <EditText
             android:id="@+id/edt_sign_result"
             style="@style/EtMultipleLine"

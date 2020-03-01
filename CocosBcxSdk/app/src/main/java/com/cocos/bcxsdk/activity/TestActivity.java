@@ -228,6 +228,7 @@ public class TestActivity extends AppCompatActivity {
     private EditText sign_message_content;
     private EditText edt_sign_result;
     private EditText edt_recover_sign_result;
+    private EditText edt_recover_sign_public_key;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -238,6 +239,7 @@ public class TestActivity extends AppCompatActivity {
         sign_message = findViewById(R.id.sign_message);
         sign_message_wifkey = findViewById(R.id.sign_message_wifkey);
         sign_message_content = findViewById(R.id.sign_message_content);
+        edt_recover_sign_public_key = findViewById(R.id.edt_recover_sign_public_key);
         edt_sign_result = findViewById(R.id.edt_sign_result);
         edt_recover_sign_result = findViewById(R.id.edt_recover_sign_result);
 
@@ -476,16 +478,19 @@ public class TestActivity extends AppCompatActivity {
         initListener();
     }
 
-    private void initListener() {
 
+    private void initListener() {
+        sign_message_wifkey.setText("5JdtKmEZK1xGSBp2wZYvsNgiya9csuMt6aUCHk8ysyD3FPrcQPc");
+        sign_message_content.setText("xxxx0000");
+        edt_recover_sign_public_key.setText("COCOS8TfoNXpPhxAwh7UCWW8z43YDwbZWWun5hDTofxKhEXh8CcNHN8");
         // 签名和解签
         sign_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String compact_signature = CocosBcxApiWrapper.getBcxInstance().signMessage("5JFtD1ciuPmyABdeUuC8bSE72joXj9ttz42uDdLHnR67AafFbWA", sign_message_content.getText().toString());
+                String compact_signature = CocosBcxApiWrapper.getBcxInstance().signMessage(sign_message_wifkey.getText().toString(), sign_message_content.getText().toString());
                 edt_sign_result.setText(compact_signature);
-                boolean isright = CocosBcxApiWrapper.getBcxInstance().recoverMessage(sign_message_content.getText().toString(), compact_signature, "COCOS5GZayVQ2xX5zE3mZy8UUYJGDc7ot2Q8221DtmzV3Ck3R4k2NbM");
-                edt_recover_sign_result.setText(String.valueOf(isright));
+                String verifyResult = CocosBcxApiWrapper.getBcxInstance().recoverMessage(sign_message_content.getText().toString(), compact_signature, edt_recover_sign_public_key.getText().toString());
+                edt_recover_sign_result.setText(verifyResult);
             }
         });
 

@@ -1,2 +1,1 @@
-include ':app'
-//, ':bcx_sdk'
+include ':app' , ':bcx_sdk'
