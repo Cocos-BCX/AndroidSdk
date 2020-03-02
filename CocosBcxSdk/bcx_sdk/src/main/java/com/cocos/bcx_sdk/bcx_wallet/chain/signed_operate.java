@@ -40,14 +40,20 @@ public class signed_operate extends transaction {
      * @param message
      * @return
      */
-    public String signMessage(String privateKey, String message) {
+    public signed_message signMessage(String privateKey, String message) {
         types.private_key_type privateKeyType = null;
         try {
             privateKeyType = new types.private_key_type(privateKey);
             sha256_object digest = generaDigest(message);
-            return global_config_object.getInstance().getGsonBuilder().create().toJson(privateKeyType.getPrivateKey().sign_compact(digest));
+            public_key publicKey = privateKeyType.getPrivateKey().get_public_key();
+            types.public_key_type public_key_type = new types.public_key_type(publicKey);
+            signed_message signed_message = new signed_message();
+            signed_message.message = message;
+            signed_message.publicKey = public_key_type.toString();
+            signed_message.signature = global_config_object.getInstance().getGsonBuilder().create().toJson(privateKeyType.getPrivateKey().sign_compact(digest));
+            return signed_message;
         } catch (Exception e) {
-            return "";
+            return null;
         }
     }
 

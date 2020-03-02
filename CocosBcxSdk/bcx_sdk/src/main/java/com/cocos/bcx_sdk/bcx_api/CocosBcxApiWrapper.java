@@ -36,6 +36,7 @@ import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.SignedMessage;
 import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.WrongSignatureException;
 import com.cocos.bcx_sdk.bcx_utils.bitlib.crypto.ec.Point;
 import com.cocos.bcx_sdk.bcx_version.VersionManager;
+import com.cocos.bcx_sdk.bcx_wallet.chain.signed_message;
 import com.cocos.bcx_sdk.bcx_wallet.chain.verify_result;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.asset_fee_object;
@@ -2882,7 +2883,7 @@ public class CocosBcxApiWrapper {
      * @param message
      * @return
      */
-    public String signMessage(String privateKey, String message) {
+    public signed_message signMessage(String privateKey, String message) {
         signed_operate signed_operate = new signed_operate();
         return signed_operate.signMessage(privateKey, message);
     }

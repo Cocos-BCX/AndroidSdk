@@ -16,6 +16,7 @@ import com.cocos.bcx_sdk.bcx_error.ContractNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
 import com.cocos.bcx_sdk.bcx_wallet.chain.compact_signature;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.signed_message;
 import com.cocos.bcxsdk.R;
 import com.cocos.bcxsdk.utils.MainHandler;
 
@@ -482,14 +483,15 @@ public class TestActivity extends AppCompatActivity {
     private void initListener() {
         sign_message_wifkey.setText("5KGpBcg4A5BHJ58co681dY35dtedvMiBT8ZQJu5K3UHNHtcadMF");
         sign_message_content.setText("xxxx0000");
-        edt_recover_sign_public_key.setText("COCOS5RNhwmVGsFfhPhSi3Ao9AU3o2kfr4Z3hTFkXfxu3t1AHTKsTqV");
         // 签名和解签
         sign_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String compact_signature = CocosBcxApiWrapper.getBcxInstance().signMessage(sign_message_wifkey.getText().toString(), sign_message_content.getText().toString());
-                edt_sign_result.setText(compact_signature);
-                String verifyResult = CocosBcxApiWrapper.getBcxInstance().recoverMessage(sign_message_content.getText().toString(), compact_signature, edt_recover_sign_public_key.getText().toString());
+                signed_message signed_message = CocosBcxApiWrapper.getBcxInstance().signMessage(sign_message_wifkey.getText().toString(), sign_message_content.getText().toString());
+                edt_sign_result.setText(signed_message.message + "\n"
+                        + signed_message.signature + "\n"
+                        + signed_message.publicKey);
+                String verifyResult = CocosBcxApiWrapper.getBcxInstance().recoverMessage(signed_message.message, signed_message.signature, signed_message.publicKey);
                 edt_recover_sign_result.setText(verifyResult);
             }
         });
