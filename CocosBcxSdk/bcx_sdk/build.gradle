@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'com.novoda.bintray-release'
 android {
 
     compileSdkVersion 27
@@ -32,6 +32,15 @@ android {
         exclude 'lib/x86_64/darwin/libscrypt.dylib'
         exclude 'lib/x86_64/freebsd/libscrypt.so'
         exclude 'lib/x86_64/linux/libscrypt.so'
+    }
+
+    publish {
+        userOrg = 'cocos-bcx'
+        groupId = 'com.cocosbcx.androidsdk'
+        artifactId = 'bcx_sdk'
+        publishVersion = '1.0.1'
+        desc = 'Cocos-BCX Android SDK'
+        website = 'https://github.com/Cocos-BCX/AndroidSdk'
     }
 
 }
