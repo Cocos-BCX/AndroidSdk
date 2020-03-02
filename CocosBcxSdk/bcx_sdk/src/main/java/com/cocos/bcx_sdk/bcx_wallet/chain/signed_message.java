@@ -4,5 +4,4 @@ public class signed_message {
 
     public String message;
     public String signature;
-    public String publicKey;
 }

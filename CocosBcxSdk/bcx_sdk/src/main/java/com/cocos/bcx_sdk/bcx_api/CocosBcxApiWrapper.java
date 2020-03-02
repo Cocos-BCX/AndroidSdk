@@ -2895,9 +2895,9 @@ public class CocosBcxApiWrapper {
      * @param signature
      * @return
      */
-    public String recoverMessage(String srcMessage, String signature, String public_key) {
+    public String recoverMessage(String srcMessage, String signature) {
         signed_operate signed_operate = new signed_operate();
-        return global_config_object.getInstance().getGsonBuilder().create().toJson(signed_operate.recoverMessage(srcMessage, signature, public_key));
+        return global_config_object.getInstance().getGsonBuilder().create().toJson(signed_operate.recoverMessage(srcMessage, signature));
     }
 
 

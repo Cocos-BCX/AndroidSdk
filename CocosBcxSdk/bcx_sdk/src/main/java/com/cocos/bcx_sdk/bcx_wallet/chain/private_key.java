@@ -119,7 +119,7 @@ public class private_key {
                 }
             };
             do {
-                InMemoryPrivateKey inMemoryPrivateKey = new InMemoryPrivateKey(key_data);
+                InMemoryPrivateKey inMemoryPrivateKey = new InMemoryPrivateKey(key_data, true);
                 SignedMessage signedMessage = inMemoryPrivateKey.signHash(new Sha256Hash(digest.hash), randomSource);
                 byte[] byteCompact = signedMessage.bitcoinEncodingOfSignature();
                 signature = new compact_signature(byteCompact);

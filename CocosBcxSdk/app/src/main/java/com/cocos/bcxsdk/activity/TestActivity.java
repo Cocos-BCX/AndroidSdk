@@ -481,18 +481,19 @@ public class TestActivity extends AppCompatActivity {
 
 
     private void initListener() {
-        sign_message_wifkey.setText("5KGpBcg4A5BHJ58co681dY35dtedvMiBT8ZQJu5K3UHNHtcadMF");
+        sign_message_wifkey.setText("5Jkvpz3veJmqVe8XUAVTemmXhPpRPhaXpffJPsA7rJSk7ybovfE");
         sign_message_content.setText("xxxx0000");
         // 签名和解签
         sign_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signed_message signed_message = CocosBcxApiWrapper.getBcxInstance().signMessage(sign_message_wifkey.getText().toString(), sign_message_content.getText().toString());
-                edt_sign_result.setText(signed_message.message + "\n"
-                        + signed_message.signature + "\n"
-                        + signed_message.publicKey);
-                String verifyResult = CocosBcxApiWrapper.getBcxInstance().recoverMessage(signed_message.message, signed_message.signature, signed_message.publicKey);
-                edt_recover_sign_result.setText(verifyResult);
+                if (null != signed_message) {
+                    edt_sign_result.setText(signed_message.message + "\n"
+                            + signed_message.signature);
+                    String verifyResult = CocosBcxApiWrapper.getBcxInstance().recoverMessage(signed_message.message, signed_message.signature);
+                    edt_recover_sign_result.setText(verifyResult);
+                }
             }
         });
 

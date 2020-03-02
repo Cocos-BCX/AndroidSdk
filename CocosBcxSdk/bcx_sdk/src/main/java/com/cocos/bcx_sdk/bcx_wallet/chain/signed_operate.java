@@ -45,23 +45,18 @@ public class signed_operate extends transaction {
         try {
             privateKeyType = new types.private_key_type(privateKey);
             sha256_object digest = generaDigest(message);
-            public_key publicKey = privateKeyType.getPrivateKey().get_public_key();
-            types.public_key_type public_key_type = new types.public_key_type(publicKey);
             signed_message signed_message = new signed_message();
             signed_message.message = message;
-            signed_message.publicKey = public_key_type.toString();
             signed_message.signature = global_config_object.getInstance().getGsonBuilder().create().toJson(privateKeyType.getPrivateKey().sign_compact(digest));
             return signed_message;
         } catch (Exception e) {
-            return null;
+            return new signed_message();
         }
     }
 
 
-    public List<verify_result> recoverMessage(String srcMessage, String signature, String public_key) {
+    public verify_result recoverMessage(String srcMessage, String signature) {
         try {
-            byte[] key_data = new byte[32];
-            byte[] key_data1 = new byte[32];
             sha256_object digest = generaDigest(srcMessage);
             BaseEncoding encoding = BaseEncoding.base16().lowerCase();
             byte[] signatureByte;
@@ -70,28 +65,23 @@ public class signed_operate extends transaction {
             } catch (Exception e) {
                 signatureByte = encoding.decode(signature);
             }
+
             String signatureBaseByte = Base64.encodeToString(signatureByte, false);
-            types.public_key_type public_key_type = new types.public_key_type(public_key);
-            public_key public_key1 = public_key_type.getPublicKey();
             PublicKey publicKey = SignedMessage.recoverFromSignature(digest, signatureBaseByte);
             public_key publicKey1 = new public_key(publicKey.getPublicKeyBytes());
-
-            System.arraycopy(publicKey1.getKeyByte(), 1, key_data, 0, key_data.length);
-            System.arraycopy(public_key1.getKeyByte(), 1, key_data1, 0, key_data1.length);
-
-            if (!TextUtils.equals(Arrays.toString(key_data), Arrays.toString(key_data1))) {
-                throw new AccountNotFoundException("This key has no account information");
-            }
+            types.public_key_type public_key_type1 = new types.public_key_type(publicKey1);
+            LogUtils.i("publicKey", public_key_type1.toString());
+//
             List<String> publicKeyTypes = new ArrayList<>();
-            publicKeyTypes.add(public_key_type.toString());
+            publicKeyTypes.add(public_key_type1.toString());
             // request to get accoount id
             List<List<String>> objects = ConnectServer.getBcxWebServerInstance().get_key_references(publicKeyTypes);
             // if id[]  null ,you need know the response about this rpc:get_key_references
             if (objects == null || objects.size() <= 0 || objects.get(0).size() <= 0) {
                 throw new AccountNotFoundException("This key has no account information");
             }
-            List<verify_result> verify_results = new ArrayList<>();
             String account_id = null;
+            verify_result verify_result = new verify_result();
             for (List<String> account_ids : objects) {
                 for (String id : account_ids) {
                     if (TextUtils.equals(id, account_id)) {
@@ -100,23 +90,19 @@ public class signed_operate extends transaction {
                     account_id = id;
                     // get account object
                     account_object account_object = CocosBcxApi.getBcxInstance().get_account_object(id);
-                    verify_result verify_result = new verify_result();
                     verify_result.accountid = account_object.id.toString();
                     verify_result.accountname = account_object.name;
-                    verify_results.add(verify_result);
                 }
             }
-            return verify_results;
+            return verify_result;
         } catch (WrongSignatureException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ArrayList<>();
+        return new verify_result();
     }
 
     private sha256_object generaDigest(String message) {
