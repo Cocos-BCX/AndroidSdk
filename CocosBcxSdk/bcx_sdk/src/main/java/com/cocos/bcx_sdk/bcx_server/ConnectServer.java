@@ -690,6 +690,28 @@ public class ConnectServer extends WebSocketListener {
         return replyAccountHistory.result;
     }
 
+
+    public List<operation_history_object> get_account_history(object_id<account_object> id, String startId, String endId, int nLimit) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mHistoryId);
+        callObject.params.add(CALL_GET_ACCOUNT_HISTORY);
+
+        List<Object> listAccountHistoryParam = new ArrayList<>();
+        listAccountHistoryParam.add(id);
+        listAccountHistoryParam.add(startId);
+        listAccountHistoryParam.add(nLimit);
+        listAccountHistoryParam.add(endId);
+        callObject.params.add(listAccountHistoryParam);
+
+        ReplyObjectProcess<Reply<List<operation_history_object>>> replyObject = new ReplyObjectProcess<>(new TypeToken<Reply<List<operation_history_object>>>() {
+        }.getType());
+        Reply<List<operation_history_object>> replyAccountHistory = sendForReply(callObject, replyObject);
+        return replyAccountHistory.result;
+    }
+
     /**
      * get_full_accounts
      *

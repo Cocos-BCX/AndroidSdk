@@ -1928,6 +1928,35 @@ public class CocosBcxApiWrapper {
         });
     }
 
+    /**
+     * get account operate history
+     *
+     * @param accountName
+     * @param nLimit
+     * @return
+     * @throws NetworkStatusException
+     */
+    public void get_account_history(final String accountName, final String startId, final String endId, final int nLimit,
+                                    final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<operation_history_object> listHistoryObject = null;
+                try {
+                    listHistoryObject = cocosBcxApi.get_account_history(accountName, startId, endId, nLimit);
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", listHistoryObject).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
 
     /**
      * get all assets balances of account

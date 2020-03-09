@@ -1797,6 +1797,20 @@ public class CocosBcxApi {
 
 
     /**
+     * get account operate history
+     *
+     * @param accountNameOrId
+     * @param nLimit
+     * @return
+     * @throws NetworkStatusException
+     */
+    public List<operation_history_object> get_account_history(String accountNameOrId, String startId, String endId, int nLimit) throws NetworkStatusException, AccountNotFoundException {
+        account_object objectId = get_account_object(accountNameOrId);
+        return mWebSocketApi.get_account_history(objectId.id, startId, endId, nLimit);
+    }
+
+
+    /**
      * get all assets balances of account
      *
      * @param account_id

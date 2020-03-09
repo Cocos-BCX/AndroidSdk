@@ -16,6 +16,7 @@ import com.cocos.bcx_sdk.bcx_error.ContractNotFoundException;
 import com.cocos.bcx_sdk.bcx_error.NetworkStatusException;
 import com.cocos.bcx_sdk.bcx_wallet.chain.compact_signature;
 import com.cocos.bcx_sdk.bcx_wallet.chain.contract_object;
+import com.cocos.bcx_sdk.bcx_wallet.chain.global_config_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.signed_message;
 import com.cocos.bcxsdk.R;
 import com.cocos.bcxsdk.utils.MainHandler;
@@ -230,6 +231,8 @@ public class TestActivity extends AppCompatActivity {
     private EditText edt_sign_result;
     private EditText edt_recover_sign_result;
     private EditText edt_recover_sign_public_key;
+    private EditText et_get_src_info_startId;
+    private EditText et_get_src_info_endId;
 
 
     @SuppressLint({"LongLogTag", "WrongViewCast"})
@@ -279,6 +282,8 @@ public class TestActivity extends AppCompatActivity {
         tv_get_private_key = findViewById(R.id.tv_get_private_key);
 
         et_get_src_info_account = findViewById(R.id.et_get_src_info_account);
+        et_get_src_info_startId = findViewById(R.id.et_get_src_info_startId);
+        et_get_src_info_endId = findViewById(R.id.et_get_src_info_endId);
         et_get_src_info_limit = findViewById(R.id.et_get_src_info_limit);
         tv_get_src_info = findViewById(R.id.tv_get_src_info);
 
@@ -487,13 +492,14 @@ public class TestActivity extends AppCompatActivity {
         sign_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signed_message signed_message = CocosBcxApiWrapper.getBcxInstance().signMessage(sign_message_wifkey.getText().toString(), sign_message_content.getText().toString());
-                if (null != signed_message) {
-                    edt_sign_result.setText(signed_message.message + "\n"
-                            + signed_message.signature);
-                    String verifyResult = CocosBcxApiWrapper.getBcxInstance().recoverMessage(signed_message.message, signed_message.signature);
-                    edt_recover_sign_result.setText(verifyResult);
-                }
+//                signed_message signed_message = CocosBcxApiWrapper.getBcxInstance().signMessage(sign_message_wifkey.getText().toString(), sign_message_content.getText().toString());
+//                if (null != signed_message) {
+//                    edt_sign_result.setText(global_config_object.getInstance().getGsonBuilder().create().toJson(signed_message));
+//                    String verifyResult = CocosBcxApiWrapper.getBcxInstance().recoverMessage("xulin", "207f500041959217c6b7e96b78a9cd54efefde1c6c97f0855e31f5fdcbcd2c6a0654f8327d0c36872fb58e112db78c85bbf95b4478735481e56001fe634e598b93");
+//                    edt_recover_sign_result.setText(verifyResult);
+//                }
+                String verifyResult = CocosBcxApiWrapper.getBcxInstance().recoverMessage("xulin", "1f7b99e628be777cca4e8c9d3c7bc68ab30f92fb7e2e3b806706620be0dd7312055365731987e0c60aa86fdcb42d0f976e9ab53f6d2358066ba32cbae4718e4721");
+                edt_recover_sign_result.setText(verifyResult);
             }
         });
 
@@ -625,6 +631,19 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CocosBcxApiWrapper.getBcxInstance().get_account_history(et_get_src_info_account.getText().toString(), Integer.valueOf(et_get_src_info_limit.getText().toString()), new IBcxCallBack() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.i("get_account_history", value);
+                    }
+                });
+            }
+        });
+
+        // 查询用户操作记录
+        tv_get_src_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CocosBcxApiWrapper.getBcxInstance().get_account_history(et_get_src_info_account.getText().toString(), et_get_src_info_startId.getText().toString(), et_get_src_info_endId.getText().toString(), Integer.valueOf(et_get_src_info_limit.getText().toString()), new IBcxCallBack() {
                     @Override
                     public void onReceiveValue(String value) {
                         Log.i("get_account_history", value);

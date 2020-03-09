@@ -30,11 +30,11 @@
             android:hint="签名内容" />
 
 
-<!--        <TextView-->
-<!--            android:id="@+id/recover_message"-->
-<!--            style="@style/TvBtn"-->
-<!--            android:layout_marginTop="30dp"-->
-<!--            android:text="验签字符串" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/recover_message"-->
+        <!--            style="@style/TvBtn"-->
+        <!--            android:layout_marginTop="30dp"-->
+        <!--            android:text="验签字符串" />-->
         <EditText
             android:id="@+id/edt_recover_sign_public_key"
             style="@style/EtSingleLine"
@@ -293,6 +293,16 @@
             style="@style/EtSingleLine"
             android:layout_marginTop="10dp"
             android:hint="查询账户" />
+
+        <EditText
+            android:id="@+id/et_get_src_info_startId"
+            style="@style/EtSingleLine"
+            android:hint="startId" />
+
+        <EditText
+            android:id="@+id/et_get_src_info_endId"
+            style="@style/EtSingleLine"
+            android:hint="endId" />
 
         <EditText
             android:id="@+id/et_get_src_info_limit"
