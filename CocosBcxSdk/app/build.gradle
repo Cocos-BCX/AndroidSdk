@@ -60,8 +60,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
 //    implementation project(':bcx_sdk')
-    implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.3.0'
+    implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.3.1'
     // tabLayoutViewFindUtils
     api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
-
 }
