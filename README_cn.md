@@ -32,7 +32,7 @@ AndroidManifest.xml :
 ```
 2. app/base模块build.gradle引用添加：   
 ```
-implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.3.0'
+implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.3.1'
 ```
 ###### 注意：
 
