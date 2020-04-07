@@ -23,6 +23,7 @@ import com.cocos.bcx_sdk.bcx_error.NoRewardAvailableException;
 import com.cocos.bcx_sdk.bcx_error.NotAssetCreatorException;
 import com.cocos.bcx_sdk.bcx_error.NotMemberException;
 import com.cocos.bcx_sdk.bcx_error.OrderNotFoundException;
+import com.cocos.bcx_sdk.bcx_error.PasswordInvalidException;
 import com.cocos.bcx_sdk.bcx_error.PasswordVerifyException;
 import com.cocos.bcx_sdk.bcx_error.UnLegalInputException;
 import com.cocos.bcx_sdk.bcx_error.WordViewExistException;
@@ -86,6 +87,7 @@ import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_NOT_MEMEBER;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_OBJECT_NOT_FOUND;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_ORDERS_DO_NOT_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_PARAMETER;
+import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_PASSWORD_NOT_SATISFIED;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_WORLDVIEW_AREADY_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_WORLDVIEW_DO_NOT_EXIST;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_WRONG_PASSWORD;
@@ -1525,6 +1527,9 @@ public class CocosBcxApiWrapper {
                 } catch (AddressFormatException e) {
                     rspText = new ResponseData(ERROR_INVALID_PRIVATE_KEY, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
+                } catch (PasswordInvalidException e) {
+                    rspText = new ResponseData(ERROR_PASSWORD_NOT_SATISFIED, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
                 }
             }
         });
@@ -2866,7 +2871,7 @@ public class CocosBcxApiWrapper {
             @Override
             public void run() {
                 try {
-                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.modify_password(accountName, originPwd, newPwd, accountDao)).toString();
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.modify_password(accountName, originPwd, newPwd)).toString();
                     callBack.onReceiveValue(rspText);
                     cocosBcxApi.updateKeyStore(accountName, newPwd, accountDao);
                 } catch (NetworkStatusException e) {
@@ -2886,6 +2891,9 @@ public class CocosBcxApiWrapper {
                     callBack.onReceiveValue(rspText);
                 } catch (UnLegalInputException e) {
                     rspText = new ResponseData(ERROR_PARAMETER, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (PasswordInvalidException e) {
+                    rspText = new ResponseData(ERROR_PASSWORD_NOT_SATISFIED, e.getMessage(), null).toString();
                     callBack.onReceiveValue(rspText);
                 }
             }

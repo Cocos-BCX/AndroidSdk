@@ -22,6 +22,7 @@ import com.cocos.bcx_sdk.bcx_error.NoRewardAvailableException;
 import com.cocos.bcx_sdk.bcx_error.NotAssetCreatorException;
 import com.cocos.bcx_sdk.bcx_error.NotMemberException;
 import com.cocos.bcx_sdk.bcx_error.OrderNotFoundException;
+import com.cocos.bcx_sdk.bcx_error.PasswordInvalidException;
 import com.cocos.bcx_sdk.bcx_error.PasswordVerifyException;
 import com.cocos.bcx_sdk.bcx_error.UnLegalInputException;
 import com.cocos.bcx_sdk.bcx_error.WordViewExistException;
@@ -85,6 +86,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import org.bitcoinj.core.AddressFormatException;
+import org.spongycastle.openssl.PasswordException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -544,7 +546,12 @@ public class CocosBcxApi {
      * @param wifKey   private key
      * @param password to encrypt your private key,
      */
-    public List<String> import_wif_key(String wifKey, String password, String accountType, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, KeyInvalideException, AddressFormatException {
+    public List<String> import_wif_key(String wifKey, String password, String accountType, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, KeyInvalideException, AddressFormatException, PasswordInvalidException {
+
+        if (!PassWordCheckUtil.passwordVerify(password)) {
+            throw new PasswordInvalidException("Password does not meet the rules：^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).{12,}$");
+        }
+
         // get public key
         types.private_key_type privateKeyType = new types.private_key_type(wifKey);
         public_key publicKey = privateKeyType.getPrivateKey().get_public_key();
@@ -3100,14 +3107,17 @@ public class CocosBcxApi {
     /**
      * create_witness
      *
-     * @param accountDao
      * @return hash
      * @throws NetworkStatusException
      * @throws AccountNotFoundException
      * @throws PasswordVerifyException
      * @throws KeyInvalideException
      */
-    public String modify_password(String accountName, String originPwd, String newPwd, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException, UnLegalInputException {
+    public String modify_password(String accountName, String originPwd, String newPwd) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException, UnLegalInputException, PasswordInvalidException {
+
+        if (!PassWordCheckUtil.passwordVerify(newPwd)) {
+          throw new PasswordInvalidException("Password does not meet the rules：^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).{12,}$");
+        }
 
         private_key privateActiveKey = private_key.from_seed(accountName + "active" + newPwd);
         private_key privateOwnerKey = private_key.from_seed(accountName + "owner" + newPwd);
