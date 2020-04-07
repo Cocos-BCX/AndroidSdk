@@ -136,5 +136,10 @@ public class ErrorCode {
      */
     public static final int ERROR_DB_ERROR = 177;
 
+    /**
+     * 密码不符合规则
+     */
+    public static final int ERROR_PASSWORD_NOT_SATISFIED = 178;
+
 
 }

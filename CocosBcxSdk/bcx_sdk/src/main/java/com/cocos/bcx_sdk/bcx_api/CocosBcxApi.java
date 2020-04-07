@@ -32,6 +32,7 @@ import com.cocos.bcx_sdk.bcx_sql.dao.AccountDao;
 import com.cocos.bcx_sdk.bcx_utils.utils.DateUtil;
 import com.cocos.bcx_sdk.bcx_utils.utils.IDHelper;
 import com.cocos.bcx_sdk.bcx_utils.utils.NumberUtil;
+import com.cocos.bcx_sdk.bcx_utils.utils.PassWordCheckUtil;
 import com.cocos.bcx_sdk.bcx_wallet.authority1;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_object;
 import com.cocos.bcx_sdk.bcx_wallet.chain.account_related_word_view_object;
@@ -115,6 +116,7 @@ import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_NETWORK_FAIL;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_OBJECT_NOT_FOUND;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_PARAMETER;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_PARAMETER_DATA_TYPE;
+import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_PASSWORD_NOT_SATISFIED;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_UNLOCK_ACCOUNT;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.ERROR_WRONG_PASSWORD;
 import static com.cocos.bcx_sdk.bcx_error.ErrorCode.OPERATE_FAILED;
@@ -249,6 +251,12 @@ public class CocosBcxApi {
      * @throws NetworkStatusException
      */
     public void createAccount(String faucetUrl, CreateAccountParamEntity paramEntity, boolean isAutoLogin, AccountDao accountDao, IBcxCallBack callBack) throws NetworkStatusException, UnLegalInputException {
+
+        if (!PassWordCheckUtil.passwordVerify(paramEntity.getPassword())) {
+            rspText = new ResponseData(ERROR_PASSWORD_NOT_SATISFIED, "Password does not meet the rules：^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).{12,}$", null).toString();
+            callBack.onReceiveValue(rspText);
+            return;
+        }
         private_key privateActiveKey = private_key.from_seed(paramEntity.getActiveSeed());
         private_key privateOwnerKey = private_key.from_seed(paramEntity.getOwnerSeed());
         types.public_key_type publicActiveKeyType = new types.public_key_type(privateActiveKey.get_public_key());
