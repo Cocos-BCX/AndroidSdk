@@ -33,7 +33,7 @@ ref url: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-t
 ```
 2. app/base moudle build.gradle add：   
 ```
-implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.3.0'
+implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.3.1'
 ```
 
 ###### Note: 
