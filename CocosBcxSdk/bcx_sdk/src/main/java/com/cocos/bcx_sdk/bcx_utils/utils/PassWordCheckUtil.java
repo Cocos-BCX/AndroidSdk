@@ -16,7 +16,7 @@ public class PassWordCheckUtil {
      * verify password
      */
     public static boolean passwordVerify(String str) {
-        return verify("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).{12,}$", str);
+        return verify("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).{12,}$", str) && verify("^[^\\s]{12,}$",str);
     }
 
     /**
