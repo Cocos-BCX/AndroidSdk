@@ -255,7 +255,7 @@ public class CocosBcxApi {
     public void createAccount(String faucetUrl, CreateAccountParamEntity paramEntity, boolean isAutoLogin, AccountDao accountDao, IBcxCallBack callBack) throws NetworkStatusException, UnLegalInputException {
 
         if (!PassWordCheckUtil.passwordVerify(paramEntity.getPassword())) {
-            rspText = new ResponseData(ERROR_PASSWORD_NOT_SATISFIED, "Password does not meet the rules：^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).{12,}$", null).toString();
+            rspText = new ResponseData(ERROR_PASSWORD_NOT_SATISFIED, "Password does not meet the rules：^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.-]).{12,}$", null).toString();
             callBack.onReceiveValue(rspText);
             return;
         }
@@ -549,7 +549,7 @@ public class CocosBcxApi {
     public List<String> import_wif_key(String wifKey, String password, String accountType, AccountDao accountDao) throws NetworkStatusException, AccountNotFoundException, KeyInvalideException, AddressFormatException, PasswordInvalidException {
 
         if (!PassWordCheckUtil.passwordVerify(password)) {
-            throw new PasswordInvalidException("Password does not meet the rules：^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).{12,}$");
+            throw new PasswordInvalidException("Password does not meet the rules：^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.-]).{12,}$");
         }
 
         // get public key
@@ -3116,7 +3116,7 @@ public class CocosBcxApi {
     public String modify_password(String accountName, String originPwd, String newPwd) throws NetworkStatusException, AccountNotFoundException, PasswordVerifyException, KeyInvalideException, AuthorityException, UnLegalInputException, PasswordInvalidException {
 
         if (!PassWordCheckUtil.passwordVerify(newPwd)) {
-          throw new PasswordInvalidException("Password does not meet the rules：^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).{12,}$");
+          throw new PasswordInvalidException("Password does not meet the rules：^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.-]).{12,}$");
         }
 
         private_key privateActiveKey = private_key.from_seed(accountName + "active" + newPwd);
