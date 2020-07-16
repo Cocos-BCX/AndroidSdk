@@ -42,7 +42,6 @@ android {
         desc = 'Cocos-BCX Android SDK'
         website = 'https://github.com/Cocos-BCX/AndroidSdk'
     }
-
 }
 
 dependencies {

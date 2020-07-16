@@ -1657,7 +1657,6 @@ public class CocosBcxApiWrapper {
 
 
     /**
-     * 哦 这个解析呀 费死老劲了
      * @param strAccount
      * @param password
      * @param contractNameOrId
