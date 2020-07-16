@@ -149,6 +149,7 @@ public class CocosBcxApi {
     }
 
 
+
     private static class CocosBcxApiInstanceHolder {
         static final CocosBcxApi INSTANCE = new CocosBcxApi();
     }
@@ -3156,7 +3157,9 @@ public class CocosBcxApi {
         signed_operate.extensions = new HashSet<>();
         return sign_transaction_owner(signed_operate, account_object);
     }
-
+    public Object getBlockNumber(String nBlockNumber) throws NetworkStatusException {
+        return mWebSocketApi.getBlockNumber(nBlockNumber);
+    }
 
     /**
      * get_dao_account_by_name

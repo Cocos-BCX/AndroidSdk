@@ -784,6 +784,22 @@ public class ConnectServer extends WebSocketListener {
         Reply<block_info> replyObject = sendForReply(callObject, replyObjectProcess);
         return replyObject.result;
     }
+    public Object getBlockNumber(String nBlockNumber) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mDatabaseId);
+        callObject.params.add(CALL_GET_BLOCK);
+        List<Object> listBlockNumber = new ArrayList<>();
+        listBlockNumber.add(nBlockNumber);
+        callObject.params.add(listBlockNumber);
+
+        ReplyObjectProcess<Reply<Object>> replyObjectProcess = new ReplyObjectProcess<>(new TypeToken<Reply<Object>>() {
+        }.getType());
+        Reply<Object> replyObject = sendForReply(callObject, replyObjectProcess);
+        return replyObject.result;
+    }
 
     /**
      * get_contract

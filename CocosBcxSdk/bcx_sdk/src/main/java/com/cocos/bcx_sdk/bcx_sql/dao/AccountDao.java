@@ -85,6 +85,7 @@ public class AccountDao {
      * @return
      */
     public List<String> queryAccountNamesByChainId() {
+        if (CocosBcxApiWrapper.chainId==null) return null;
         Cursor cursor = mDatabase.query(AccountEntry.TABLE_NAME, null, AccountEntry.COLUMN_CHAINID + " = ?", new String[]{CocosBcxApiWrapper.chainId}, null, null, null, null);
         List<String> list = new ArrayList<>();
         if (cursor.getCount() > 0) {
