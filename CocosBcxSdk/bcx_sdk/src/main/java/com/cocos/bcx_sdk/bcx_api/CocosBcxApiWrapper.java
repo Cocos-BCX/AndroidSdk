@@ -216,7 +216,7 @@ public class CocosBcxApiWrapper {
      * @param strPassword    Password
      * @param isAutoLogin    true :   log in， false:just register
      * @param callBack
-     * @throws CreateAccountException
+     * 
      */
     public void create_password_account(final String strAccountName, final String strPassword, final boolean isAutoLogin, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -246,7 +246,7 @@ public class CocosBcxApiWrapper {
      * @param strPassword    Password
      * @param isAutoLogin    true :   log in， false:just register
      * @param callBack
-     * @throws CreateAccountException
+     * 
      */
     public void create_wallet_account(final String strAccountName, final String strPassword, final boolean isAutoLogin, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -278,7 +278,6 @@ public class CocosBcxApiWrapper {
      * @param isAutoLogin    true :   log in， false:just register
      * @param isAutoLogin    accountType :   "WALLET"，"ACCOUNT"
      * @param callBack
-     * @throws CreateAccountException
      */
     public void create_account(final String strAccountName, final String strPassword, final AccountType accountType, final boolean isAutoLogin, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -533,7 +532,6 @@ public class CocosBcxApiWrapper {
     /**
      * get_full_accounts and subscribe
      *
-     * @throws NetworkStatusException
      */
     public void get_full_accounts(final String names_or_id, final boolean subscribe,
                                   final IBcxCallBack callBack) {
@@ -555,7 +553,6 @@ public class CocosBcxApiWrapper {
     /**
      * lookup_nh_asset get NH asset detail by NH asset id
      *
-     * @throws NetworkStatusException
      */
     public void lookup_nh_asset(final List<String> nh_asset_ids_or_hash,
                                 final IBcxCallBack callBack) {
@@ -579,7 +576,6 @@ public class CocosBcxApiWrapper {
     /**
      * lookup_nh_asset get NH asset detail by NH asset id
      *
-     * @throws NetworkStatusException
      */
     public void lookup_nh_asset_object(final String nh_asset_ids_or_hash, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -602,7 +598,6 @@ public class CocosBcxApiWrapper {
     /**
      * get nh asset order object
      *
-     * @throws NetworkStatusException
      */
     public void get_nhasset_order_object(final String nh_asset_order_id, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -622,7 +617,6 @@ public class CocosBcxApiWrapper {
     /**
      * get limit asset order object
      *
-     * @throws NetworkStatusException
      */
     public void get_limit_order_object(final String limit_order_id, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -643,7 +637,6 @@ public class CocosBcxApiWrapper {
     /**
      * get nh asset order object
      *
-     * @throws NetworkStatusException
      */
     public void list_assets(final String strLowerBound, final int nLimit, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -664,7 +657,7 @@ public class CocosBcxApiWrapper {
     /**
      * get nh asset order object
      *
-     * @throws NetworkStatusException
+     *
      */
     public List<asset_object> list_assets_sync(final String strLowerBound, final int nLimit) throws NetworkStatusException {
         return cocosBcxApi.list_assets(strLowerBound, nLimit);
@@ -673,7 +666,6 @@ public class CocosBcxApiWrapper {
     /**
      * lookup_nh_asset get NH asset by nh asset id
      *
-     * @throws NetworkStatusException
      */
     public void list_account_nh_asset(final String account_id_or_name,
                                       final List<String> world_view_name_or_ids, final int page, final int pageSize,
@@ -699,7 +691,6 @@ public class CocosBcxApiWrapper {
     /**
      * lookup_nh_asset get NH asset by nh asset id
      *
-     * @throws NetworkStatusException
      */
     public void list_account_nh_asset_order(final String account_id_or_name,
                                             final int pageSize, final int page, final IBcxCallBack callBack) {
@@ -724,7 +715,6 @@ public class CocosBcxApiWrapper {
     /**
      * lookup_nh_asset get NH asset by asset id
      *
-     * @throws NetworkStatusException
      */
     public void list_nh_asset_order(final String asset_id_or_symbol,
                                     final String world_view_name_or_ids, final String baseDescribe, final int pageSize,
@@ -747,7 +737,6 @@ public class CocosBcxApiWrapper {
     /**
      * list nh asset order no filter options
      *
-     * @throws NetworkStatusException
      */
     public void list_nh_asset_order(final int page, final int pageSize,
                                     final IBcxCallBack callBack) {
@@ -769,7 +758,6 @@ public class CocosBcxApiWrapper {
     /**
      * Seek World View Details
      *
-     * @throws NetworkStatusException
      */
     public void lookup_world_view(final List<String> world_view_names,
                                   final IBcxCallBack callBack) {
@@ -791,7 +779,6 @@ public class CocosBcxApiWrapper {
     /**
      * get Developer-Related World View
      *
-     * @throws NetworkStatusException
      */
     public void get_nh_creator(final String account_id_or_name, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -815,7 +802,6 @@ public class CocosBcxApiWrapper {
     /**
      * Query NH assets created by developers
      *
-     * @throws NetworkStatusException
      */
     public void list_nh_asset_by_creator(final String account_id, final String worldview,
                                          final int page, final int pageSize, final IBcxCallBack callBack) {
@@ -840,7 +826,6 @@ public class CocosBcxApiWrapper {
     /**
      * register_creator
      *
-     * @throws NetworkStatusException
      */
     public void register_creator(final String register_creator,
                                  final String register_creator_password, final IBcxCallBack callBack) {
@@ -877,7 +862,6 @@ public class CocosBcxApiWrapper {
     /**
      * create_worldview
      *
-     * @throws NetworkStatusException
      */
     public void create_worldview(final String world_view,
                                  final String create_worldview_account, final String create_worldview_account_password,
@@ -919,7 +903,6 @@ public class CocosBcxApiWrapper {
     /**
      * create_nh_asset
      *
-     * @throws NetworkStatusException
      */
     public void create_nh_asset(final String fee_paying_account, final String password,
                                 final String owner, final String asset_id, final String world_view,
@@ -963,7 +946,6 @@ public class CocosBcxApiWrapper {
     /**
      * transfer NH assets
      *
-     * @throws NetworkStatusException
      */
     public void transfer_nh_asset(final String password, final String account_from,
                                   final String account_to, final List<String> nh_asset_ids, final IBcxCallBack callBack) {
@@ -1008,9 +990,6 @@ public class CocosBcxApiWrapper {
      * delete nhasset
      *
      * @return
-     * @throws NetworkStatusException
-     * @throws AccountNotFoundException
-     * @throws NhAssetNotFoundException
      */
     public void delete_nh_asset(final String fee_paying_account, final String password,
                                 final List<String> nhasset_ids, final IBcxCallBack callBack) {
@@ -1055,9 +1034,9 @@ public class CocosBcxApiWrapper {
      * cancel nhasset order
      *
      * @return
-     * @throws NetworkStatusException
-     * @throws AccountNotFoundException
-     * @throws NhAssetNotFoundException
+     *
+     * 
+     * 
      */
     public void cancel_nh_asset_order(final String fee_paying_account, final String password,
                                       final String order_id, final IBcxCallBack callBack) {
@@ -1101,7 +1080,7 @@ public class CocosBcxApiWrapper {
     /**
      * buy NH assets
      *
-     * @throws NetworkStatusException
+     *
      */
     public void buy_nh_asset(final String fee_paying_account, final String password,
                              final String order_Id, final IBcxCallBack callBack) {
@@ -1148,8 +1127,8 @@ public class CocosBcxApiWrapper {
      * @param pending_order_price
      * @param pending_order_price_symbol
      * @return
-     * @throws NetworkStatusException
-     * @throws NhAssetNotFoundException
+     *
+     * 
      */
     public void create_nh_asset_order(final String otcaccount, final String seller,
                                       final String password, final String pending_order_nh_asset, final String pending_order_fee,
@@ -1203,11 +1182,11 @@ public class CocosBcxApiWrapper {
      *
      * @param upgrade_account_id_or_symbol
      * @return
-     * @throws NetworkStatusException
-     * @throws AccountNotFoundException
-     * @throws NhAssetNotFoundException
-     * @throws OrderNotFoundException
-     * @throws UnLegalInputException
+     *
+     * 
+     * 
+     * 
+     * 
      */
     public void upgrade_to_lifetime_member(final String upgrade_account_id_or_symbol,
                                            final String upgrade_account_password, final IBcxCallBack callBack) {
@@ -1247,11 +1226,11 @@ public class CocosBcxApiWrapper {
      * @param child_account
      * @param child_account_password
      * @return
-     * @throws NetworkStatusException
-     * @throws AccountNotFoundException
-     * @throws NhAssetNotFoundException
-     * @throws OrderNotFoundException
-     * @throws UnLegalInputException
+     *
+     * 
+     * 
+     * 
+     * 
      */
     public void create_child_account(final String child_account,
                                      final String child_account_password, final String registrar_account_id_or_symbol,
@@ -1307,7 +1286,7 @@ public class CocosBcxApiWrapper {
      *
      * @param ids ：ids
      * @return object
-     * @throws NetworkStatusException
+     *
      */
     public void get_objects(final List<String> ids, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -1330,7 +1309,7 @@ public class CocosBcxApiWrapper {
      *
      * @param id ：
      * @return object
-     * @throws NetworkStatusException
+     *
      */
     public void get_objects(final String id, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -1353,7 +1332,7 @@ public class CocosBcxApiWrapper {
      *
      * @param contractNameOrId ：contractNameOrId
      * @return object
-     * @throws NetworkStatusException
+     *
      */
     public void get_contract(final String contractNameOrId, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -1578,7 +1557,7 @@ public class CocosBcxApiWrapper {
      *
      * @param assetsSymbolOrId ：asset symbol or id
      * @return asset object
-     * @throws NetworkStatusException
+     *
      */
     public void lookup_asset_symbols(final String assetsSymbolOrId,
                                      final IBcxCallBack callBack) {
@@ -1601,7 +1580,7 @@ public class CocosBcxApiWrapper {
      *
      * @param assetsSymbolOrId ：asset symbol or asset id
      * @return asset object
-     * @throws NetworkStatusException
+     *
      */
     public asset_object get_asset_object(final String assetsSymbolOrId) throws NetworkStatusException {
         return cocosBcxApi.lookup_asset_symbols(assetsSymbolOrId);
@@ -1990,7 +1969,7 @@ public class CocosBcxApiWrapper {
      * @param strAssetSymbol
      * @param strMemo
      * @return
-     * @throws NetworkStatusException
+     *
      */
     public void transfer(final String password, final String strFrom, final String strTo,
                          final String strAmount, final String strAssetSymbol, final String strMemo,
@@ -2035,7 +2014,7 @@ public class CocosBcxApiWrapper {
      *
      * @param nBlockNumber
      * @return
-     * @throws NetworkStatusException
+     *
      */
     public void get_block(final String nBlockNumber, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -2060,7 +2039,7 @@ public class CocosBcxApiWrapper {
      * @param accountName
      * @param nLimit
      * @return
-     * @throws NetworkStatusException
+     *
      */
     public void get_account_history(final String accountName, final int nLimit,
                                     final IBcxCallBack callBack) {
@@ -2089,7 +2068,7 @@ public class CocosBcxApiWrapper {
      * @param accountName
      * @param nLimit
      * @return
-     * @throws NetworkStatusException
+     *
      */
     public void get_account_history(final String accountName, final String startId, final String endId, final int nLimit,
                                     final IBcxCallBack callBack) {
@@ -2118,7 +2097,7 @@ public class CocosBcxApiWrapper {
      *
      * @param accountId
      * @return account balance
-     * @throws NetworkStatusException
+     *
      */
     public void get_all_account_balances(final String accountId, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -2148,7 +2127,7 @@ public class CocosBcxApiWrapper {
      * @param accountId
      * @param assetsId
      * @return account balance
-     * @throws NetworkStatusException
+     *
      */
     public void get_account_balances(final String accountId, final String assetsId,
                                      final IBcxCallBack callBack) {
@@ -2182,8 +2161,7 @@ public class CocosBcxApiWrapper {
      *
      * @param contractNameOrId
      * @return
-     * @throws ContractNotFoundException
-     * @throws NetworkStatusException
+     *
      */
     public contract_object get_contract_sync(String contractNameOrId) throws
             NetworkStatusException, ContractNotFoundException {
@@ -2194,7 +2172,7 @@ public class CocosBcxApiWrapper {
     /**
      * get block header。
      *
-     * @throws NetworkStatusException
+     *
      */
     public void get_block_header(final String nBlockNumber, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -2216,7 +2194,7 @@ public class CocosBcxApiWrapper {
      * search  current global_property_object
      *
      * @return
-     * @throws NetworkStatusException
+     *
      */
     public void get_global_properties(final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -2238,7 +2216,7 @@ public class CocosBcxApiWrapper {
      * search  current global_property_object
      *
      * @return
-     * @throws NetworkStatusException
+     *
      */
     public void get_dynamic_global_properties(final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -2259,7 +2237,7 @@ public class CocosBcxApiWrapper {
      * get  current dynamic_global_property_object
      *
      * @return
-     * @throws NetworkStatusException
+     *
      */
     public global_property_object get_global_properties() throws NetworkStatusException {
         return cocosBcxApi.get_global_properties();
@@ -2269,7 +2247,7 @@ public class CocosBcxApiWrapper {
     /**
      * get transaction in block info
      *
-     * @throws NetworkStatusException
+     *
      */
     public void get_transaction_in_block_info(final String tr_id, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {
@@ -2291,7 +2269,7 @@ public class CocosBcxApiWrapper {
     /**
      * get transaction by tx_id
      *
-     * @throws NetworkStatusException
+     *
      */
     public void get_transaction_by_id(final String tr_id, final IBcxCallBack callBack) {
         proxy.execute(new Runnable() {

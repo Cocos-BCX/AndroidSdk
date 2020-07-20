@@ -1,11 +1,14 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+
 android {
 
     compileSdkVersion 27
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
         consumerProguardFiles 'proguard-rules.pro'
     }
 
@@ -34,13 +37,8 @@ android {
         exclude 'lib/x86_64/linux/libscrypt.so'
     }
 
-    publish {
-        userOrg = 'cocos-bcx'
-        groupId = 'com.cocosbcx.androidsdk'
-        artifactId = 'bcx_sdk'
-        publishVersion = '1.3.3'
-        desc = 'Cocos-BCX Android SDK'
-        website = 'https://github.com/Cocos-BCX/AndroidSdk'
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -61,3 +59,4 @@ dependencies {
     // fasterxml
     api 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
 }
+apply from: 'bintrayReleaseUpload.gradle'

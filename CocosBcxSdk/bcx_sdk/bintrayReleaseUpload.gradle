@@ -1,0 +1,11 @@
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+    repoName="maven"//仓库名
+    userOrg = 'cocos-bcx'
+    groupId = 'com.cocosbcx.androidsdk'
+    artifactId = 'bcx_sdk'
+    publishVersion = '1.3.3'
+    desc = 'Cocos-BCX Android SDK'
+    website = 'https://github.com/Cocos-BCX/AndroidSdk'
+}

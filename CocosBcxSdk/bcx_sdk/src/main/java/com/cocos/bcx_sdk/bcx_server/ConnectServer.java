@@ -794,7 +794,6 @@ public class ConnectServer extends WebSocketListener {
         List<Object> listBlockNumber = new ArrayList<>();
         listBlockNumber.add(nBlockNumber);
         callObject.params.add(listBlockNumber);
-
         ReplyObjectProcess<Reply<Object>> replyObjectProcess = new ReplyObjectProcess<>(new TypeToken<Reply<Object>>() {
         }.getType());
         Reply<Object> replyObject = sendForReply(callObject, replyObjectProcess);

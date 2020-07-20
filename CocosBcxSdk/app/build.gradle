@@ -44,7 +44,6 @@ android {
         exclude("META-INF/*.kotlin_module")
         exclude("META-INF/io.netty.versions.properties")
         exclude("META-INF/INDEX.LIST")
-
     }
 }
 
@@ -59,8 +58,8 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:multidex:1.0.3'
 
-//    implementation project(':bcx_sdk')
-    implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.3.2'
+    implementation project(':bcx_sdk')
+//    implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.3.2'
     // tabLayoutViewFindUtils
     api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
 }

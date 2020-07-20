@@ -6,6 +6,7 @@ buildscript {
         google()
         jcenter()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
         classpath 'com.novoda:bintray-release:0.9.2'
@@ -20,8 +21,4 @@ allprojects {
         maven { url 'https://jitpack.io' }
         maven { url 'https://dl.bintray.com/cocos-bcx/maven' }
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
