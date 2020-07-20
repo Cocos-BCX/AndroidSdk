@@ -34,6 +34,22 @@ AndroidManifest.xml :
 ```
 implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.3.2'
 ```
+在1.3.2之前的版本可以采用上面的方式接入，在1.3.3以及以后版本可采用以下方式接入：
+1.在项目根目录的build.gradle加入：
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+2.在module的build.gradle加入依赖：
+```
+	dependencies {
+	        implementation 'com.github.Cocos-BCX:AndroidSdk:V-2.2.1'
+	}
+```
 ###### 注意：
 
 ```

@@ -17,7 +17,7 @@ AndroidManifest.xml :
 ref url: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted
  
 ## 1.1 Library Reference
-
+the old version you use maven like that:
 1. project root build.gradle add：  maven { url 'https://dl.bintray.com/cocos-bcx/maven' }
 
 ```Java
@@ -35,7 +35,24 @@ ref url: https://stackoverflow.com/questions/45940861/android-8-cleartext-http-t
 ```
 implementation 'com.cocosbcx.androidsdk:bcx_sdk:1.3.2'
 ```
+but the version of 1.3.3 and latter we choose use jitpack like that:
+1.project root build.gradle add:
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+2.modle build.gradle add:
+```
+dependencies {
+	        implementation 'com.github.Cocos-BCX:AndroidSdk:V-2.2.1'
+	}
+```
 
+the lastter version we solve some bug
 ###### Note: 
 
 ```
