@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply from: 'upload.gradle'
 android {
 
     compileSdkVersion 27
@@ -59,4 +59,4 @@ dependencies {
     // fasterxml
     api 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
 }
-apply from: 'bintrayReleaseUpload.gradle'
+//apply from: 'bintrayReleaseUpload.gradle'
