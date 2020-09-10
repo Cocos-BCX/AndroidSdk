@@ -19,6 +19,9 @@ allprojects {
         mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
+        maven {
+            url rootProject.file('bcxsdk-aar')
+        }
 //        maven { url 'https://dl.bintray.com/cocos-bcx/maven' }
     }
 }
