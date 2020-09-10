@@ -947,7 +947,7 @@ public class ConnectServer extends WebSocketListener {
         nhparams.add(world_view_name_or_ids);
         nhparams.add(pageSize);
         nhparams.add(page);
-        nhparams.add(4);
+        nhparams.add(3);
         callObject.params.add(nhparams);
 
         ReplyObjectProcess<Reply<List<Object>>> replyObject = new ReplyObjectProcess<>(new com.google.gson.reflect.TypeToken<Reply<List<Object>>>() {
@@ -957,6 +957,38 @@ public class ConnectServer extends WebSocketListener {
         return (List<Object>) replyLookupAccountNames.result.get(0);
     }
 
+    /**
+     *
+     * @param account_id
+     * @param world_view_name_or_ids
+     * @param page
+     * @param pageSize
+     * @param type 0:only_activity 1:only_owner,2:all_activity,3:all_owner,4:owner_and_activity
+     * @return
+     * @throws NetworkStatusException
+     */
+    public List<Object> list_account_nh_asset(String account_id, List<String> world_view_name_or_ids, int page, int pageSize,int type) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(mDatabaseId);
+        callObject.params.add(CALL_LIST_ACCOUNT_NH_ASSET);
+
+        List<Object> nhparams = new ArrayList<>();
+        nhparams.add(account_id);
+        nhparams.add(world_view_name_or_ids);
+        nhparams.add(pageSize);
+        nhparams.add(page);
+        nhparams.add(type);
+        callObject.params.add(nhparams);
+
+        ReplyObjectProcess<Reply<List<Object>>> replyObject = new ReplyObjectProcess<>(new com.google.gson.reflect.TypeToken<Reply<List<Object>>>() {
+        }.getType());
+        Reply<List<Object>> replyLookupAccountNames = sendForReply(callObject, replyObject);
+
+        return (List<Object>) replyLookupAccountNames.result.get(0);
+    }
 
     /**
      * list account nh asset order

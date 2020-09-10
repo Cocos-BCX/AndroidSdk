@@ -1704,6 +1704,25 @@ public class CocosBcxApi {
         return mWebSocketApi.list_account_nh_asset(account_object.id.toString(), world_view_name_or_ids, page, pageSize);
     }
 
+    /**
+     * lookup_nh_asset get account NH asset by account id or name
+     * @param account_id_or_name
+     * @param world_view_name_or_ids
+     * @param page
+     * @param pageSize
+     * @param type 0:only_activity 1:only_owner,2:all_activity,3:all_owner,4:owner_and_activity
+     * @return
+     * @throws NetworkStatusException
+     * @throws AccountNotFoundException
+     */
+    public List<Object> list_account_nh_asset(String account_id_or_name, List<String> world_view_name_or_ids, int page, int pageSize,int type) throws NetworkStatusException, AccountNotFoundException {
+        account_object account_object = get_account_object(account_id_or_name);
+        if (account_object == null) {
+            throw new AccountNotFoundException("Account does not exist");
+        }
+        return mWebSocketApi.list_account_nh_asset(account_object.id.toString(), world_view_name_or_ids, page, pageSize,type);
+    }
+
 
     /**
      * list account nh asset order

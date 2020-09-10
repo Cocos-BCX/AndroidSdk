@@ -687,6 +687,36 @@ public class CocosBcxApiWrapper {
         });
     }
 
+    /**
+     * lookup_nh_asset get NH asset by nh asset id
+     * you can select the type of NHA permission
+     * @param account_id_or_name
+     * @param world_view_name_or_ids
+     * @param page
+     * @param pageSize
+     * @param type 0:only_activity 1:only_owner,2:all_activity,3:all_owner,4:owner_and_activity
+     * @param callBack
+     */
+    public void list_account_nh_asset(final String account_id_or_name,
+                                      final List<String> world_view_name_or_ids, final int page, final int pageSize,final int type,
+                                      final IBcxCallBack callBack) {
+        proxy.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    rspText = new ResponseData(OPERATE_SUCCESS, "success", cocosBcxApi.list_account_nh_asset(account_id_or_name, world_view_name_or_ids, page, pageSize,type)).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (NetworkStatusException e) {
+                    rspText = new ResponseData(ERROR_NETWORK_FAIL, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                } catch (AccountNotFoundException e) {
+                    rspText = new ResponseData(ERROR_OBJECT_NOT_FOUND, e.getMessage(), null).toString();
+                    callBack.onReceiveValue(rspText);
+                }
+            }
+        });
+    }
+
 
     /**
      * lookup_nh_asset get NH asset by nh asset id
