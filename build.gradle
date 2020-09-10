@@ -20,7 +20,7 @@ allprojects {
         jcenter()
         maven { url 'https://jitpack.io' }
         maven {
-            url rootProject.file('bcxsdk-aar')
+           url 'https://raw.githubusercontent.com/systoon/TNLiveDetect-Android/master'
         }
 //        maven { url 'https://dl.bintray.com/cocos-bcx/maven' }
     }

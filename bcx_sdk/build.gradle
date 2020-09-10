@@ -59,4 +59,3 @@ dependencies {
     // fasterxml
     api 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
 }
-//apply from: 'bintrayReleaseUpload.gradle'
