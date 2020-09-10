@@ -1830,6 +1830,11 @@ public class CocosBcxApi {
         return mWebSocketApi.get_account_history(objectId.id, startId, nLimit);
     }
 
+    public List<operation_history_object> get_account_history(String accountNameOrId, int nLimit, String endId) throws NetworkStatusException, AccountNotFoundException {
+        account_object objectId = get_account_object(accountNameOrId);
+        object_id<operation_history_object> startId = new object_id<>(0, operation_history_object.class);
+        return mWebSocketApi.get_account_history(objectId.id, startId, nLimit,endId);
+    }
 
     /**
      * get account operate history
