@@ -47,7 +47,7 @@ allprojects {
 2.在module的build.gradle加入依赖：
 ```
 	dependencies {
-	        implementation 'com.github.Cocos-BCX:AndroidSdk:V-2.2.2'
+	        implementation 'com.github.Cocos-BCX:AndroidSdk:V-2.2.1'
 	}
 ```
 ###### 注意：
