@@ -48,7 +48,7 @@ allprojects {
 2.modle build.gradle add:
 ```
 dependencies {
-	        implementation 'com.github.Cocos-BCX:AndroidSdk:V-2.2.2'
+	        implementation 'com.github.Cocos-BCX:AndroidSdk:V-2.2.1'
 	}
 ```
 
